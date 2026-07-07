@@ -7,8 +7,11 @@ import ImageValidator from '../../../FormValidators/ImageValidator'
 import TextValidator from '../../../FormValidators/TextValidator'
 
 
+import { useDispatch, useSelector } from 'react-redux';
+import { getMaincategory, updateMaincategory } from "../../../Redux/ActionCreators/MaincategoryActionCreators"
+
 export default function AdminMaincategoryUpdatePage() {
-    let{id} = useParams()
+    let { id } = useParams()
 
     let [data, setData] = useState({
         name: "",
@@ -20,41 +23,34 @@ export default function AdminMaincategoryUpdatePage() {
         pic: ""
     })
     let [show, setShow] = useState(false)
-    let [MaincategoryStateData, setMaincategoryStateData] = useState([])
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let dispatch = useDispatch()
     let navigate = useNavigate()
-    // function getInputData(e) {
-        // let name = e.target.name
-        // let value = name === "pic" ? e.target.files[0].name : e.target.value
-        // setData({ ...data, [name]: value })
-        // setErrorMessage({
-        //     ...errorMessage, [name]: name === "pic" ? ImageValidator(e) :
-        //         TextValidator(e)
-        // })
-        function getInputData(e) {
+    function getInputData(e) {
 
-            let name = e.target.name;
-            let value;
+        let name = e.target.name;
+        let value;
 
-            if (name === "pic") {
-                value = e.target.files[0];
-            }
-            else if (name === "status") {
-                value = e.target.value === "1"
-            }
-            else {
-                value = e.target.value;
-            }
-
-            setData({ ...data, [name]: value });
-
-            setErrorMessage({
-                ...errorMessage,
-                [name]: name === "pic"
-                    ? ImageValidator(e)
-                    : TextValidator(e)
-            });
+        if (name === "pic") {
+            value = e.target.files[0];
         }
-    
+        else if (name === "status") {
+            value = e.target.value === "1"
+        }
+        else {
+            value = e.target.value;
+        }
+
+        setData({ ...data, [name]: value });
+
+        setErrorMessage({
+            ...errorMessage,
+            [name]: name === "pic"
+                ? ImageValidator(e)
+                : TextValidator(e)
+        });
+    }
+
     async function postData(e) {
         e.preventDefault()
         let error = Object.values(errorMessage).find(x => x != "")
@@ -62,11 +58,6 @@ export default function AdminMaincategoryUpdatePage() {
             setShow(true)
         }
         else {
-            // alert(`
-            //     Name : ${data.name}
-            //     Pic : ${data.pic}
-            //     Status : ${data.status}
-            //     `)
 
             let formData = new FormData();
 
@@ -74,18 +65,15 @@ export default function AdminMaincategoryUpdatePage() {
             formData.append("pic", data.pic);
             formData.append("status", data.status);
 
-             
+
             try {
-                let item = MaincategoryStateData.find(x=>x.id != id && x.name?.toLocaleLowerCase()===data.name?.toLocaleLowerCase())
-                if(item){
-                    setErrorMessage({...errorMessage,name:'Maincategory With This Name Already Exist'})
+                let item = MaincategoryStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+                if (item) {
+                    setErrorMessage({ ...errorMessage, name: 'Maincategory With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                let response = await axios.put(
-                     `${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory/${id}`,
-                    formData
-                );
+                dispatch(updateMaincategory(formData))
                 navigate("/admin/maincategory")
             }
             catch (error) {
@@ -95,20 +83,20 @@ export default function AdminMaincategoryUpdatePage() {
     }
 
     useEffect(() => {
-        (async () => {
-            let response = await axios.get(
-                `${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory`
-            );
-            let item = response.data.find(x=>x.id==id)
-            if(item){
-                setData({...data, ...item})
+        (() => {
+            dispatch(getMaincategory())
+            if(MaincategoryStateData.length){
+                let item = MaincategoryStateData.find(x => x.id == id)
+            if (item) {
+                setData({ ...data, ...item })
             }
-            else{
+            else {
                 navigate("/admin/maincategory")
             }
-            setMaincategoryStateData(response.data)
+            }
+            
         })()
-    }, [])
+    }, [MaincategoryStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -135,7 +123,7 @@ export default function AdminMaincategoryUpdatePage() {
 
                                 <div className="col-md-6 md-3">
                                     <label>Status*</label>
-                                    <select name="status" value={data.status?"1":"0"} onChange={getInputData} className='form-select border-primary'>
+                                    <select name="status" value={data.status ? "1" : "0"} onChange={getInputData} className='form-select border-primary'>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>

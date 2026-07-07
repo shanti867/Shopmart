@@ -6,32 +6,32 @@ import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
 import { Link } from 'react-router-dom'
 
+import {getMaincategory, deleteMaincategory} from "../../../Redux/ActionCreators/MaincategoryActionCreators"
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function AdminMaincategoryPage() {
     let [data, setData] = useState([])
-    let [MaincategoryStateData, setMaincategoryStateData] = useState([])
+    let MaincategoryStateData = useSelector(state=>state.MaincategoryStateData)
+    let dispatch = useDispatch()
 
-    async function deleteRecord(id){
+    function deleteRecord(id){
         if(window.confirm("Are You Sure To Delete This Record")){
-            let response = await axios.delete(
-                `${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory/${id}`
-            );
+           dispatch(deleteMaincategory({id:id}))
             setData(data.filter(x=>x.id!==id))
         }
     }
 
     useEffect(() => {
-    let time = (async () => {
-            let response = await axios.get(
-                `${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory`
-            );
-            setData(response.data)
-            setMaincategoryStateData(response.data)
-
+    let time = (() => {
+        console.log("useEffect running");
+            dispatch(getMaincategory())
+            if(MaincategoryStateData.length){
+                setData(MaincategoryStateData)
             return setTimeout(()=>new DataTable('#myTable'), 500);
+            }
         })()
         return ()=>clearTimeout(time)
-    }, [])
+    }, [MaincategoryStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />

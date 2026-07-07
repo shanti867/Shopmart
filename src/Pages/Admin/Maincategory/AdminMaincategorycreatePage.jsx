@@ -6,7 +6,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import ImageValidator from '../../../FormValidators/ImageValidator'
 import TextValidator from '../../../FormValidators/TextValidator'
 
-
+import { useDispatch, useSelector } from 'react-redux';
+import { createMaincategory, getMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
 export default function AdminMaincategorycreatePage() {
     let [data, setData] = useState({
         name: "",
@@ -18,72 +19,53 @@ export default function AdminMaincategorycreatePage() {
         pic: "Pic Field is Mendatory"
     })
     let [show, setShow] = useState(false)
-    let [MaincategoryStateData, setMaincategoryStateData] = useState([])
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let dispatch = useDispatch()
     let navigate = useNavigate()
-    // function getInputData(e) {
-        // let name = e.target.name
-        // let value = name === "pic" ? e.target.files[0].name : e.target.value
-        // setData({ ...data, [name]: value })
-        // setErrorMessage({
-        //     ...errorMessage, [name]: name === "pic" ? ImageValidator(e) :
-        //         TextValidator(e)
-        // })
-        function getInputData(e) {
+    function getInputData(e) {
 
-            let name = e.target.name;
-            let value;
+        let name = e.target.name;
+        let value;
 
-            if (name === "pic") {
-                value = e.target.files[0];
-            }
-            else if (name === "status") {
-                value = e.target.value === "1"
-            }
-            else {
-                value = e.target.value;
-            }
-
-            setData({ ...data, [name]: value });
-
-            setErrorMessage({
-                ...errorMessage,
-                [name]: name === "pic"
-                    ? ImageValidator(e)
-                    : TextValidator(e)
-            });
+        if (name === "pic") {
+            value = e.target.files[0];
         }
-    
-    async function postData(e) {
+        else if (name === "status") {
+            value = e.target.value === "1"
+        }
+        else {
+            value = e.target.value;
+        }
+
+        setData({ ...data, [name]: value });
+
+        setErrorMessage({
+            ...errorMessage,
+            [name]: name === "pic"
+                ? ImageValidator(e)
+                : TextValidator(e)
+        });
+    }
+
+    function postData(e) {
         e.preventDefault()
         let error = Object.values(errorMessage).find(x => x != "")
         if (error) {
             setShow(true)
         }
         else {
-            // alert(`
-            //     Name : ${data.name}
-            //     Pic : ${data.pic}
-            //     Status : ${data.status}
-            //     `)
-
             let formData = new FormData();
-
             formData.append("name", data.name);
             formData.append("pic", data.pic);
             formData.append("status", data.status);
-
-             
             try {
-                let item = MaincategoryStateData.find(x=>x.name?.toLocaleLowerCase()===data.name?.toLocaleLowerCase())
-                if(item){
-                    setErrorMessage({...errorMessage,name:'Maincategory With This Name Already Exist'})
+                let item = MaincategoryStateData.find(x => x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+                if (item) {
+                    setErrorMessage({ ...errorMessage, name: 'Maincategory With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                let response = await axios.post(
-                     `${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory`,
-                    formData
-                );
+                dispatch(createMaincategory(formData))
                 navigate("/admin/maincategory")
             }
             catch (error) {
@@ -93,13 +75,8 @@ export default function AdminMaincategorycreatePage() {
     }
 
     useEffect(() => {
-        (async () => {
-            let response = await axios.get(
-                `${import.meta.env.VITE_APP_BACKEND_SERVER}/maincategory`
-            );
-            setMaincategoryStateData(response.data)
-        })()
-    }, [])
+        dispatch(getMaincategory())
+    }, [MaincategoryStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
