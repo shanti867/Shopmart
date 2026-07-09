@@ -8,9 +8,9 @@ import TextValidator from '../../../FormValidators/TextValidator'
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getMaincategory, updateMaincategory } from "../../../Redux/ActionCreators/MaincategoryActionCreators"
+import { getSubcategory, updateSubcategory } from "../../../Redux/ActionCreators/SubcategoryActionCreators"
 
-export default function AdminMaincategoryUpdatePage() {
+export default function AdminSubcategoryUpdatePage() {
     let { id } = useParams()
 
     let [data, setData] = useState({
@@ -23,7 +23,7 @@ export default function AdminMaincategoryUpdatePage() {
         pic: ""
     })
     let [show, setShow] = useState(false)
-    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {
@@ -67,16 +67,16 @@ export default function AdminMaincategoryUpdatePage() {
 
 
             try {
-                let item = MaincategoryStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+                let item = SubcategoryStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
                 if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'Maincategory With This Name Already Exist' })
+                    setErrorMessage({ ...errorMessage, name: 'Subcategory With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                dispatch(updateMaincategory(id, formData))
-                // navigate("/admin/maincategory")
+                dispatch(updateSubcategory(id, formData))
+                // navigate("/admin/Subcategory")
                 setTimeout(() => {
-                    navigate("/admin/maincategory");
+                    navigate("/admin/subcategory");
                 }, 500);
             }
             catch (error) {
@@ -87,19 +87,19 @@ export default function AdminMaincategoryUpdatePage() {
 
     useEffect(() => {
         (() => {
-            dispatch(getMaincategory())
-            if (MaincategoryStateData.length) {
-                let item = MaincategoryStateData.find(x => x.id == id)
+            dispatch(getSubcategory())
+            if (SubcategoryStateData.length) {
+                let item = SubcategoryStateData.find(x => x.id == id)
                 if (item) {
                     setData({ ...data, ...item })
                 }
                 else {
-                    navigate("/admin/maincategory")
+                    navigate("/admin/subcategory")
                 }
             }
 
         })()
-    }, [MaincategoryStateData.length])
+    }, [SubcategoryStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -109,12 +109,12 @@ export default function AdminMaincategoryUpdatePage() {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Update Maincategory<Link to="/admin/maincategory"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
+                        <h5 className='bg-primary text-light text-center p-2'>Update Subcategory<Link to="/admin/subcategory"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
                                 <div className="col-12 mb-3">
                                     <label>Name*</label>
-                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Maincategory Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
+                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Subcategory Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 
