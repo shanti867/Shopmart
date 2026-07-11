@@ -1,22 +1,22 @@
 
-import { CREATE_MAINCATEGORY, DELETE_MAINCATEGORY, GET_MAINCATEGORY, UPDATE_MAINCATEGORY } from "../Constant"
+import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT, UPDATE_PRODUCT } from "../Constant"
 
-export function createMaincategory(data){
+export function createProduct(data){
     return{
-        type: CREATE_MAINCATEGORY,
+        type: CREATE_PRODUCT,
         payload: data
     }
 }
 
-export function getMaincategory(){
+export function getProduct(){
     return{
-        type: GET_MAINCATEGORY,
+        type: GET_PRODUCT,
     }
 }
 
-export function updateMaincategory(id, data){
+export function updateProduct(id, data){
     return{
-        type: UPDATE_MAINCATEGORY,
+        type: UPDATE_PRODUCT,
         payload: {
             id:id,
             data:data
@@ -24,9 +24,9 @@ export function updateMaincategory(id, data){
     }
 }
 
-export function deleteMaincategory(data){
+export function deleteProduct(data){
     return{
-        type: DELETE_MAINCATEGORY,
+        type: DELETE_PRODUCT,
         payload: data
     }
 }

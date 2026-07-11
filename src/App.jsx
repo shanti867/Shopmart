@@ -24,6 +24,14 @@ import AdminMaincategoryUpdatePage from './Pages/Admin/Maincategory/AdminMaincat
 import AdminSubcategoryPage from './Pages/Admin/Subcategory/AdminSubcategoryPage'
 import AdminSubcategorycreatePage from './Pages/Admin/Subcategory/AdminSubcategorycreatePage'
 import AdminSubcategoryUpdatePage from './Pages/Admin/Subcategory/AdminSubcategoryUpdatePage'
+
+import AdminBrandPage from './Pages/Admin/Brand/AdminBrandPage'
+import AdminBrandcreatePage from './Pages/Admin/Brand/AdminBrandcreatePage'
+import AdminBrandUpdatePage from './Pages/Admin/Brand/AdminBrandUpdatePage'
+
+import AdminFeaturePage from './Pages/Admin/Feature/AdminFeaturePage'
+import AdminFeaturecreatePage from './Pages/Admin/Feature/AdminFeaturecreatePage'
+import AdminFeatureUpdatePage from './Pages/Admin/Feature/AdminFeatureUpdatePage'
 export default function App() {
   return (
     <>
@@ -56,6 +64,10 @@ export default function App() {
           <Route path='/admin/subcategory' element={<AdminSubcategoryPage />} />
           <Route path='/admin/subcategory/create' element={<AdminSubcategorycreatePage />} />
           <Route path='/admin/subcategory/update/:id' element={<AdminSubcategoryUpdatePage />} />
+
+          <Route path='/admin/feature' element={<AdminFeaturePage />} />
+          <Route path='/admin/feature/create' element={<AdminFeaturecreatePage />} />
+          <Route path='/admin/feature/update/:id' element={<AdminFeatureUpdatePage />} />
         </Routes>
         <Footer />
       </BrowserRouter>

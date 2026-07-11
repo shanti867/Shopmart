@@ -8,9 +8,9 @@ import TextValidator from '../../../FormValidators/TextValidator'
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getSubcategory, updateSubcategory } from "../../../Redux/ActionCreators/SubcategoryActionCreators"
+import { getFeature, updateFeature } from "../../../Redux/ActionCreators/FeatureActionCreators"
 
-export default function AdminSubcategoryUpdatePage() {
+export default function AdminFeatureUpdatePage() {
     let { id } = useParams()
 
     let [data, setData] = useState({
@@ -23,7 +23,7 @@ export default function AdminSubcategoryUpdatePage() {
         pic: ""
     })
     let [show, setShow] = useState(false)
-    let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
+    let FeatureStateData = useSelector(state => state.FeatureStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {
@@ -67,18 +67,18 @@ export default function AdminSubcategoryUpdatePage() {
 
 
             try {
-                let item = SubcategoryStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+                let item = FeatureStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
                 if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'Subcategory With This Name Already Exist' })
+                    setErrorMessage({ ...errorMessage, name: 'Feature With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                dispatch(updateSubcategory(id, formData))
-                // navigate("/admin/Subcategory")
-setTimeout(() => {
-    navigate("/admin/subcategory");
-}, 500);
-              
+                dispatch(updateFeature(id, formData))
+                // navigate("/admin/Feature")
+
+                setTimeout(() => {
+                    navigate("/admin/feature");
+                }, 500);
             }
             catch (error) {
                 console.log(error);
@@ -88,19 +88,19 @@ setTimeout(() => {
 
     useEffect(() => {
         (() => {
-            dispatch(getSubcategory())
-            if (SubcategoryStateData.length) {
-                let item = SubcategoryStateData.find(x => x.id == id)
+            dispatch(getFeature())
+            if (FeatureStateData.length) {
+                let item = FeatureStateData.find(x => x.id == id)
                 if (item) {
                     setData({ ...data, ...item })
                 }
                 else {
-                    navigate("/admin/subcategory")
+                    navigate("/admin/feature")
                 }
             }
 
         })()
-    }, [SubcategoryStateData.length])
+    }, [FeatureStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -110,12 +110,12 @@ setTimeout(() => {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Update Subcategory<Link to="/admin/subcategory"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
+                        <h5 className='bg-primary text-light text-center p-2'>Update Feature<Link to="/admin/feature"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
                                 <div className="col-12 mb-3">
                                     <label>Name*</label>
-                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Subcategory Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
+                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Feature Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 

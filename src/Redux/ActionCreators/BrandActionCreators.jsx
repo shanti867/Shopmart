@@ -1,22 +1,22 @@
 
-import { CREATE_MAINCATEGORY, DELETE_MAINCATEGORY, GET_MAINCATEGORY, UPDATE_MAINCATEGORY } from "../Constant"
+import { CREATE_BRAND, DELETE_BRAND, GET_BRAND, UPDATE_BRAND } from "../Constant"
 
-export function createMaincategory(data){
+export function createBrand(data){
     return{
-        type: CREATE_MAINCATEGORY,
+        type: CREATE_BRAND,
         payload: data
     }
 }
 
-export function getMaincategory(){
+export function getBrand(){
     return{
-        type: GET_MAINCATEGORY,
+        type: GET_BRAND,
     }
 }
 
-export function updateMaincategory(id, data){
+export function updateBrand(id, data){
     return{
-        type: UPDATE_MAINCATEGORY,
+        type: UPDATE_BRAND,
         payload: {
             id:id,
             data:data
@@ -24,9 +24,9 @@ export function updateMaincategory(id, data){
     }
 }
 
-export function deleteMaincategory(data){
+export function deleteBrand(data){
     return{
-        type: DELETE_MAINCATEGORY,
+        type: DELETE_BRAND,
         payload: data
     }
 }

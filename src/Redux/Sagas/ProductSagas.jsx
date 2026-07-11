@@ -1,28 +1,27 @@
 import { put, takeEvery } from "redux-saga/effects"
-import {} from "../Constant"
 import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
-import { CREATE_MAINCATEGORY, CREATE_MAINCATEGORY_RED, DELETE_MAINCATEGORY, DELETE_MAINCATEGORY_RED, GET_MAINCATEGORY, GET_MAINCATEGORY_RED, UPDATE_MAINCATEGORY, UPDATE_MAINCATEGORY_RED } from "../Constant"
+import { CREATE_PRODUCT, CREATE_PRODUCT_RED, DELETE_PRODUCT, DELETE_PRODUCT_RED, GET_PRODUCT, GET_PRODUCT_RED, UPDATE_PRODUCT, UPDATE_PRODUCT_RED } from "../Constant"
 
 function* createSaga(action){        //worker
-    let response = yield createMultipartRecord("maincategory", action.payload)
-    yield put({type: CREATE_MAINCATEGORY_RED, payload: response})
+    let response = yield createMultipartRecord("product", action.payload)
+    yield put({type: CREATE_PRODUCT_RED, payload: response})
 }
 function* getSaga(){        //worker
-    let response = yield getRecord("maincategory")
-    yield put({type: GET_MAINCATEGORY_RED, payload: response})
+    let response = yield getRecord("product")
+    yield put({type: GET_PRODUCT_RED, payload: response})
 }
 function* updateSaga(action){        //worker
-    let response = yield updateMultipartRecord("maincategory", action.payload.id, action.payload.data)
-    yield put({type: UPDATE_MAINCATEGORY_RED, payload: response})
+    let response = yield updateMultipartRecord("product", action.payload.id, action.payload.data)
+    yield put({type: UPDATE_PRODUCT_RED, payload: response})
 }
 function* deleteSaga(action){        //worker
-    let response = yield deleteRecord("maincategory", action.payload.id)
-    yield put({type: DELETE_MAINCATEGORY_RED, payload: response})
+    let response = yield deleteRecord("product", action.payload.id)
+    yield put({type: DELETE_PRODUCT_RED, payload: response})
 }
 
 export default function* ProductSaga(){         
-    yield takeEvery(CREATE_MAINCATEGORY, createSaga)  //Watcher
-    yield takeEvery(GET_MAINCATEGORY, getSaga)        //Watcher
-    yield takeEvery(UPDATE_MAINCATEGORY, updateSaga)   //Watcher
-    yield takeEvery(DELETE_MAINCATEGORY, deleteSaga)   //Watcher
+    yield takeEvery(CREATE_PRODUCT, createSaga)  //Watcher
+    yield takeEvery(GET_PRODUCT, getSaga)        //Watcher
+    yield takeEvery(UPDATE_PRODUCT, updateSaga)   //Watcher
+    yield takeEvery(DELETE_PRODUCT, deleteSaga)   //Watcher
 }

@@ -1,19 +1,19 @@
-import { CREATE_MAINCATEGORY_RED, DELETE_MAINCATEGORY_RED, GET_MAINCATEGORY_RED, UPDATE_MAINCATEGORY_RED } from "../Constant"
-export default function MaincategoryReducer(state=[],action){
+import { CREATE_FEATURE_RED, DELETE_FEATURE_RED, GET_FEATURE_RED, UPDATE_FEATURE_RED } from "../Constant"
+export default function FeatureReducer(state=[],action){
     let index
     switch(action.type){
-        case CREATE_MAINCATEGORY_RED:
+        case CREATE_FEATURE_RED:
             return [...state,action.payload]
         
-        case GET_MAINCATEGORY_RED:
+        case GET_FEATURE_RED:
             return action.payload
 
-        case UPDATE_MAINCATEGORY_RED:
+        case UPDATE_FEATURE_RED:
             index = state.findIndex(x=>x.id == action.payload.id)
             state[index] = {...action.payload}
             return state
 
-        case DELETE_MAINCATEGORY_RED:
+        case DELETE_FEATURE_RED:
             return state.filter(x=>x.id != action.payload.id)
 
         default:

@@ -1,29 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import axios from "axios"
+
 import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ImageValidator from '../../../FormValidators/ImageValidator'
 import TextValidator from '../../../FormValidators/TextValidator'
 
-
 import { useDispatch, useSelector } from 'react-redux';
-import { getSubcategory, updateSubcategory } from "../../../Redux/ActionCreators/SubcategoryActionCreators"
-
-export default function AdminSubcategoryUpdatePage() {
-    let { id } = useParams()
-
+import { createBrand, getBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
+export default function AdminBrandcreatePage() {
     let [data, setData] = useState({
         name: "",
         pic: "",
         status: true
     })
     let [errorMessage, setErrorMessage] = useState({
-        name: "",
-        pic: ""
+        name: "Name Field is Mendatory",
+        pic: "Pic Field is Mendatory"
     })
     let [show, setShow] = useState(false)
-    let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
+    let BrandStateData = useSelector(state => state.BrandStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {
@@ -58,27 +54,19 @@ export default function AdminSubcategoryUpdatePage() {
             setShow(true)
         }
         else {
-
             let formData = new FormData();
-
             formData.append("name", data.name);
             formData.append("pic", data.pic);
             formData.append("status", data.status);
-
-
             try {
-                let item = SubcategoryStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+                let item = BrandStateData.find(x => x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
                 if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'Subcategory With This Name Already Exist' })
+                    setErrorMessage({ ...errorMessage, name: 'Brand With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                dispatch(updateSubcategory(id, formData))
-                // navigate("/admin/Subcategory")
-setTimeout(() => {
-    navigate("/admin/subcategory");
-}, 500);
-              
+                dispatch(createBrand(formData))
+                navigate("/admin/brand")
             }
             catch (error) {
                 console.log(error);
@@ -87,20 +75,9 @@ setTimeout(() => {
     }
 
     useEffect(() => {
-        (() => {
-            dispatch(getSubcategory())
-            if (SubcategoryStateData.length) {
-                let item = SubcategoryStateData.find(x => x.id == id)
-                if (item) {
-                    setData({ ...data, ...item })
-                }
-                else {
-                    navigate("/admin/subcategory")
-                }
-            }
+        dispatch(getBrand())
+    }, [BrandStateData.length])
 
-        })()
-    }, [SubcategoryStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -110,12 +87,12 @@ setTimeout(() => {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Update Subcategory<Link to="/admin/subcategory"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
+                        <h5 className='bg-primary text-light text-center p-2'>Create Brand<Link to="/admin/brand"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
                                 <div className="col-12 mb-3">
                                     <label>Name*</label>
-                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Subcategory Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
+                                    <input type="text" name="name" onChange={getInputData} placeholder='Brand Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 
@@ -127,14 +104,14 @@ setTimeout(() => {
 
                                 <div className="col-md-6 md-3">
                                     <label>Status*</label>
-                                    <select name="status" value={data.status ? "1" : "0"} onChange={getInputData} className='form-select border-primary'>
+                                    <select name="status" onChange={getInputData} className='form-select border-primary'>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <button type='submit' className='btn btn-primary w-100'>Update</button>
+                                    <button type='submit' className='btn btn-primary w-100'>Create</button>
                                 </div>
 
                             </div>

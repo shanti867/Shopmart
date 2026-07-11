@@ -1,5 +1,4 @@
 import { put, takeEvery } from "redux-saga/effects"
-import {} from "../Constant"
 import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
 import { CREATE_SUBCATEGORY, CREATE_SUBCATEGORY_RED, DELETE_SUBCATEGORY, DELETE_SUBCATEGORY_RED, GET_SUBCATEGORY, GET_SUBCATEGORY_RED, UPDATE_SUBCATEGORY, UPDATE_SUBCATEGORY_RED } from "../Constant"
 

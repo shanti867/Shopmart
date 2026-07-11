@@ -8,9 +8,9 @@ import TextValidator from '../../../FormValidators/TextValidator'
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getSubcategory, updateSubcategory } from "../../../Redux/ActionCreators/SubcategoryActionCreators"
+import { getBrand, updateBrand } from "../../../Redux/ActionCreators/BrandActionCreators"
 
-export default function AdminSubcategoryUpdatePage() {
+export default function AdminBrandUpdatePage() {
     let { id } = useParams()
 
     let [data, setData] = useState({
@@ -23,7 +23,7 @@ export default function AdminSubcategoryUpdatePage() {
         pic: ""
     })
     let [show, setShow] = useState(false)
-    let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
+    let BrandStateData = useSelector(state => state.BrandStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {
@@ -67,18 +67,18 @@ export default function AdminSubcategoryUpdatePage() {
 
 
             try {
-                let item = SubcategoryStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+                let item = BrandStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
                 if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'Subcategory With This Name Already Exist' })
+                    setErrorMessage({ ...errorMessage, name: 'Brand With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                dispatch(updateSubcategory(id, formData))
-                // navigate("/admin/Subcategory")
-setTimeout(() => {
-    navigate("/admin/subcategory");
-}, 500);
-              
+                dispatch(updateBrand(id, formData))
+                // navigate("/admin/Brand")
+
+                setTimeout(() => {
+                    navigate("/admin/brand");
+                }, 500);
             }
             catch (error) {
                 console.log(error);
@@ -88,19 +88,19 @@ setTimeout(() => {
 
     useEffect(() => {
         (() => {
-            dispatch(getSubcategory())
-            if (SubcategoryStateData.length) {
-                let item = SubcategoryStateData.find(x => x.id == id)
+            dispatch(getBrand())
+            if (BrandStateData.length) {
+                let item = BrandStateData.find(x => x.id == id)
                 if (item) {
                     setData({ ...data, ...item })
                 }
                 else {
-                    navigate("/admin/subcategory")
+                    navigate("/admin/brand")
                 }
             }
 
         })()
-    }, [SubcategoryStateData.length])
+    }, [BrandStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -110,12 +110,12 @@ setTimeout(() => {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Update Subcategory<Link to="/admin/subcategory"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
+                        <h5 className='bg-primary text-light text-center p-2'>Update Brand<Link to="/admin/brand"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
                                 <div className="col-12 mb-3">
                                     <label>Name*</label>
-                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Subcategory Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
+                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Brand Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 

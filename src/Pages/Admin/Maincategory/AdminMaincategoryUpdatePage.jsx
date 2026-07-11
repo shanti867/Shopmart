@@ -75,6 +75,7 @@ export default function AdminMaincategoryUpdatePage() {
                 }
                 dispatch(updateMaincategory(id, formData))
                 // navigate("/admin/maincategory")
+
                 setTimeout(() => {
                     navigate("/admin/maincategory");
                 }, 500);

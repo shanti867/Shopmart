@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from "axios"
+
 import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
 import { Link, useNavigate } from 'react-router-dom'
@@ -77,6 +77,7 @@ export default function AdminMaincategorycreatePage() {
     useEffect(() => {
         dispatch(getMaincategory())
     }, [MaincategoryStateData.length])
+
     return (
         <>
             <Breadcrum title="Admin" />

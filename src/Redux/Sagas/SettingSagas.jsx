@@ -1,5 +1,4 @@
 import { put, takeEvery } from "redux-saga/effects"
-import {} from "../Constant"
 import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
 import { CREATE_SETTING, CREATE_SETTING_RED, DELETE_SETTING, DELETE_SETTING_RED, GET_SETTING, GET_SETTING_RED, UPDATE_SETTING, UPDATE_SETTING_RED } from "../Constant"
 
