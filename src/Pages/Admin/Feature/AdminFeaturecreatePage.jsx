@@ -38,9 +38,7 @@ export default function AdminFeaturecreatePage() {
 
         setErrorMessage({
             ...errorMessage,
-            [name]: name === "pic"
-                ? ImageValidator(e)
-                : TextValidator(e)
+            [name]: TextValidator(e)
         });
     }
 
@@ -58,7 +56,7 @@ export default function AdminFeaturecreatePage() {
                     setShow(true)
                     return
                 }
-                dispatch(createFeature())
+                dispatch(createFeature(data))
                 navigate("/admin/feature")
             }
             catch (error) {

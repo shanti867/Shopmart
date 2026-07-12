@@ -49,7 +49,8 @@ export default function AdminFeaturePage() {
                                 <tr>
                                     <th>Id</th>
                                     <th>Name</th>
-                                    <th>Pic</th>
+                                    <th>Icon</th>
+                                    <th>Short Description</th>
                                     <th>Status</th>
                                     <th>Update</th>
                                     <th>Delete</th>
@@ -60,11 +61,8 @@ export default function AdminFeaturePage() {
                                     return <tr key={item.id}>
                                         <td>{item.featureId}</td>
                                         <td>{item.name}</td>
-                                        <td>
-                                            <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.pic}`} target='_blank'>
-                                            <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.pic}`} height={60} width={80}alt="" />
-                                            </Link>
-                                        </td>
+                                        <td><span className='fs-1' dangerouslySetInnerHTML={{__html:item.icon}}/></td>
+                                        <td>{item.shortDescription}</td>
                                         <td>{item.status ? "Active" : "Inactive"}</td>
                                         <td><Link to={`/admin/feature/update/${item.id}`} className='btn btn-primary'><i className='bi bi-pencil-square'></i></Link></td>
                                         <td><button className='btn btn-danger' onClick={()=>deleteRecord(item.id)}><i className='bi bi-x'></i></button></td>
