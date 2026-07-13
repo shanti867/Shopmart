@@ -32,6 +32,10 @@ import AdminBrandUpdatePage from './Pages/Admin/Brand/AdminBrandUpdatePage'
 import AdminFeaturePage from './Pages/Admin/Feature/AdminFeaturePage'
 import AdminFeaturecreatePage from './Pages/Admin/Feature/AdminFeaturecreatePage'
 import AdminFeatureUpdatePage from './Pages/Admin/Feature/AdminFeatureUpdatePage'
+
+import AdminFaqPage from './Pages/Admin/Faq/AdminFaqPage'
+import AdminFaqcreatePage from './Pages/Admin/Faq/AdminFaqcreatePage'
+import AdminFaqUpdatePage from './Pages/Admin/Faq/AdminFaqUpdatePage'
 export default function App() {
   return (
     <>
@@ -68,6 +72,10 @@ export default function App() {
           <Route path='/admin/feature' element={<AdminFeaturePage />} />
           <Route path='/admin/feature/create' element={<AdminFeaturecreatePage />} />
           <Route path='/admin/feature/update/:id' element={<AdminFeatureUpdatePage />} />
+
+          <Route path='/admin/faq' element={<AdminFaqPage />} />
+          <Route path='/admin/faq/create' element={<AdminFaqcreatePage />} />
+          <Route path='/admin/faq/update/:id' element={<AdminFaqUpdatePage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
