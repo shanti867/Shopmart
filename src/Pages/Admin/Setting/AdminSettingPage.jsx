@@ -1,38 +1,46 @@
 import React, { useEffect, useState } from 'react'
 
-import DataTable from 'datatables.net-dt'
-import "datatables.net-dt/css/dataTables.dataTables.min.css"
 import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
-import { Link } from 'react-router-dom'
-
-import {getFeature, deleteFeature} from "../../../Redux/ActionCreators/FeatureActionCreators"
+import { getSetting, createSetting, updateSetting } from "../../../Redux/ActionCreators/SettingActionCreators"
 import { useDispatch, useSelector } from 'react-redux';
 
-export default function AdminFeaturePage() {
-    let [data, setData] = useState([])
-    let FeatureStateData = useSelector(state=>state.FeatureStateData)
+export default function AdminSettingPage() {
+    let [data, setData] = useState({
+        siteName: "",
+        address: "",
+        map1: "",
+        map2: "",
+        email: "",
+        phone: "",
+        whatsapp: "",
+        facebook: "",
+        twitter: "",
+        instagram: "",
+        linkedin: "",
+        youtube: "",
+        privacyPolicy: "",
+        termsAndConditions: "",
+        refundPolicy: "",
+
+    })
+    let SettingStateData = useSelector(state => state.SettingStateData)
     let dispatch = useDispatch()
 
-    function deleteRecord(id){
-        if(window.confirm("Are You Sure To Delete This Record")){
-           dispatch(deleteFeature({id:id}))
-            setData(data.filter(x=>x.id!==id))
-        }
+    function getInputData(e){
+        let{name, value} = e.target 
+        setData({...data,[name]:value})
+    }
+    function postData(e){
+        e.preventDefault()
     }
     useEffect(() => {
-    let time = (() => {
-        dispatch(getFeature());
+        dispatch(getSetting());
 
-        if (FeatureStateData.length) {
-            setData(FeatureStateData);
-
-            return setTimeout(() => new DataTable("#myTable"), 500);
+        if (SettingStateData.length) {
+            setData({ ...data, ...SettingStateData[0] })
         }
-    })();
-
-    return () => clearTimeout(time);
-}, [FeatureStateData.length]);
+    }, [SettingStateData.length]);
     return (
         <>
             <Breadcrum title="Admin" />
@@ -42,35 +50,63 @@ export default function AdminFeaturePage() {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Feature<Link to="/admin/feature/create"><i className='bi bi-plus text-light float-end'></i></Link></h5>
-                       <div className="table-responsive">
-                         <table id='myTable' className='table table-bordered text-dark'>
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Icon</th>
-                                    <th>Short Description</th>
-                                    <th>Status</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.map(item => {
-                                    return <tr key={item.id}>
-                                        <td>{item.featureId}</td>
-                                        <td>{item.name}</td>
-                                        <td><span className='fs-1' dangerouslySetInnerHTML={{__html:item.icon}}/></td>
-                                        <td>{item.shortDescription}</td>
-                                        <td>{item.status ? "Active" : "Inactive"}</td>
-                                        <td><Link to={`/admin/feature/update/${item.id}`} className='btn btn-primary'><i className='bi bi-pencil-square'></i></Link></td>
-                                        <td><button className='btn btn-danger' onClick={()=>deleteRecord(item.id)}><i className='bi bi-x'></i></button></td>
-                                    </tr>
-                                })}
-                            </tbody>
-                        </table>
-                       </div>
+                        <h5 className='bg-primary text-light text-center p-2'>Setting</h5>
+                            <form onSubmit={postData}>
+                                <div className="row">
+                                    <div className="col-12 mb-3">
+                                        <label>Address</label>
+                                        <input type="text" name="address" onChange={getInputData} placeholder='Address' className='form-control border-primary'/>
+                                    </div>
+
+                                    <div className="col-12 mb-3">
+                                        <label>Map1</label>
+                                        <input type="url" name="map1" onChange={getInputData} placeholder='Map1' className='form-control border-primary'/>
+                                    </div>
+
+                                     <div className="col-12 mb-3">
+                                        <label>Map2</label>
+                                        <input type="url" name="map2" onChange={getInputData} placeholder='Map2' className='form-control border-primary'/>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label>Site Name</label>
+                                        <input type="text" name="siteName" onChange={getInputData} placeholder='Site Name' className='form-control border-primary'/>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label>Email Address</label>
+                                        <input type="email" name="email" onChange={getInputData} placeholder='Email Address' className='form-control border-primary'/>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label>Phone Number</label>
+                                        <input type="text" name="phone" onChange={getInputData} placeholder='Phone Number' className='form-control border-primary'/>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label>Whatsapp Number</label>
+                                        <input type="text" name="whatsapp" onChange={getInputData} placeholder='Whatsapp Number' className='form-control border-primary'/>
+                                    </div>
+                                    <div className="col-12 mb-3">
+                                        <label>Facebook Profile Page url</label>
+                                        <input type="url" name="facebook" onChange={getInputData} placeholder='Facebook Profile Page url' className='form-control border-primary'/>
+                                    </div>
+                                    <div className="col-12 mb-3">
+                                        <label>Twitter Profile Page url</label>
+                                        <input type="url" name="twitter" onChange={getInputData} placeholder='Twitter Profile Page url' className='form-control border-primary'/>
+                                    </div>
+                                    <div className="col-12 mb-3">
+                                        <label>Instagram Profile Page url</label>
+                                        <input type="url" name="instagram" onChange={getInputData} placeholder='Instagram Profile Page url' className='form-control border-primary'/>
+                                    </div>
+                                    <div className="col-12 mb-3">
+                                        <label>Linkeding Profile Page url</label>
+                                        <input type="url" name="linkeding" onChange={getInputData} placeholder='Linkeding Profile Page url' className='form-control border-primary'/>
+                                    </div>
+                                    <div className="col-12 mb-3">
+                                        <label>Youtube Profile Page url</label>
+                                        <input type="url" name="youtube" onChange={getInputData} placeholder='Youtube Profile Page url' className='form-control border-primary'/>
+                                    </div>
+                                </div>
+                            </form>
                     </div>
                 </div>
             </div>
