@@ -31,7 +31,7 @@ export default function SaleBanner() {
                                     Now</a>
                             </div>
                         </div>
-                    </div>
+                    </div>        
                 </div>
             </div>
         </div>

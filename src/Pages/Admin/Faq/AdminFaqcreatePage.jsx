@@ -90,7 +90,7 @@ export default function AdminFaqcreatePage() {
                                     <textarea name="answer" rows={3} onChange={getInputData} placeholder='Answer' className={`form-control ${show && errorMessage.answer ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.answer ? <p className='text-danger text-capitalize'>{errorMessage.answer}</p> : null}
                                 </div>
-                                <div className="col-md-6 md-3">
+                                <div className="col-md-12 mb-3">
                                     <label>Status*</label>
                                     <select name="status" onChange={getInputData} className='form-select border-primary'>
                                         <option value="1">Active</option>

@@ -69,6 +69,10 @@ export default function App() {
           <Route path='/admin/subcategory/create' element={<AdminSubcategorycreatePage />} />
           <Route path='/admin/subcategory/update/:id' element={<AdminSubcategoryUpdatePage />} />
 
+           <Route path='/admin/brand' element={<AdminBrandPage />} />
+          <Route path='/admin/brand/create' element={<AdminBrandcreatePage />} />
+          <Route path='/admin/brand/update/:id' element={<AdminBrandUpdatePage />} />
+
           <Route path='/admin/feature' element={<AdminFeaturePage />} />
           <Route path='/admin/feature/create' element={<AdminFeaturecreatePage />} />
           <Route path='/admin/feature/update/:id' element={<AdminFeatureUpdatePage />} />

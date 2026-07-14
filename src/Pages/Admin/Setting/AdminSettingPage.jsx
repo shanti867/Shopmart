@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react'
 
 import DataTable from 'datatables.net-dt'
@@ -7,33 +6,33 @@ import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
 import { Link } from 'react-router-dom'
 
-import {getFaq, deleteFaq} from "../../../Redux/ActionCreators/FaqActionCreators"
+import {getFeature, deleteFeature} from "../../../Redux/ActionCreators/FeatureActionCreators"
 import { useDispatch, useSelector } from 'react-redux';
 
-export default function AdminFaqPage() {
+export default function AdminFeaturePage() {
     let [data, setData] = useState([])
-    let FaqStateData = useSelector(state=>state.FaqStateData)
+    let FeatureStateData = useSelector(state=>state.FeatureStateData)
     let dispatch = useDispatch()
 
     function deleteRecord(id){
         if(window.confirm("Are You Sure To Delete This Record")){
-           dispatch(deleteFaq({id:id}))
+           dispatch(deleteFeature({id:id}))
             setData(data.filter(x=>x.id!==id))
         }
     }
     useEffect(() => {
     let time = (() => {
-        dispatch(getFaq());
+        dispatch(getFeature());
 
-        if (FaqStateData.length) {
-            setData(FaqStateData);
+        if (FeatureStateData.length) {
+            setData(FeatureStateData);
 
             return setTimeout(() => new DataTable("#myTable"), 500);
         }
     })();
 
     return () => clearTimeout(time);
-}, [FaqStateData.length]);
+}, [FeatureStateData.length]);
     return (
         <>
             <Breadcrum title="Admin" />
@@ -43,14 +42,15 @@ export default function AdminFaqPage() {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Faq<Link to="/admin/faq/create"><i className='bi bi-plus text-light float-end'></i></Link></h5>
+                        <h5 className='bg-primary text-light text-center p-2'>Feature<Link to="/admin/feature/create"><i className='bi bi-plus text-light float-end'></i></Link></h5>
                        <div className="table-responsive">
                          <table id='myTable' className='table table-bordered text-dark'>
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Question</th>
-                                    <th>Answer</th>
+                                    <th>Name</th>
+                                    <th>Icon</th>
+                                    <th>Short Description</th>
                                     <th>Status</th>
                                     <th>Update</th>
                                     <th>Delete</th>
@@ -59,11 +59,12 @@ export default function AdminFaqPage() {
                             <tbody>
                                 {data.map(item => {
                                     return <tr key={item.id}>
-                                        <td>{item.faqId}</td>
-                                        <td>{item.question}</td>
-                                        <td>{item.answer}</td>
+                                        <td>{item.featureId}</td>
+                                        <td>{item.name}</td>
+                                        <td><span className='fs-1' dangerouslySetInnerHTML={{__html:item.icon}}/></td>
+                                        <td>{item.shortDescription}</td>
                                         <td>{item.status ? "Active" : "Inactive"}</td>
-                                        <td><Link to={`/admin/faq/update/${item.id}`} className='btn btn-primary'><i className='bi bi-pencil-square'></i></Link></td>
+                                        <td><Link to={`/admin/feature/update/${item.id}`} className='btn btn-primary'><i className='bi bi-pencil-square'></i></Link></td>
                                         <td><button className='btn btn-danger' onClick={()=>deleteRecord(item.id)}><i className='bi bi-x'></i></button></td>
                                     </tr>
                                 })}

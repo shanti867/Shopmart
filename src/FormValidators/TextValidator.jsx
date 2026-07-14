@@ -5,6 +5,7 @@ export default function TextValidator(e) {
     switch (name) {
         case "name":
         case "icon":
+        case "question":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
             else if (value.length < 2 || value.length > 100)
@@ -13,10 +14,11 @@ export default function TextValidator(e) {
                 return ""
 
         case "shortDescription":
+        case "answer":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
-            else if (value.length < 20 || value.length > 300)
-                return name + " Field Length Must Be 20-300"
+            else if (value.length < 20 || value.length > 1000)
+                return name + " Field Length Must Be 20-1000"
             else
                 return ""
         default:

@@ -3,38 +3,35 @@ import axios from "axios"
 import Breadcrum from '../../../Components/Breadcrum'
 import AdminSidebar from '../../../Components/Admin/AdminSidebar'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import ImageValidator from '../../../FormValidators/ImageValidator'
 import TextValidator from '../../../FormValidators/TextValidator'
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getMaincategory, updateMaincategory } from "../../../Redux/ActionCreators/MaincategoryActionCreators"
+import { getFeature, updateFeature } from "../../../Redux/ActionCreators/FeatureActionCreators"
 
-export default function AdminMaincategoryUpdatePage() {
+export default function AdminFeatureUpdatePage() {
     let { id } = useParams()
 
     let [data, setData] = useState({
         name: "",
-        pic: "",
+        icon: "",
+        shortDescription:"",
         status: true
     })
     let [errorMessage, setErrorMessage] = useState({
         name: "",
-        pic: ""
+        icon: "",
+        shortDescription:""
     })
     let [show, setShow] = useState(false)
-    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let FeatureStateData = useSelector(state => state.FeatureStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {
 
         let name = e.target.name;
         let value;
-
-        if (name === "pic") {
-            value = e.target.files[0];
-        }
-        else if (name === "status") {
+        if (name === "status") {
             value = e.target.value === "1"
         }
         else {
@@ -45,9 +42,7 @@ export default function AdminMaincategoryUpdatePage() {
 
         setErrorMessage({
             ...errorMessage,
-            [name]: name === "pic"
-                ? ImageValidator(e)
-                : TextValidator(e)
+            [name]: TextValidator(e)
         });
     }
 
@@ -58,26 +53,18 @@ export default function AdminMaincategoryUpdatePage() {
             setShow(true)
         }
         else {
-
-            let formData = new FormData();
-
-            formData.append("name", data.name);
-            formData.append("pic", data.pic);
-            formData.append("status", data.status);
-
-
             try {
-                let item = MaincategoryStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
+                let item = FeatureStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
                 if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'Maincategory With This Name Already Exist' })
+                    setErrorMessage({ ...errorMessage, name: 'Feature With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                dispatch(updateMaincategory(id, formData))
-                // navigate("/admin/maincategory")
+                dispatch(updateFeature(id, data))
+                // navigate("/admin/Feature")
 
                 setTimeout(() => {
-                    navigate("/admin/maincategory");
+                    navigate("/admin/feature");
                 }, 500);
             }
             catch (error) {
@@ -88,19 +75,19 @@ export default function AdminMaincategoryUpdatePage() {
 
     useEffect(() => {
         (() => {
-            dispatch(getMaincategory())
-            if (MaincategoryStateData.length) {
-                let item = MaincategoryStateData.find(x => x.id == id)
+            dispatch(getFeature())
+            if (FeatureStateData.length) {
+                let item = FeatureStateData.find(x => x.id == id)
                 if (item) {
                     setData({ ...data, ...item })
                 }
                 else {
-                    navigate("/admin/maincategory")
+                    navigate("/admin/feature")
                 }
             }
 
         })()
-    }, [MaincategoryStateData.length])
+    }, [FeatureStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -110,19 +97,25 @@ export default function AdminMaincategoryUpdatePage() {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Update Maincategory<Link to="/admin/maincategory"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
+                        <h5 className='bg-primary text-light text-center p-2'>Update Feature<Link to="/admin/feature"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
                                 <div className="col-12 mb-3">
                                     <label>Name*</label>
-                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Maincategory Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
+                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Feature Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 
+                                <div className="col-12 mb-3">
+                                    <label>Short Description*</label>
+                                    <textarea name="shortDescription" value ={data.shortDescription} rows = {3} onChange={getInputData} placeholder='Feature Name' className={`form-control ${show && errorMessage.shortDescription ? 'border-danger' : 'border-primary'}`} />
+                                    {show && errorMessage.shortDescription ? <p className='text-danger text-capitalize'>{errorMessage.shortDescription}</p> : null}
+                                </div>
+
                                 <div className="col-md-6 mb-3">
-                                    <label>Pic*</label>
-                                    <input type="file" name="pic" onChange={getInputData} className={`form-control ${show && errorMessage.pic ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.pic ? <p className='text-danger text-capitalize'>{errorMessage.pic}</p> : null}
+                                    <label>Icon*</label>
+                                    <input type="text" name="icon" value={data.icon} onChange={getInputData} className={`form-control ${show && errorMessage.icon ? 'border-danger' : 'border-primary'}`} placeholder="Bootstrap Icon Tag like <i class='bi bi-list'></i>"/>
+                                    {show && errorMessage.icon ? <p className='text-danger text-capitalize'>{errorMessage.icon}</p> : null}
                                 </div>
 
                                 <div className="col-md-6 md-3">

@@ -75,10 +75,10 @@ export default function AdminSubcategoryUpdatePage() {
                 }
                 dispatch(updateSubcategory(id, formData))
                 // navigate("/admin/Subcategory")
-setTimeout(() => {
-    navigate("/admin/subcategory");
-}, 500);
-              
+                setTimeout(() => {
+                    navigate("/admin/subcategory");
+                }, 500);
+
             }
             catch (error) {
                 console.log(error);
