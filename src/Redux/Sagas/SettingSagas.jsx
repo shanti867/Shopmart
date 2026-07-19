@@ -1,9 +1,9 @@
 import { put, takeEvery } from "redux-saga/effects"
-import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
+import { createRecord, deleteRecord, getRecord, updateRecord } from "./Service/Index"
 import { CREATE_SETTING, CREATE_SETTING_RED, DELETE_SETTING, DELETE_SETTING_RED, GET_SETTING, GET_SETTING_RED, UPDATE_SETTING, UPDATE_SETTING_RED } from "../Constant"
 
 function* createSaga(action){        //worker
-    let response = yield createMultipartRecord("setting", action.payload)
+    let response = yield createRecord("setting", action.payload)
     yield put({type: CREATE_SETTING_RED, payload: response})
 }
 function* getSaga(){        //worker
@@ -11,7 +11,7 @@ function* getSaga(){        //worker
     yield put({type: GET_SETTING_RED, payload: response})
 }
 function* updateSaga(action){        //worker
-    let response = yield updateMultipartRecord("setting", action.payload.id, action.payload.data)
+    let response = yield updateRecord("setting", action.payload.id, action.payload.data)
     yield put({type: UPDATE_SETTING_RED, payload: response})
 }
 function* deleteSaga(action){        //worker
