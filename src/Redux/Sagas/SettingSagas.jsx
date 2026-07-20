@@ -10,7 +10,9 @@ function* getSaga(){        //worker
     let response = yield getRecord("setting")
     yield put({type: GET_SETTING_RED, payload: response})
 }
-function* updateSaga(action){        //worker
+function* updateSaga(action){  
+     console.log("Payload:", action.payload);
+    console.log("Payload.id:", action.payload.id);      //worker
     let response = yield updateRecord("setting", action.payload.id, action.payload.data)
     yield put({type: UPDATE_SETTING_RED, payload: response})
 }
