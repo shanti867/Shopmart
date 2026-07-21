@@ -59,15 +59,13 @@ export default function AdminSettingPage() {
     }
     function postData(e) {
         e.preventDefault()
-        console.log("Submit button clicked");
-
-        let item = {
+            let item = {
             ...data,
             privacyPolicy: privacyPolicy,
             termsAndConditions: termsAndConditions,
             refundPolicy: refundPolicy
         }
-        console.log("Item =", item);
+        
         if (SettingStateData.length) {
             dispatch(updateSetting(SettingStateData[0].id,item))
         }
@@ -176,6 +174,7 @@ export default function AdminSettingPage() {
                                         ref={editorRefPrivacyPolicy}
                                         onChange={handleChangePrivacyPolicy}
                                         value={privacyPolicy?? ""}
+                                        className="border-primary"
                                     />
                                 </div>
 
@@ -185,6 +184,7 @@ export default function AdminSettingPage() {
                                         ref={editorRefTermsAndConditions}
                                         onChange={handleChangeTermsAndConditions}
                                         value={termsAndConditions?? ""}
+                                        className="border-primary"
                                     />
                                 </div>
 
@@ -194,6 +194,7 @@ export default function AdminSettingPage() {
                                         ref={editorRefRefundPolicy}
                                         onChange={handleChangeRefundPolicy}
                                         value={refundPolicy?? ""}
+                                        className="border-primary"
                                     />
                                 </div>
 
