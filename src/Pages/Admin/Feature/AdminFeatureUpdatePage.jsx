@@ -7,14 +7,15 @@ import TextValidator from '../../../FormValidators/TextValidator'
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getFaq, updateFaq } from "../../../Redux/ActionCreators/FaqActionCreators"
+import { getFeature, updateFeature } from "../../../Redux/ActionCreators/FeatureActionCreators"
 
-export default function AdminFaqUpdatePage() {
+export default function AdminFeatureUpdatePage() {
     let { id } = useParams()
 
     let [data, setData] = useState({
-        question: "",
-        answer: "",
+        name: "",
+        icon: "",
+        shortDescription:"",
         status: true
     })
     let [errorMessage, setErrorMessage] = useState({
@@ -23,7 +24,7 @@ export default function AdminFaqUpdatePage() {
         shortDescription:""
     })
     let [show, setShow] = useState(false)
-    let FaqStateData = useSelector(state => state.FaqStateData)
+    let FeatureStateData = useSelector(state => state.FeatureStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {
@@ -53,17 +54,17 @@ export default function AdminFaqUpdatePage() {
         }
         else {
             try {
-                let item = FaqStateData.find(x => x.id != id && x.question?.toLocaleLowerCase() === data.question?.toLocaleLowerCase())
+                let item = FeatureStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
                 if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'Faq With This Question Already Exist' })
+                    setErrorMessage({ ...errorMessage, name: 'Feature With This Name Already Exist' })
                     setShow(true)
                     return
                 }
-                dispatch(updateFaq(id, data))
-                // navigate("/admin/Faq")
+                dispatch(updateFeature(id, data))
+                // navigate("/admin/Feature")
 
                 setTimeout(() => {
-                    navigate("/admin/faq");
+                    navigate("/admin/feature");
                 }, 500);
             }
             catch (error) {
@@ -74,19 +75,19 @@ export default function AdminFaqUpdatePage() {
 
     useEffect(() => {
         (() => {
-            dispatch(getFaq())
-            if (FaqStateData.length) {
-                let item = FaqStateData.find(x => x.id == id)
+            dispatch(getFeature())
+            if (FeatureStateData.length) {
+                let item = FeatureStateData.find(x => x.id == id)
                 if (item) {
                     setData({ ...data, ...item })
                 }
                 else {
-                    navigate("/admin/faq")
+                    navigate("/admin/feature")
                 }
             }
 
         })()
-    }, [FaqStateData.length])
+    }, [FeatureStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -96,22 +97,28 @@ export default function AdminFaqUpdatePage() {
                         <AdminSidebar />
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Update Faq<Link to="/admin/faq"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
+                        <h5 className='bg-primary text-light text-center p-2'>Update Feature<Link to="/admin/feature"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
                                 <div className="col-12 mb-3">
-                                    <label>Question*</label>
-                                    <input type="text" name="question" value={data.question} onChange={getInputData} placeholder='Question' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
+                                    <label>Name*</label>
+                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='Feature Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <label>Answer*</label>
-                                    <textarea name="answer" value = {data.answer} rows={3} onChange={getInputData} placeholder='Answer' className={`form-control ${show && errorMessage.answer ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.answer ? <p className='text-danger text-capitalize'>{errorMessage.answer}</p> : null}
+                                    <label>Short Description*</label>
+                                    <textarea name="shortDescription" value ={data.shortDescription} rows = {3} onChange={getInputData} placeholder='Feature Name' className={`form-control ${show && errorMessage.shortDescription ? 'border-danger' : 'border-primary'}`} />
+                                    {show && errorMessage.shortDescription ? <p className='text-danger text-capitalize'>{errorMessage.shortDescription}</p> : null}
                                 </div>
 
-                                <div className="col-md-12 mb-3">
+                                <div className="col-md-6 mb-3">
+                                    <label>Icon*</label>
+                                    <input type="text" name="icon" value={data.icon} onChange={getInputData} className={`form-control ${show && errorMessage.icon ? 'border-danger' : 'border-primary'}`} placeholder="Bootstrap Icon Tag like <i class='bi bi-list'></i>"/>
+                                    {show && errorMessage.icon ? <p className='text-danger text-capitalize'>{errorMessage.icon}</p> : null}
+                                </div>
+
+                                <div className="col-md-6 md-3">
                                     <label>Status*</label>
                                     <select name="status" value={data.status ? "1" : "0"} onChange={getInputData} className='form-select border-primary'>
                                         <option value="1">Active</option>
