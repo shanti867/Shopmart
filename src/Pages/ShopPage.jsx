@@ -173,7 +173,7 @@ export default function ShopPage() {
                                     <a href="#" className="btn btn-primary px-4 py-3 rounded-pill w-100">Vew More</a>
                                 </div>
                             </div>
-                            <a href="#">
+                            <div>
                                 <div className="position-relative">
                                     <img src="img/product-banner-2.jpg" className="img-fluid w-100 rounded" alt="Image" />
                                     <div className="text-center position-absolute d-flex flex-column align-items-center justify-content-center rounded p-4"
@@ -183,7 +183,7 @@ export default function ShopPage() {
                                         <a href="#" className="btn btn-primary rounded-pill px-4">Shop Now</a>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                             <div className="product-tags py-4">
                                 <h4 className="mb-3">PRODUCT TAGS</h4>
                                 <div className="product-tags-items bg-light rounded p-3">

@@ -9,9 +9,14 @@ import TextValidator from '../../../FormValidators/TextValidator'
 import { useDispatch, useSelector } from 'react-redux';
 // import { createProduct, getProduct } from '../../../Redux/ActionCreators/ProductActionCreators'
 import { createProduct, getProduct } from '../../../Redux/ActionCreators/ProductActionCreators '
+// import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators '
+import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
+// import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators '
+import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
 
 import RichTextEditor from '../../../rte/RichTextEditor'
 import { createStructuredContent, renderHTML } from '../../../rte/richTextEditorBridge';
+import { getMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
 export default function AdminProductcreatePage() {
     let editorRefDescription = useRef(null)
     let [description, setDescription] = useState("")
@@ -41,6 +46,9 @@ export default function AdminProductcreatePage() {
         pic: "Pic Field is Mendatory"
     })
     let [show, setShow] = useState(false)
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
+    let BrandStateData = useSelector(state => state.BrandStateData)
     let ProductStateData = useSelector(state => state.ProductStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -85,12 +93,6 @@ export default function AdminProductcreatePage() {
             formData.append("pic", data.pic);
             formData.append("status", data.status);
             try {
-                let item = ProductStateData.find(x => x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
-                if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'Product With This Name Already Exist' })
-                    setShow(true)
-                    return
-                }
                 dispatch(createProduct(formData))
                 navigate("/admin/product")
             }
@@ -101,17 +103,29 @@ export default function AdminProductcreatePage() {
     }
 
     useEffect(() => {
+        dispatch(getMaincategory())
+    }, [MaincategoryStateData.length])
+
+    useEffect(() => {
+        dispatch(getBrand())
+    }, [BrandStateData.length])
+
+    useEffect(() => {
+        dispatch(getSubcategory())
+    }, [SubcategoryStateData.length])
+
+    useEffect(() => {
         dispatch(getProduct());
         (() => {
-                    if (ProductStateData.length) {
-                        setData({ ...data, ...ProductStateData })
-        
-                        setTimeout(() => {
-                            const documentModel1 = createStructuredContent(ProductStateData.description ?? "")
-                            changePrivacyPolicy(documentModel1, ProductStateData.description ?? "")
-                        }, 500)
-                    }
-                })()
+            if (ProductStateData.length) {
+                setData({ ...data, ...ProductStateData })
+
+                setTimeout(() => {
+                    const documentModel1 = createStructuredContent(ProductStateData.description ?? "")
+                    changePrivacyPolicy(documentModel1, ProductStateData.description ?? "")
+                }, 500)
+            }
+        })()
 
     }, [ProductStateData.length])
 
@@ -133,12 +147,21 @@ export default function AdminProductcreatePage() {
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 
+                                <div className="col-xl-3 col-md-3 mb-3">
+                                    <label>Maincategory*</label>
+                                    <select name="maincategory" onChange={getInputData} className='form-select border-primary'>
+                                        {MaincategoryStateData.map((item)=>{
+                                            return <option key = {item.id} value={item.id}>{item.name}</option>
+                                        })}
+                                    </select>
+                                </div>
+
                                 <div className="col-12 mb-3">
                                     <label>Description</label>
                                     <RichTextEditor
                                         ref={editorRefDescription}
                                         onChange={handleChangeDescription}
-                                        value={description?? ""}
+                                        value={description ?? ""}
                                         className="border-primary"
                                     />
                                 </div>
