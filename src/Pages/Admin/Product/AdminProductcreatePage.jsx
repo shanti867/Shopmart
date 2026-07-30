@@ -7,16 +7,17 @@ import ImageValidator from '../../../FormValidators/ImageValidator'
 import TextValidator from '../../../FormValidators/TextValidator'
 
 import { useDispatch, useSelector } from 'react-redux';
-// import { createProduct, getProduct } from '../../../Redux/ActionCreators/ProductActionCreators'
+
 import { createProduct, getProduct } from '../../../Redux/ActionCreators/ProductActionCreators '
-// import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators '
 import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
-// import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators '
 import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
 
 import RichTextEditor from '../../../rte/RichTextEditor'
 import { createStructuredContent, renderHTML } from '../../../rte/richTextEditorBridge';
 import { getMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
+
+const colors = ["Black", "White", "Blue", "Red", "Green", "Gray", "Pink", "Yellow", "Magenta", "purple", "Orange", "N/A"]
+const sizes = ["XXL", "XL", "L", "MD", "SM", "XS", "NB", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "N/A"]
 export default function AdminProductcreatePage() {
     let editorRefDescription = useRef(null)
     let [description, setDescription] = useState("")
@@ -43,7 +44,13 @@ export default function AdminProductcreatePage() {
     }
     let [errorMessage, setErrorMessage] = useState({
         name: "Name Field is Mendatory",
+        basePrice: "Base Price Field is Mendatory",
+        discount: "Discount Field is Mendatory",
+        stockQuantity: "Stock Quantity Field is Mendatory",
+        color: "Please Select Atleast one color",
+        size: "Please Select Atleast one size",
         pic: "Pic Field is Mendatory"
+
     })
     let [show, setShow] = useState(false)
     let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
@@ -52,15 +59,27 @@ export default function AdminProductcreatePage() {
     let ProductStateData = useSelector(state => state.ProductStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
+
+    function getInputCheckbox(name, value) {
+        let arr = data[name]
+        if (arr.includes(value)) {
+            arr = arr.filter(x => x !== value)
+        }
+        else {
+            arr.push(value)
+        }
+        setData({ ...data, [name]: arr })
+        setErrorMessage({ ...errorMessage, [name]: arr.length === 0 ? `Please Select Atleast One ${name}` : "" })
+    }
     function getInputData(e) {
 
         let name = e.target.name;
         let value;
 
         if (name === "pic") {
-            value = e.target.files[0];
+            value = e.target.files
         }
-        else if (name === "status") {
+        else if (name === "status" || name === "stock") {
             value = e.target.value === "1"
         }
         else {
@@ -79,21 +98,32 @@ export default function AdminProductcreatePage() {
 
     function postData(e) {
         e.preventDefault()
-        let item = {
-            ...data,
-            description: description,
-        }
+
         let error = Object.values(errorMessage).find(x => x != "")
         if (error) {
             setShow(true)
         }
         else {
-            let formData = new FormData();
-            formData.append("name", data.name);
-            formData.append("pic", data.pic);
-            formData.append("status", data.status);
+            let formData = new FormData()
+            formData.append("name", data.name)
+            formData.append("pic", data.pic)
+            formData.append("status", data.status)
+            let bp = parseInt(data.basePrice)
+            let d = parseInt(data.discount)
+            let fp = parseInt(bp - bp * d / 100)
             try {
-                dispatch(createProduct(formData))
+                dispatch(createProduct({
+                    formData,
+                    ...data,
+                    maincategory: data.maincategory || MaincategoryStateData[0].name,
+                    subcategory: data.subcategory || SubcategoryStateData[0].name,
+                    brand: data.brand || BrandStateData[0].name,
+                    basePrice: bp, 
+                    discount: d,
+                    finalPrice: fp,
+                    stockQuantity: stockQuantity,
+                    description: description
+                }))
                 navigate("/admin/product")
             }
             catch (error) {
@@ -150,14 +180,90 @@ export default function AdminProductcreatePage() {
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Maincategory*</label>
                                     <select name="maincategory" onChange={getInputData} className='form-select border-primary'>
-                                        {MaincategoryStateData.map((item)=>{
-                                            return <option key = {item.id} value={item.id}>{item.name}</option>
+                                        {MaincategoryStateData.filter(x => x.status).map((item) => {
+                                            return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
                                     </select>
                                 </div>
 
+                                <div className="col-xl-3 col-md-3 mb-3">
+                                    <label>Subcategory*</label>
+                                    <select name="subcategory" onChange={getInputData} className='form-select border-primary'>
+                                        {SubcategoryStateData.filter(x => x.status).map((item) => {
+                                            return <option key={item.id} value={item.id}>{item.name}</option>
+                                        })}
+                                    </select>
+                                </div>
+
+                                <div className="col-xl-3 col-md-3 mb-3">
+                                    <label>Brand*</label>
+                                    <select name="brand" onChange={getInputData} className='form-select border-primary'>
+                                        {BrandStateData.filter(x => x.status).map((item) => {
+                                            return <option key={item.id} value={item.id}>{item.name}</option>
+                                        })}
+                                    </select>
+                                </div>
+
+                                <div className="col-xl-3 col-md-3 mb-3">
+                                    <label>Stock*</label>
+                                    <select name="stock" onChange={getInputData} className='form-select border-primary'>
+                                        <option value="1">In Stock</option>
+                                        <option value="0">Out Of Stock</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-md-4 mb-3">
+                                    <label>Base Price*</label>
+                                    <input type="number" name="basePrice" onChange={getInputData}
+                                        placeholder='Product Base Price' className={`form-control 
+                                     ${show && errorMessage.basePrice ? 'border-danger' : 'border-primary'}`} />
+                                    {show && errorMessage.basePrice ? <p className='text-danger text-capitalize'>{errorMessage.basePrice}</p> : null}
+                                </div>
+
+                                <div className="col-md-4 mb-3">
+                                    <label>Discount*</label>
+                                    <input type="number" name="discount" onChange={getInputData}
+                                        placeholder='Product Discount' className={`form-control 
+                                     ${show && errorMessage.discount ? 'border-danger' : 'border-primary'}`} />
+                                    {show && errorMessage.discount ? <p className='text-danger text-capitalize'>{errorMessage.discount}</p> : null}
+                                </div>
+
+                                <div className="col-md-4 mb-3">
+                                    <label>Stock Quantity*</label>
+                                    <input type="number" name="stockQuantity" onChange={getInputData}
+                                        placeholder='Product Stock Quantity' className={`form-control 
+                                     ${show && errorMessage.stockQuantity ? 'border-danger' : 'border-primary'}`} />
+                                    {show && errorMessage.stockQuantity ? <p className='text-danger text-capitalize'>{errorMessage.stockQuantity}</p> : null}
+                                </div>
+
                                 <div className="col-12 mb-3">
-                                    <label>Description</label>
+                                    <label>Color*</label>
+                                    <div className="border border-primary rounded m-1 row">
+                                        {colors.map((item, index) => {
+                                            return <div key={index} className='col-md-2 col-3 my-2'>
+                                                <label htmlFor={item} style={{ display: "inline-block", width: 60 }}>{item}</label>
+                                                <input type="checkbox" onChange={() => getInputCheckbox('color', item)} checked={data?.color?.includes(item)} name={item} id={item} className='ms-2' />
+                                            </div>
+                                        })}
+                                    </div>
+                                    {show && errorMessage.color ? <p className='text-danger text-capitalize'>{errorMessage.color}</p> : null}
+                                </div>
+
+                                <div className="col-12 mb-3">
+                                    <label>Size*</label>
+                                    <div className="border border-primary rounded m-1 row">
+                                        {sizes.map((item, index) => {
+                                            return <div key={index} className='col-md-2 col-3 my-2'>
+                                                <label htmlFor={item} style={{ display: "inline-block", width: 60 }}>{item}</label>
+                                                <input type="checkbox" onChange={() => getInputCheckbox('size', item)} checked={data?.size?.includes(item)} name={item} id={item} className='ms-2' />
+                                            </div>
+                                        })}
+                                    </div>
+                                    {show && errorMessage.size ? <p className='text-danger text-capitalize'>{errorMessage.size}</p> : null}
+                                </div>
+
+                                <div className="col-12 mb-3">
+                                    <label>Description*</label>
                                     <RichTextEditor
                                         ref={editorRefDescription}
                                         onChange={handleChangeDescription}
@@ -165,9 +271,10 @@ export default function AdminProductcreatePage() {
                                         className="border-primary"
                                     />
                                 </div>
+
                                 <div className="col-md-6 mb-3">
                                     <label>Pic*</label>
-                                    <input type="file" name="pic" onChange={getInputData} className={`form-control ${show && errorMessage.pic ? 'border-danger' : 'border-primary'}`} />
+                                    <input type="file" name="pic" multiple onChange={getInputData} className={`form-control ${show && errorMessage.pic ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.pic ? <p className='text-danger text-capitalize'>{errorMessage.pic}</p> : null}
                                 </div>
 

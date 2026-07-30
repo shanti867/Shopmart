@@ -83,11 +83,11 @@ export default function Footer() {
                                     </div>
                                 </div>
                                 <div className='mt-3'>
-                                    <a href={settingData.facebook} target='_blank' className="me-2"><i className='fs-3 me-2 bi bi-facebook'></i></a>
-                                    <a href={settingData.twitter} target='_blank' className="me-2"><i className='fs-3 me-2 bi bi-twitter'></i></a>
-                                    <a href={settingData.youtube} target='_blank' className="me-2"><i className='fs-3 me-2 bi bi-youtube'></i></a>
-                                    <a href={settingData.linkedin} target='_blank' className="me-2"><i className='fs-3 me-2 bi bi-linkedin'></i></a>
-                                    <a href={settingData.instagram} target='_blank' className="me-2"><i className='fs-3 me-2 bi bi-instagram'></i></a>
+                                    <a href={settingData.facebook} target='_blank' className="text-light me-2"><i className='fs-3 me-2 bi bi-facebook'></i></a>
+                                    <a href={settingData.twitter} target='_blank' className="text-light me-2"><i className='fs-3 me-2 bi bi-twitter'></i></a>
+                                    <a href={settingData.youtube} target='_blank' className="text-light me-2"><i className='fs-3 me-2 bi bi-youtube'></i></a>
+                                    <a href={settingData.linkedin} target='_blank' className="text-light me-2"><i className='fs-3 me-2 bi bi-linkedin'></i></a>
+                                    <a href={settingData.instagram} target='_blank' className="text-light me-2"><i className='fs-3 me-2 bi bi-instagram'></i></a>
                                 </div>
                             </div>
                         </div>
