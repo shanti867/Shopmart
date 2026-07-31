@@ -8,7 +8,7 @@ import TextValidator from '../../../FormValidators/TextValidator'
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { createProduct, getProduct } from '../../../Redux/ActionCreators/ProductActionCreators '
+import { createProduct } from '../../../Redux/ActionCreators/ProductActionCreators '
 import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
 import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
 
@@ -33,7 +33,7 @@ export default function AdminProductcreatePage() {
         finalPrice: 0,
         stock: true,
         stockQuantity: 0,
-        pic: "",
+        pic: [],
         status: true
     })
     function changeDescription(documentModel, nextHtml) {
@@ -106,8 +106,25 @@ export default function AdminProductcreatePage() {
         else {
             let formData = new FormData()
             formData.append("name", data.name)
-            formData.append("pic", data.pic)
+            data.pic.forEach(x=>{
+                formData.append("pic",x)
+            })
             formData.append("status", data.status)
+            formData.append("maincategory", data.maincategory || MaincategoryStateData[0].id)
+            formData.append("subcategory", data.subcategory || SubcategoryStateData[0].id)
+            formData.append("brand", data.brand || BrandStateData[0].id)
+            formData.append("basePrice", bp)
+            formData.append("discount", d)
+            formData.append("finalPrice", fp)
+            formData.append("stock", data.stock)
+            formData.append("stockQuantity", stockQuantity)
+            data.color.forEach(x=>{
+                formData.append("color", x)
+            })
+            data.size.forEach(x=>{
+                formData.append("size", x)
+            })
+            formData.append("description", description)
             let bp = parseInt(data.basePrice)
             let d = parseInt(data.discount)
             let fp = parseInt(bp - bp * d / 100)
@@ -115,9 +132,6 @@ export default function AdminProductcreatePage() {
                 dispatch(createProduct({
                     formData,
                     ...data,
-                    maincategory: data.maincategory || MaincategoryStateData[0].name,
-                    subcategory: data.subcategory || SubcategoryStateData[0].name,
-                    brand: data.brand || BrandStateData[0].name,
                     basePrice: bp, 
                     discount: d,
                     finalPrice: fp,
@@ -275,7 +289,9 @@ export default function AdminProductcreatePage() {
                                 <div className="col-md-6 mb-3">
                                     <label>Pic*</label>
                                     <input type="file" name="pic" multiple onChange={getInputData} className={`form-control ${show && errorMessage.pic ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.pic ? <p className='text-danger text-capitalize'>{errorMessage.pic}</p> : null}
+                                    {show && errorMessage.pic ? errorMessage.pic?.split("|").map((item,index)=>{
+                                        return<p className='text-danger text-capitalize' key={index}>{item}</p> 
+                                    }): null}
                                 </div>
 
                                 <div className="col-md-6 md-3">
