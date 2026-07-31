@@ -12,6 +12,7 @@ import { createProduct } from '../../../Redux/ActionCreators/ProductActionCreato
 import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
 import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
 
+
 import RichTextEditor from '../../../rte/RichTextEditor'
 import { createStructuredContent, renderHTML } from '../../../rte/richTextEditorBridge';
 import { getMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
@@ -25,7 +26,7 @@ export default function AdminProductcreatePage() {
         name: "",
         maincategory: "",
         subcategory: "",
-        Product: "",
+        brand: "",
         color: [],
         size: [],
         basePrice: 0,
@@ -77,7 +78,7 @@ export default function AdminProductcreatePage() {
         let value;
 
         if (name === "pic") {
-            value = e.target.files
+            value = Array.from(e.target.files)
         }
         else if (name === "status" || name === "stock") {
             value = e.target.value === "1"
@@ -104,20 +105,23 @@ export default function AdminProductcreatePage() {
             setShow(true)
         }
         else {
+            let bp = parseInt(data.basePrice)
+            let d = parseInt(data.discount)
+            let fp = parseInt(bp - (bp * d) / 100)
             let formData = new FormData()
             formData.append("name", data.name)
             data.pic.forEach(x=>{
                 formData.append("pic",x)
             })
             formData.append("status", data.status)
-            formData.append("maincategory", data.maincategory || MaincategoryStateData[0].id)
-            formData.append("subcategory", data.subcategory || SubcategoryStateData[0].id)
-            formData.append("brand", data.brand || BrandStateData[0].id)
+            formData.append("maincategory", data.maincategory || MaincategoryStateData[0]?.id)
+            formData.append("subcategory", data.subcategory || SubcategoryStateData[0]?.id)
+            formData.append("brand", data.brand || BrandStateData[0]?.id)
             formData.append("basePrice", bp)
             formData.append("discount", d)
             formData.append("finalPrice", fp)
             formData.append("stock", data.stock)
-            formData.append("stockQuantity", stockQuantity)
+            formData.append("stockQuantity", data.stockQuantity)
             data.color.forEach(x=>{
                 formData.append("color", x)
             })
@@ -125,9 +129,7 @@ export default function AdminProductcreatePage() {
                 formData.append("size", x)
             })
             formData.append("description", description)
-            let bp = parseInt(data.basePrice)
-            let d = parseInt(data.discount)
-            let fp = parseInt(bp - bp * d / 100)
+            
             try {
                 dispatch(createProduct({
                     formData,
@@ -135,7 +137,7 @@ export default function AdminProductcreatePage() {
                     basePrice: bp, 
                     discount: d,
                     finalPrice: fp,
-                    stockQuantity: stockQuantity,
+                    stockQuantity: data.stockQuantity,
                     description: description
                 }))
                 navigate("/admin/product")
@@ -158,20 +160,20 @@ export default function AdminProductcreatePage() {
         dispatch(getSubcategory())
     }, [SubcategoryStateData.length])
 
-    useEffect(() => {
-        dispatch(getProduct());
-        (() => {
-            if (ProductStateData.length) {
-                setData({ ...data, ...ProductStateData })
+    // useEffect(() => {
+    //     dispatch(getProduct());
+    //     (() => {
+    //         if (ProductStateData.length) {
+    //             setData({ ...data, ...ProductStateData })
 
-                setTimeout(() => {
-                    const documentModel1 = createStructuredContent(ProductStateData.description ?? "")
-                    changePrivacyPolicy(documentModel1, ProductStateData.description ?? "")
-                }, 500)
-            }
-        })()
+    //             setTimeout(() => {
+    //                 const documentModel1 = createStructuredContent(ProductStateData.description ?? "")
+    //                 changeDescription(documentModel1, ProductStateData.description ?? "")
+    //             }, 500)
+    //         }
+    //     })()
 
-    }, [ProductStateData.length])
+    // }, [ProductStateData.length])
 
     return (
         <>
