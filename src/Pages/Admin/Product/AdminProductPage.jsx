@@ -84,8 +84,8 @@ export default function AdminProductPage() {
                                             <td>
                                                 <div style={{width:350}}>
                                                     {item.pic?.map((p, index) => {
-                                                        return <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}${p}`} target='_blank'>
-                                                            <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${p}`} className='m-1' height={60} width={80} alt="" />
+                                                        return <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${p}`} target='_blank'>
+                                                            <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${p}`} className='m-1' height={60} width={80} alt="" />
                                                         </Link>
                                                     })}
                                                 </div>

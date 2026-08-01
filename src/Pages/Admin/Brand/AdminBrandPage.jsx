@@ -61,8 +61,8 @@ export default function AdminBrandPage() {
                                         <td>{item.brandId}</td>
                                         <td>{item.name}</td>
                                         <td>
-                                            <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.pic}`} target='_blank'>
-                                            <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.pic}`} height={60} width={80}alt="" />
+                                            <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/brand/${item.pic}`} target='_blank'>
+                                            <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/brand/${item.pic}`} height={60} width={80}alt="" />
                                             </Link>
                                         </td>
                                         <td>{item.status ? "Active" : "Inactive"}</td>

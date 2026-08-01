@@ -1,6 +1,6 @@
 import { put, takeEvery } from "redux-saga/effects"
 import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
-import { CREATE_SUBCATEGORY, CREATE_SUBCATEGORY_RED, DELETE_SUBCATEGORY, DELETE_SUBCATEGORY_RED, GET_SUBCATEGORY, GET_SUBCATEGORY_RED, UPDATE_SUBCATEGORY, UPDATE_SUBCATEGORY_RED } from "../Constant"
+import { CREATE_SUBCATEGORY, CREATE_SUBCATEGORY_RED, DELETE_SUBCATEGORY, DELETE_SUBCATEGORY_RED, GET_SUBCATEGORY, GET_SUBCATEGORY_RED, GET_ACTIVE_SUBCATEGORY, UPDATE_SUBCATEGORY, UPDATE_SUBCATEGORY_RED } from "../Constant"
 
 function* createSaga(action){        //worker
     let response = yield createMultipartRecord("subcategory", action.payload)
@@ -8,6 +8,10 @@ function* createSaga(action){        //worker
 }
 function* getSaga(){        //worker
     let response = yield getRecord("subcategory")
+    yield put({type: GET_SUBCATEGORY_RED, payload: response})
+}
+function* getActiveSaga(){        //worker
+    let response = yield getRecord("subcategory/active")
     yield put({type: GET_SUBCATEGORY_RED, payload: response})
 }
 function* updateSaga(action){        //worker
@@ -21,7 +25,8 @@ function* deleteSaga(action){        //worker
 
 export default function* SubcategorySaga(){         
     yield takeEvery(CREATE_SUBCATEGORY, createSaga)  //Watcher
-    yield takeEvery(GET_SUBCATEGORY, getSaga)        //Watcher
+    yield takeEvery(GET_SUBCATEGORY, getSaga) 
+    yield takeEvery(GET_ACTIVE_SUBCATEGORY, getActiveSaga)        //Watcher
     yield takeEvery(UPDATE_SUBCATEGORY, updateSaga)   //Watcher
     yield takeEvery(DELETE_SUBCATEGORY, deleteSaga)   //Watcher
 }

@@ -1,5 +1,5 @@
 
-import { CREATE_SUBCATEGORY, DELETE_SUBCATEGORY, GET_SUBCATEGORY, UPDATE_SUBCATEGORY } from "../Constant"
+import { CREATE_SUBCATEGORY, DELETE_SUBCATEGORY, GET_SUBCATEGORY, UPDATE_SUBCATEGORY, GET_ACTIVE_SUBCATEGORY } from "../Constant"
 
 export function createSubcategory(data){
     return{
@@ -12,6 +12,11 @@ export function getSubcategory(){
     return{
         type: GET_SUBCATEGORY,
     }
+}
+export function getActiveSubcategory() {
+    return {
+        type: GET_ACTIVE_SUBCATEGORY
+    };
 }
 
 export function updateSubcategory(id, data){

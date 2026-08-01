@@ -11,9 +11,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { getProduct, updateProduct } from "../../../Redux/ActionCreators/ProductActionCreators"
 
 import { getProduct, updateProduct } from '../../../Redux/ActionCreators/ProductActionCreators '
-import { getMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
-import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
-import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
+import { getActiveMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
+import { getActiveSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
+import { getActiveBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
 import RichTextEditor from '../../../rte/RichTextEditor'
 import { createStructuredContent, renderHTML } from '../../../rte/richTextEditorBridge';
 
@@ -214,15 +214,15 @@ export default function AdminProductUpdatePage() {
     }, [ProductStateData.length])
 
     useEffect(() => {
-        dispatch(getMaincategory())
+        dispatch(getActiveMaincategory())
     }, [MaincategoryStateData.length])
 
     useEffect(() => {
-        dispatch(getBrand())
+        dispatch(getActiveBrand())
     }, [BrandStateData.length])
 
     useEffect(() => {
-        dispatch(getSubcategory())
+        dispatch(getActiveSubcategory())
     }, [SubcategoryStateData.length])
     return (
         <>

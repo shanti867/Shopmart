@@ -9,13 +9,13 @@ import TextValidator from '../../../FormValidators/TextValidator'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { createProduct } from '../../../Redux/ActionCreators/ProductActionCreators '
-import { getSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
-import { getBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
+import { getActiveSubcategory } from '../../../Redux/ActionCreators/SubcategoryActionCreators'
+import { getActiveBrand } from '../../../Redux/ActionCreators/BrandActionCreators'
 
 
 import RichTextEditor from '../../../rte/RichTextEditor'
 import { createStructuredContent, renderHTML } from '../../../rte/richTextEditorBridge';
-import { getMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
+import { getActiveMaincategory } from '../../../Redux/ActionCreators/MaincategoryActionCreators'
 
 const colors = ["Black", "White", "Blue", "Red", "Green", "Gray", "Pink", "Yellow", "Magenta", "purple", "Orange", "N/A"]
 const sizes = ["XXL", "XL", "L", "MD", "SM", "XS", "NB", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "N/A"]
@@ -57,7 +57,7 @@ export default function AdminProductcreatePage() {
     let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
     let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
     let BrandStateData = useSelector(state => state.BrandStateData)
-    let ProductStateData = useSelector(state => state.ProductStateData)
+    // let ProductStateData = useSelector(state => state.ProductStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
 
@@ -149,15 +149,15 @@ export default function AdminProductcreatePage() {
     }
 
     useEffect(() => {
-        dispatch(getMaincategory())
+        dispatch(getActiveMaincategory())
     }, [MaincategoryStateData.length])
 
     useEffect(() => {
-        dispatch(getBrand())
+        dispatch(getActiveBrand())
     }, [BrandStateData.length])
 
     useEffect(() => {
-        dispatch(getSubcategory())
+        dispatch(getActiveSubcategory())
     }, [SubcategoryStateData.length])
 
     // useEffect(() => {
@@ -196,7 +196,7 @@ export default function AdminProductcreatePage() {
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Maincategory*</label>
                                     <select name="maincategory" onChange={getInputData} className='form-select border-primary'>
-                                        {MaincategoryStateData.filter(x => x.status).map((item) => {
+                                        {MaincategoryStateData.map((item) => {
                                             return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
                                     </select>
@@ -205,7 +205,7 @@ export default function AdminProductcreatePage() {
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Subcategory*</label>
                                     <select name="subcategory" onChange={getInputData} className='form-select border-primary'>
-                                        {SubcategoryStateData.filter(x => x.status).map((item) => {
+                                        {SubcategoryStateData.map((item) => {
                                             return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
                                     </select>
@@ -214,7 +214,7 @@ export default function AdminProductcreatePage() {
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Brand*</label>
                                     <select name="brand" onChange={getInputData} className='form-select border-primary'>
-                                        {BrandStateData.filter(x => x.status).map((item) => {
+                                        {BrandStateData.map((item) => {
                                             return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
                                     </select>

@@ -1,5 +1,5 @@
 
-import { CREATE_MAINCATEGORY, DELETE_MAINCATEGORY, GET_MAINCATEGORY, UPDATE_MAINCATEGORY } from "../Constant"
+import { CREATE_MAINCATEGORY, DELETE_MAINCATEGORY, GET_MAINCATEGORY, UPDATE_MAINCATEGORY, GET_ACTIVE_MAINCATEGORY } from "../Constant"
 
 export function createMaincategory(data){
     return{
@@ -12,6 +12,12 @@ export function getMaincategory(){
     return{
         type: GET_MAINCATEGORY,
     }
+}
+
+export function getActiveMaincategory() {
+    return {
+        type: GET_ACTIVE_MAINCATEGORY
+    };
 }
 
 export function updateMaincategory(id, data){

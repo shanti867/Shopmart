@@ -1,5 +1,5 @@
 
-import { CREATE_BRAND, DELETE_BRAND, GET_BRAND, UPDATE_BRAND } from "../Constant"
+import { CREATE_BRAND, DELETE_BRAND, GET_BRAND, UPDATE_BRAND, GET_ACTIVE_BRAND } from "../Constant"
 
 export function createBrand(data){
     return{
@@ -12,6 +12,11 @@ export function getBrand(){
     return{
         type: GET_BRAND,
     }
+}
+export function getActiveBrand() {
+    return {
+        type: GET_ACTIVE_BRAND
+    };
 }
 
 export function updateBrand(id, data){
