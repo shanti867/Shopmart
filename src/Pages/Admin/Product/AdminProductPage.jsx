@@ -69,11 +69,11 @@ export default function AdminProductPage() {
                                 <tbody>
                                     {data.map(item => {
                                         return <tr key={item.id}>
-                                            <td>{item.ProductId}</td>
+                                            <td>{item.productId}</td>
                                             <td>{item.name}</td>
-                                            <td>{item.maincategory}</td>
-                                            <td>{item.subcategory}</td>
-                                            <td>{item.brand}</td>
+                                            <td>{item.maincategory?.name}</td>
+                                            <td>{item.subcategory?.name}</td>
+                                            <td>{item.brand?.name}</td>
                                             <td>{item.color?.join()}</td>
                                             <td>{item.size?.join()}</td>
                                             <td>&#8377;{item.basePrice}</td>
@@ -84,7 +84,7 @@ export default function AdminProductPage() {
                                             <td>
                                                 <div style={{width:350}}>
                                                     {item.pic?.map((p, index) => {
-                                                        return <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${p}`} target='_blank'>
+                                                        return <Link  key={index} to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${p}`} target='_blank'>
                                                             <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${p}`} className='m-1' height={60} width={80} alt="" />
                                                         </Link>
                                                     })}

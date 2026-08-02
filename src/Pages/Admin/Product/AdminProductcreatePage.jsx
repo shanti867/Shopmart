@@ -57,7 +57,6 @@ export default function AdminProductcreatePage() {
     let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
     let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
     let BrandStateData = useSelector(state => state.BrandStateData)
-    // let ProductStateData = useSelector(state => state.ProductStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
 
@@ -114,9 +113,9 @@ export default function AdminProductcreatePage() {
                 formData.append("pic",x)
             })
             formData.append("status", data.status)
-            formData.append("maincategory", data.maincategory || MaincategoryStateData[0]?.id)
-            formData.append("subcategory", data.subcategory || SubcategoryStateData[0]?.id)
-            formData.append("brand", data.brand || BrandStateData[0]?.id)
+            formData.append("mainCategoryId", data.maincategory || MaincategoryStateData[0]?.id)
+            formData.append("subCategoryId", data.subcategory || SubcategoryStateData[0]?.id)
+            formData.append("brandId", data.brand || BrandStateData[0]?.id)
             formData.append("basePrice", bp)
             formData.append("discount", d)
             formData.append("finalPrice", fp)
@@ -131,15 +130,8 @@ export default function AdminProductcreatePage() {
             formData.append("description", description)
             
             try {
-                dispatch(createProduct({
-                    formData,
-                    ...data,
-                    basePrice: bp, 
-                    discount: d,
-                    finalPrice: fp,
-                    stockQuantity: data.stockQuantity,
-                    description: description
-                }))
+                
+                dispatch(createProduct(formData))
                 navigate("/admin/product")
             }
             catch (error) {
@@ -160,21 +152,7 @@ export default function AdminProductcreatePage() {
         dispatch(getActiveSubcategory())
     }, [SubcategoryStateData.length])
 
-    // useEffect(() => {
-    //     dispatch(getProduct());
-    //     (() => {
-    //         if (ProductStateData.length) {
-    //             setData({ ...data, ...ProductStateData })
-
-    //             setTimeout(() => {
-    //                 const documentModel1 = createStructuredContent(ProductStateData.description ?? "")
-    //                 changeDescription(documentModel1, ProductStateData.description ?? "")
-    //             }, 500)
-    //         }
-    //     })()
-
-    // }, [ProductStateData.length])
-
+    
     return (
         <>
             <Breadcrum title="Admin" />
