@@ -69,7 +69,7 @@ export default function AdminProductPage() {
                                 <tbody>
                                     {data.map(item => {
                                         return <tr key={item.id}>
-                                            <td>{item.productId}</td>
+                                            <td>{item.ProductId}</td>
                                             <td>{item.name}</td>
                                             <td>{item.maincategory?.name}</td>
                                             <td>{item.subcategory?.name}</td>

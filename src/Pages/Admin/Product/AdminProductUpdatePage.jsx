@@ -23,11 +23,12 @@ export default function AdminProductUpdatePage() {
     let { id } = useParams()
     let editorRefDescription = useRef(null)
     let [description, setDescription] = useState("")
+    let[newPics, setNewPics] = useState([])
     let [data, setData] = useState({
         name: "",
         maincategory: "",
         subcategory: "",
-        Product: "",
+        brand: "",
         color: [],
         size: [],
         basePrice: 0,
@@ -57,7 +58,6 @@ export default function AdminProductUpdatePage() {
     })
 
     let [show, setShow] = useState(false)
-    let [flag, setFlag] = useState(false)
     let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
     let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
     let BrandStateData = useSelector(state => state.BrandStateData)
@@ -82,7 +82,8 @@ export default function AdminProductUpdatePage() {
         let value;
 
         if (name === "pic") {
-            value = data.pic.concat(e.target.files)
+            setNewPics(Array.from(e.target.files))
+            return
         }
         else if (name === "status" || name === "stock") {
             value = e.target.value === "1"
@@ -101,45 +102,7 @@ export default function AdminProductUpdatePage() {
         });
     }
 
-    // function postData(e) {
-    //     e.preventDefault()
-    //     let error = Object.values(errorMessage).find(x => x != "")
-    //     if (error) {
-    //         setShow(true)
-    //     }
-    //     else {
-
-    //         let formData = new FormData();
-
-    //         formData.append("name", data.name);
-    //         formData.append("pic", data.pic);
-    //         formData.append("status", data.status);
-
-
-    //         try {
-    //             let item = ProductStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
-    //             if (item) {
-    //                 setErrorMessage({ ...errorMessage, name: 'Product With This Name Already Exist' })
-    //                 setShow(true)
-    //                 return
-    //             }
-    //             dispatch(updateProduct({
-    //                 id, formData,
-    //                 ...data,
-    //                 description: description,
-    //             }))
-    //             // navigate("/admin/Product")
-
-    //             setTimeout(() => {
-    //                 navigate("/admin/product");
-    //             }, 500);
-    //         }
-    //         catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    // }
-
+    
     function postData(e) {
         e.preventDefault()
 
@@ -148,20 +111,24 @@ export default function AdminProductUpdatePage() {
             setShow(true)
         }
         else {
+            let bp = parseInt(data.basePrice)
+            let d = parseInt(data.discount)
+            let fp = parseInt(bp - bp * d / 100)
             let formData = new FormData()
             formData.append("name", data.name)
-            data.pic.forEach(x => {
-                formData.append("pic", x)
+            newPics.forEach(file => {
+                formData.append("pic", file)
             })
+            formData.append("oldPic", JSON.stringify(data.pic))
             formData.append("status", data.status)
-            formData.append("maincategory", data.maincategory || MaincategoryStateData[0].id)
-            formData.append("subcategory", data.subcategory || SubcategoryStateData[0].id)
-            formData.append("brand", data.brand || BrandStateData[0].id)
+            formData.append("mainCategoryId",  data.maincategory?.id ?? data.maincategory)
+            formData.append("subCategoryId", data.subcategory?.id ?? data.subcategory)
+            formData.append("brandId", data.brand?.id ?? data.brand)
             formData.append("basePrice", bp)
             formData.append("discount", d)
             formData.append("finalPrice", fp)
             formData.append("stock", data.stock)
-            formData.append("stockQuantity", stockQuantity)
+            formData.append("stockQuantity", data.stockQuantity)
             data.color.forEach(x => {
                 formData.append("color", x)
             })
@@ -169,19 +136,9 @@ export default function AdminProductUpdatePage() {
                 formData.append("size", x)
             })
             formData.append("description", description)
-            let bp = parseInt(data.basePrice)
-            let d = parseInt(data.discount)
-            let fp = parseInt(bp - bp * d / 100)
             try {
-                dispatch(updateProduct({
-                    formData,
-                    ...data,
-                    basePrice: bp,
-                    discount: d,
-                    finalPrice: fp,
-                    stockQuantity: stockQuantity,
-                    description: description
-                }))
+                console.log(data);
+                dispatch(updateProduct(id,formData))
                 setTimeout(() => {
                     navigate("/admin/product");
                 }, 500);
@@ -199,10 +156,11 @@ export default function AdminProductUpdatePage() {
             if (ProductStateData.length) {
                 let item = ProductStateData.find(x => x.id == id)
                 if (item) {
-                    setData({ ...data, ...item })
+                    // setData({ ...data, ...item })
+                    setData(item)
                     setTimeout(() => {
-                        const documentModel1 = createStructuredContent(ProductStateData.description ?? "")
-                        changePrivacyPolicy(documentModel1, ProductStateData.description ?? "")
+                        const documentModel1 = createStructuredContent(item.description ?? "")
+                        changeDescription(documentModel1, item.description ?? "")
                     }, 500)
                 }
                 else {
@@ -238,7 +196,7 @@ export default function AdminProductUpdatePage() {
                             <div className="row">
                                 <div className="col-12 mb-3">
                                     <label>Name*</label>
-                                    <input type="text" value={data.name} name="name" value={data.name} onChange={getInputData} placeholder='Product Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
+                                    <input type="text" value={data.name} name="name" onChange={getInputData} placeholder='Product Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 
@@ -349,10 +307,13 @@ export default function AdminProductUpdatePage() {
                                     <label>Old Pic(Click on Image to Delete)</label>
                                     <div>
                                         {data.pic?.map((item, index) => {
-                                            return <img key={index} onClick={()=>{
-                                                data.pic.splice(index, 1)
-                                                setFlag(!flag)
-                                            }}className='m-1' src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item}`} height={50} width={50} />
+                                            return <img key={item} onClick={()=>{
+                                               const updatedPics = data.pic.filter((image, i)=>i!== index)
+                                               setData({
+                                                ...data,
+                                                pic:updatedPics
+                                               })
+                                            }}className='m-1' src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item}`} height={50} width={50} />
                                         })}
                                     </div>
                                 </div>
