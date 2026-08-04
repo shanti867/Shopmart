@@ -23,6 +23,7 @@ export default function AdminBrandUpdatePage() {
         pic: ""
     })
     let [show, setShow] = useState(false)
+    let [isUpdating, setIsUpdating] = useState(false)
     let BrandStateData = useSelector(state => state.BrandStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -73,18 +74,23 @@ export default function AdminBrandUpdatePage() {
                     setShow(true)
                     return
                 }
+                setIsUpdating(true)
                 dispatch(updateBrand(id, formData))
-                // navigate("/admin/Brand")
-
-                setTimeout(() => {
-                    navigate("/admin/brand");
-                }, 500);
             }
             catch (error) {
                 console.log(error);
             }
         }
     }
+
+    useEffect(()=>{
+        if(isUpdating){
+            let updateItem = BrandStateData.find(item => item.id == id)
+            if(updateItem){
+                navigate("/admin/brand")
+            }
+        }
+    },[BrandStateData])
 
     useEffect(() => {
         (() => {

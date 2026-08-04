@@ -23,6 +23,7 @@ export default function AdminSubcategoryUpdatePage() {
         pic: ""
     })
     let [show, setShow] = useState(false)
+    let [isUpdating, setIsUpdating] = useState(false)
     let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -73,11 +74,9 @@ export default function AdminSubcategoryUpdatePage() {
                     setShow(true)
                     return
                 }
+                setIsUpdating(true)
                 dispatch(updateSubcategory(id, formData))
-                // navigate("/admin/Subcategory")
-                setTimeout(() => {
-                    navigate("/admin/subcategory");
-                }, 500);
+                
 
             }
             catch (error) {
@@ -85,6 +84,15 @@ export default function AdminSubcategoryUpdatePage() {
             }
         }
     }
+    useEffect(()=>{
+        if(isUpdating){
+            let updateItem = SubcategoryStateData.find(x => x.id == id)
+            if(updateItem){
+            navigate("/admin/subcategory")
+        }
+        }
+        
+    },[SubcategoryStateData])
 
     useEffect(() => {
         (() => {

@@ -23,7 +23,8 @@ export default function AdminProductUpdatePage() {
     let { id } = useParams()
     let editorRefDescription = useRef(null)
     let [description, setDescription] = useState("")
-    let[newPics, setNewPics] = useState([])
+    let [newPics, setNewPics] = useState([])
+    let [isUpdating, setIsUpdating] = useState(false)
     let [data, setData] = useState({
         name: "",
         maincategory: "",
@@ -102,7 +103,7 @@ export default function AdminProductUpdatePage() {
         });
     }
 
-    
+
     function postData(e) {
         e.preventDefault()
 
@@ -121,7 +122,7 @@ export default function AdminProductUpdatePage() {
             })
             formData.append("oldPic", JSON.stringify(data.pic))
             formData.append("status", data.status)
-            formData.append("mainCategoryId",  data.maincategory?.id ?? data.maincategory)
+            formData.append("mainCategoryId", data.maincategory?.id ?? data.maincategory)
             formData.append("subCategoryId", data.subcategory?.id ?? data.subcategory)
             formData.append("brandId", data.brand?.id ?? data.brand)
             formData.append("basePrice", bp)
@@ -138,38 +139,40 @@ export default function AdminProductUpdatePage() {
             formData.append("description", description)
             try {
                 console.log(data);
-                dispatch(updateProduct(id,formData))
-                setTimeout(() => {
-                    navigate("/admin/product");
-                }, 500);
+                setIsUpdating(true)
+                dispatch(updateProduct(id, formData))
             }
             catch (error) {
                 console.log(error);
             }
         }
     }
+    useEffect(() => {
+        if (isUpdating) {
+            let updatedItem = ProductStateData.find(
+                x => x.id == id
+            )
+            if (updatedItem) {
+                navigate("/admin/product")
+            }
+        }
 
+    }, [ProductStateData])
+    useEffect(() => {
+        dispatch(getProduct())
+    }, [])
 
     useEffect(() => {
-        (() => {
-            dispatch(getProduct())
-            if (ProductStateData.length) {
-                let item = ProductStateData.find(x => x.id == id)
-                if (item) {
-                    // setData({ ...data, ...item })
-                    setData(item)
-                    setTimeout(() => {
-                        const documentModel1 = createStructuredContent(item.description ?? "")
-                        changeDescription(documentModel1, item.description ?? "")
-                    }, 500)
-                }
-                else {
-                    navigate("/admin/product")
-                }
-            }
+        if (!ProductStateData.length) return;
 
-        })()
-    }, [ProductStateData.length])
+        const item = ProductStateData.find(x => x.id == id);
+
+        if (item) {
+            setData(item)
+            const documentModel = createStructuredContent(item.description ?? "")
+            changeDescription(documentModel, item.description ?? "")
+        }
+    }, [ProductStateData, id]);
 
     useEffect(() => {
         dispatch(getActiveMaincategory())
@@ -202,7 +205,7 @@ export default function AdminProductUpdatePage() {
 
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Maincategory*</label>
-                                    <select name="maincategory" value={data.maincategory} onChange={getInputData} className='form-select border-primary'>
+                                    <select name="maincategory" value={data.maincategory?.id ?? data.maincategory} onChange={getInputData} className='form-select border-primary'>
                                         {MaincategoryStateData.filter(x => x.status).map((item) => {
                                             return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
@@ -211,7 +214,7 @@ export default function AdminProductUpdatePage() {
 
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Subcategory*</label>
-                                    <select name="subcategory" value={data.subcategory} onChange={getInputData} className='form-select border-primary'>
+                                    <select name="subcategory" value={data.subcategory?.id ?? data.subcategory} onChange={getInputData} className='form-select border-primary'>
                                         {SubcategoryStateData.filter(x => x.status).map((item) => {
                                             return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
@@ -220,7 +223,7 @@ export default function AdminProductUpdatePage() {
 
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Brand*</label>
-                                    <select name="brand" value={data.brand} onChange={getInputData} className='form-select border-primary'>
+                                    <select name="brand" value={data.brand?.id ?? data.brand} onChange={getInputData} className='form-select border-primary'>
                                         {BrandStateData.filter(x => x.status).map((item) => {
                                             return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
@@ -287,12 +290,17 @@ export default function AdminProductUpdatePage() {
 
                                 <div className="col-12 mb-3">
                                     <label>Description*</label>
-                                    <RichTextEditor
-                                        ref={editorRefDescription}
-                                        onChange={handleChangeDescription}
-                                        value={description ?? ""}
-                                        className="border-primary"
-                                    />
+                                    {
+                                        description && (
+                                            <RichTextEditor
+                                                ref={editorRefDescription}
+                                                value={description}
+                                                onChange={handleChangeDescription}
+                                                className="border-primary"
+                                            />
+                                        )
+                                    }
+
                                 </div>
 
                                 <div className="col-md-6 mb-3">
@@ -305,19 +313,32 @@ export default function AdminProductUpdatePage() {
 
                                 <div className="col-md-6 mb-3">
                                     <label>Old Pic(Click on Image to Delete)</label>
+
                                     <div>
-                                        {data.pic?.map((item, index) => {
-                                            return <img key={item} onClick={()=>{
-                                               const updatedPics = data.pic.filter((image, i)=>i!== index)
-                                               setData({
-                                                ...data,
-                                                pic:updatedPics
-                                               })
-                                            }}className='m-1' src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item}`} height={50} width={50} />
-                                        })}
+                                        {data.pic && data.pic.length > 0 && (
+                                            data.pic.map((item, index) => {
+                                                return (
+                                                    <img
+                                                        key={item}
+                                                        onClick={() => {
+                                                            const updatedPics = data.pic.filter((image, i) => i !== index);
+
+                                                            setData({
+                                                                ...data,
+                                                                pic: updatedPics
+                                                            });
+                                                        }}
+                                                        className="m-1"
+                                                        src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item}`}
+                                                        height={50}
+                                                        width={50}
+                                                        alt=""
+                                                    />
+                                                );
+                                            })
+                                        )}
                                     </div>
                                 </div>
-
                                 <div className="col-md-6 md-3">
                                     <label>Status*</label>
                                     <select name="status" value={data.status ? "1" : "0"} onChange={getInputData} className='form-select border-primary'>

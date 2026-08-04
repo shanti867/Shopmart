@@ -23,6 +23,7 @@ export default function AdminMaincategoryUpdatePage() {
         pic: ""
     })
     let [show, setShow] = useState(false)
+    let [isUpdating, setIsUpdating] = useState(false)
     let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -73,11 +74,12 @@ export default function AdminMaincategoryUpdatePage() {
                     setShow(true)
                     return
                 }
+                setIsUpdating(true)
                 dispatch(updateMaincategory(id, formData))
-                // navigate("/admin/Maincategory")
-                setTimeout(() => {
-                    navigate("/admin/maincategory");
-                }, 500);
+
+                // setTimeout(() => {
+                //     navigate("/admin/maincategory");
+                // }, 500);
 
             }
             catch (error) {
@@ -85,6 +87,19 @@ export default function AdminMaincategoryUpdatePage() {
             }
         }
     }
+    useEffect(() => {
+
+        if (isUpdating) {
+            let updatedItem = MaincategoryStateData.find(
+                x => x.id == id
+            )
+
+            if (updatedItem) {
+                navigate("/admin/maincategory")
+            }
+        }
+
+    }, [MaincategoryStateData])
 
     useEffect(() => {
         (() => {
