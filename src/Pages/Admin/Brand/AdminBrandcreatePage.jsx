@@ -66,7 +66,10 @@ export default function AdminBrandcreatePage() {
                     return
                 }
                 dispatch(createBrand(formData))
-                navigate("/admin/brand")
+                // navigate("/admin/brand")
+                setTimeout(()=>{
+                    navigate("/admin/brand")
+                }, 500)
             }
             catch (error) {
                 console.log(error);

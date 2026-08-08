@@ -66,7 +66,10 @@ export default function AdminMaincategorycreatePage() {
                     return
                 }
                 dispatch(createMaincategory(formData))
-                navigate("/admin/maincategory")
+                // navigate("/admin/maincategory")
+                setTimeout(()=>{
+                    navigate("/admin/maincategory")
+                }, 500)
             }
             catch (error) {
                 console.log(error);

@@ -24,6 +24,7 @@ export default function AdminFeatureUpdatePage() {
         shortDescription:""
     })
     let [show, setShow] = useState(false)
+    let[isUpdating, setIsUpdating] = useState(false)
     let FeatureStateData = useSelector(state => state.FeatureStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -60,18 +61,23 @@ export default function AdminFeatureUpdatePage() {
                     setShow(true)
                     return
                 }
+                setIsUpdating(true)
                 dispatch(updateFeature(id, data))
-                // navigate("/admin/Feature")
-
-                setTimeout(() => {
-                    navigate("/admin/feature");
-                }, 500);
+               
             }
             catch (error) {
                 console.log(error);
             }
         }
     }
+    useEffect(()=>{
+        if(isUpdating){
+            let updateItem = FeatureStateData.find(item => item.id == id)
+            if(updateItem){
+                navigate("/admin/feature")
+            }
+        }
+    },[FeatureStateData])
 
     useEffect(() => {
         (() => {
@@ -127,7 +133,7 @@ export default function AdminFeatureUpdatePage() {
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <button type='submit' className='btn btn-primary w-100'>Update</button>
+                                    <button type='submit' className='btn btn-primary w-100' disabled={isUpdating}>{isUpdating?"Updating...":"Update"}</button>
                                 </div>
 
                             </div>

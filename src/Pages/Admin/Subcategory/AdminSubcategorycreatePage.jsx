@@ -49,6 +49,7 @@ export default function AdminSubcategorycreatePage() {
 
     function postData(e) {
         e.preventDefault()
+         console.log("POST DATA CALLED");
         let error = Object.values(errorMessage).find(x => x != "")
         if (error) {
             setShow(true)
@@ -66,7 +67,10 @@ export default function AdminSubcategorycreatePage() {
                     return
                 }
                 dispatch(createSubcategory(formData))
-                navigate("/admin/subcategory")
+                // navigate("/admin/subcategory")
+                setTimeout(()=>{
+    navigate("/admin/subcategory")
+},500)
             }
             catch (error) {
                 console.log(error);
@@ -75,8 +79,11 @@ export default function AdminSubcategorycreatePage() {
     }
 
     useEffect(() => {
-        dispatch(getSubcategory())
-    }, [SubcategoryStateData.length])
+    dispatch(getSubcategory())
+}, [])
+    // useEffect(() => {
+    //     dispatch(getSubcategory())
+    // }, [SubcategoryStateData.length])
     return (
         <>
             <Breadcrum title="Admin" />

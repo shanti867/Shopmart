@@ -138,7 +138,6 @@ export default function AdminProductUpdatePage() {
             })
             formData.append("description", description)
             try {
-                console.log(data);
                 setIsUpdating(true)
                 dispatch(updateProduct(id, formData))
             }
@@ -315,7 +314,7 @@ export default function AdminProductUpdatePage() {
                                     <label>Old Pic(Click on Image to Delete)</label>
 
                                     <div>
-                                        {data.pic && data.pic.length > 0 && (
+                                        {
                                             data.pic.map((item, index) => {
                                                 return (
                                                     <img
@@ -336,10 +335,10 @@ export default function AdminProductUpdatePage() {
                                                     />
                                                 );
                                             })
-                                        )}
+                                        }
                                     </div>
                                 </div>
-                                <div className="col-md-6 md-3">
+                                <div className="col-md-6 mb-3">
                                     <label>Status*</label>
                                     <select name="status" value={data.status ? "1" : "0"} onChange={getInputData} className='form-select border-primary'>
                                         <option value="1">Active</option>
@@ -348,7 +347,7 @@ export default function AdminProductUpdatePage() {
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <button type='submit' className='btn btn-primary w-100'>Update</button>
+                                    <button type='submit' className='btn btn-primary w-100' disabled={isUpdating}>{isUpdating?"Updating...":"Update"}</button>
                                 </div>
 
                             </div>

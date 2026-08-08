@@ -20,7 +20,14 @@ function* updateSaga(action){        //worker
 }
 function* deleteSaga(action){        //worker
     let response = yield deleteRecord("brand", action.payload.id)
-    yield put({type: DELETE_BRAND_RED, payload: response})
+        if(response){
+            yield put({
+                type:DELETE_BRAND_RED,
+                payload:{
+                    id:action.payload.id
+                }
+            })
+        }
 }
 
 export default function* BrandSaga(){         

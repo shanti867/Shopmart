@@ -132,7 +132,10 @@ export default function AdminProductcreatePage() {
             try {
                 
                 dispatch(createProduct(formData))
-                navigate("/admin/product")
+                // navigate("/admin/product")
+                setTimeout(()=>{
+navigate("/admin/product")
+                }, 500)
             }
             catch (error) {
                 console.log(error);

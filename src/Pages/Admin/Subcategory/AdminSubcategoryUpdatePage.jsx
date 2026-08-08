@@ -59,9 +59,7 @@ export default function AdminSubcategoryUpdatePage() {
             setShow(true)
         }
         else {
-
             let formData = new FormData();
-
             formData.append("name", data.name);
             formData.append("pic", data.pic);
             formData.append("status", data.status);
@@ -142,7 +140,7 @@ export default function AdminSubcategoryUpdatePage() {
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <button type='submit' className='btn btn-primary w-100'>Update</button>
+                                    <button type='submit' className='btn btn-primary w-100' disabled={isUpdating}>{isUpdating?"Updating...":"Update"}</button>
                                 </div>
 
                             </div>

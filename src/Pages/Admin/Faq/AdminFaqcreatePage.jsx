@@ -55,7 +55,10 @@ export default function AdminFaqcreatePage() {
                     return
                 }
                 dispatch(createFaq(data))
-                navigate("/admin/faq")
+                // navigate("/admin/faq")
+                setTimeout(()=>{
+                    navigate("/admin/faq")
+                }, 500)
             }
             catch (error) {
                 console.log(error);

@@ -9,11 +9,7 @@ export default function MaincategoryReducer(state = [], action) {
             return action.payload
 
         case UPDATE_MAINCATEGORY_RED:
-            return state.map(item =>
-                item.id == action.payload.id
-                    ? action.payload
-                    : item
-            )
+            return state.map(item => item.id == action.payload.id? action.payload: item )
 
         case DELETE_MAINCATEGORY_RED:
             return state.filter(x => x.id != action.payload.id)

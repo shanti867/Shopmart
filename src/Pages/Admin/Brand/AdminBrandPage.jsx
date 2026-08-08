@@ -1,81 +1,127 @@
-import React, { useEffect, useState } from 'react'
+import React,{useEffect,useState} from "react";
+import DataTable from "react-data-table-component";
+import Breadcrum from "../../../Components/Breadcrum";
+import AdminSidebar from "../../../Components/Admin/AdminSidebar";
+import {Link} from "react-router-dom";
+import {useDispatch,useSelector} from "react-redux";
 
-import DataTable from 'datatables.net-dt'
-import "datatables.net-dt/css/dataTables.dataTables.min.css"
-import Breadcrum from '../../../Components/Breadcrum'
-import AdminSidebar from '../../../Components/Admin/AdminSidebar'
-import { Link } from 'react-router-dom'
+import {getBrand,deleteBrand} from "../../../Redux/ActionCreators/BrandActionCreators";
 
-import {getBrand, deleteBrand} from "../../../Redux/ActionCreators/BrandActionCreators"
-import { useDispatch, useSelector } from 'react-redux';
+export default function AdminBrandPage(){
 
-export default function AdminBrandPage() {
-    let [data, setData] = useState([])
-    let BrandStateData = useSelector(state=>state.BrandStateData)
-    let dispatch = useDispatch()
+    const dispatch=useDispatch();
+    const data=useSelector(state=>state.BrandStateData);
+    const [search,setSearch]=useState("");
+
+    useEffect(()=>{
+        dispatch(getBrand());
+    },[]);
 
     function deleteRecord(id){
         if(window.confirm("Are You Sure To Delete This Record")){
-           dispatch(deleteBrand({id:id}))
-            setData(data.filter(x=>x.id!==id))
+            dispatch(deleteBrand({id}));
         }
     }
-    useEffect(() => {
-    let time = (() => {
-        dispatch(getBrand());
 
-        if (BrandStateData.length) {
-            setData(BrandStateData);
+    const filteredData=data.filter(row=>
+        row.brandId?.toLowerCase().includes(search.toLowerCase()) ||
+        row.name?.toLowerCase().includes(search.toLowerCase()) ||
+        (row.status?"active":"inactive").includes(search.toLowerCase())
+    );
 
-            return setTimeout(() => new DataTable("#myTable"), 500);
+    const columns=[
+        {
+            name:"Id",
+            selector:row=>row.brandId,
+            sortable:true
+        },
+        {
+            name:"Name",
+            selector:row=>row.name,
+            sortable:true
+        },
+        {
+            name:"Pic",
+            cell:row=>(
+                <Link
+                    to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/brand/${row.pic}`}
+                    target="_blank"
+                >
+                    <img
+                        src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/brand/${row.pic}`}
+                        height="60"
+                        width="80"
+                        alt=""
+                    />
+                </Link>
+            )
+        },
+        {
+            name:"Status",
+            selector:row=>row.status?"Active":"Inactive",
+            sortable:true
+        },
+        {
+            name:"Update",
+            cell:row=>(
+                <Link
+                    to={`/admin/brand/update/${row.id}`}
+                    className="btn btn-primary"
+                >
+                    <i className="bi bi-pencil-square"></i>
+                </Link>
+            )
+        },
+        {
+            name:"Delete",
+            cell:row=>(
+                <button
+                    className="btn btn-danger"
+                    onClick={()=>deleteRecord(row.id)}
+                >
+                    <i className="bi bi-x"></i>
+                </button>
+            )
         }
-    })();
+    ];
 
-    return () => clearTimeout(time);
-}, [BrandStateData.length]);
-    return (
+    return(
         <>
-            <Breadcrum title="Admin" />
+            <Breadcrum title="Admin"/>
             <div className="container-fluid my-3">
                 <div className="row">
                     <div className="col-md-3">
-                        <AdminSidebar />
+                        <AdminSidebar/>
                     </div>
                     <div className="col-md-9">
-                        <h5 className='bg-primary text-light text-center p-2'>Brand<Link to="/admin/brand/create"><i className='bi bi-plus text-light float-end'></i></Link></h5>
-                       <div className="table-responsive">
-                         <table id='myTable' className='table table-bordered text-dark'>
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Pic</th>
-                                    <th>Status</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.map(item => {
-                                    return <tr key={item.id}>
-                                        <td>{item.brandId}</td>
-                                        <td>{item.name}</td>
-                                        <td>
-                                            <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/brand/${item.pic}`} target='_blank'>
-                                            <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/brand/${item.pic}`} height={60} width={80}alt="" />
-                                            </Link>
-                                        </td>
-                                        <td>{item.status ? "Active" : "Inactive"}</td>
-                                        <td><Link to={`/admin/brand/update/${item.id}`} className='btn btn-primary'><i className='bi bi-pencil-square'></i></Link></td>
-                                        <td><button className='btn btn-danger' onClick={()=>deleteRecord(item.id)}><i className='bi bi-x'></i></button></td>
-                                    </tr>
-                                })}
-                            </tbody>
-                        </table>
-                       </div>
+                        <h5 className="bg-primary text-light text-center p-2">
+                            Brand
+                            <Link to="/admin/brand/create">
+                                <i className="bi bi-plus text-light float-end"></i>
+                            </Link>
+                        </h5>
+
+                        <input
+                            type="text"
+                            className="form-control mb-3 w-25 float-end"
+                            placeholder="Search Brand..."
+                            value={search}
+                            onChange={(e)=>setSearch(e.target.value)}
+                        />
+
+                        <DataTable
+                            columns={columns}
+                            data={filteredData}
+                            pagination
+                            striped
+                            highlightOnHover
+                            responsive
+                            persistTableHead
+                        />
+
                     </div>
                 </div>
             </div>
         </>
-    )
+    );
 }

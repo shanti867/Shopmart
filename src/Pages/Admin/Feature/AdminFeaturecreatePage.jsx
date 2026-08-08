@@ -57,7 +57,10 @@ export default function AdminFeaturecreatePage() {
                     return
                 }
                 dispatch(createFeature(data))
-                navigate("/admin/feature")
+                // navigate("/admin/feature")
+                setTimeout(()=>{
+                   navigate("/admin/feature") 
+                }, 500)
             }
             catch (error) {
                 console.log(error);
@@ -87,7 +90,7 @@ export default function AdminFeaturecreatePage() {
                                     {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
                                 </div>
 
-                                <div className="col-12 mb-3">
+                                <div className="col-12 mb-3 ">
                                     <label>Short Description*</label>
                                     <textarea name="shortDescription" rows = {3} onChange={getInputData} placeholder='Feature Name' className={`form-control ${show && errorMessage.shortDescription ? 'border-danger' : 'border-primary'}`} />
                                     {show && errorMessage.shortDescription ? <p className='text-danger text-capitalize'>{errorMessage.shortDescription}</p> : null}

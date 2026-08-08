@@ -20,7 +20,15 @@ function* updateSaga(action){        //worker
 }
 function* deleteSaga(action){        //worker
     let response = yield deleteRecord("subcategory", action.payload.id)
-    yield put({type: DELETE_SUBCATEGORY_RED, payload: response})
+    if(response){
+        yield put({
+            type:DELETE_SUBCATEGORY_RED,
+            payload:{
+                id:action.payload.id
+            }
+        })
+    }
+    // yield put({type: DELETE_SUBCATEGORY_RED, payload: response})
 }
 
 export default function* SubcategorySaga(){         

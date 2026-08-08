@@ -9,9 +9,7 @@ export default function FaqReducer(state=[],action){
             return action.payload
 
         case UPDATE_FAQ_RED:
-            index = state.findIndex(x=>x.id == action.payload.id)
-            state[index] = {...action.payload}
-            return state
+            return state.map(item=>item.id == action.payload.id ? action.payload: item)
 
         case DELETE_FAQ_RED:
             return state.filter(x=>x.id != action.payload.id)

@@ -23,6 +23,7 @@ export default function AdminFaqUpdatePage() {
         shortDescription:""
     })
     let [show, setShow] = useState(false)
+    let [isUpdating, setIsUpdating] = useState(false)
     let FaqStateData = useSelector(state => state.FaqStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -59,18 +60,23 @@ export default function AdminFaqUpdatePage() {
                     setShow(true)
                     return
                 }
+                setIsUpdating(true)
                 dispatch(updateFaq(id, data))
-                // navigate("/admin/Faq")
-
-                setTimeout(() => {
-                    navigate("/admin/faq");
-                }, 500);
+                
             }
             catch (error) {
                 console.log(error);
             }
         }
     }
+    useEffect(()=>{
+        if(isUpdating){
+            let updateItem = FaqStateData.find(item => item.id == id)
+            if(updateItem){
+                navigate("/admin/faq")
+            }
+        }
+    },[FaqStateData])
 
     useEffect(() => {
         (() => {
@@ -120,7 +126,7 @@ export default function AdminFaqUpdatePage() {
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <button type='submit' className='btn btn-primary w-100'>Update</button>
+                                    <button type='submit' className='btn btn-primary w-100' disabled={isUpdating}>{isUpdating?"Updating...":"Update"}</button>
                                 </div>
 
                             </div>
