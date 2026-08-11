@@ -24,7 +24,7 @@ export default function AdminMaincategoryUpdatePage() {
     })
     let [show, setShow] = useState(false)
     let [isUpdating, setIsUpdating] = useState(false)
-    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData.maincategory)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {

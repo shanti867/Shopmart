@@ -1,7 +1,7 @@
 import { put, takeEvery } from "redux-saga/effects"
 
 import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
-import { CREATE_MAINCATEGORY, CREATE_MAINCATEGORY_RED, DELETE_MAINCATEGORY, DELETE_MAINCATEGORY_RED, GET_MAINCATEGORY, GET_MAINCATEGORY_RED, GET_ACTIVE_MAINCATEGORY, UPDATE_MAINCATEGORY, UPDATE_MAINCATEGORY_RED } from "../Constant"
+import { CREATE_MAINCATEGORY, CREATE_MAINCATEGORY_RED, DELETE_MAINCATEGORY, DELETE_MAINCATEGORY_RED, GET_MAINCATEGORY, GET_MAINCATEGORY_RED, GET_ACTIVE_MAINCATEGORY_RED,  GET_ACTIVE_MAINCATEGORY, UPDATE_MAINCATEGORY, UPDATE_MAINCATEGORY_RED } from "../Constant"
 
 function* createSaga(action){        //worker
     let response = yield createMultipartRecord("maincategory", action.payload)
@@ -14,7 +14,7 @@ function* getSaga(){        //worker
 
 function* getActiveSaga(){        //worker
     let response = yield getRecord("maincategory/active")
-    yield put({type: GET_MAINCATEGORY_RED, payload: response})
+    yield put({type: GET_ACTIVE_MAINCATEGORY_RED, payload: response})
 }
 function* updateSaga(action){        //worker
     let response = yield updateMultipartRecord("maincategory", action.payload.id, action.payload.data)

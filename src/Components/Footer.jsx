@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { getSetting } from "../Redux/ActionCreators/SettingActionCreators"
 export default function Footer() {
     let [settingData, setSettingData] = useState({
         siteName: import.meta.env.VITE_APP_SITE_NAME,
@@ -15,6 +17,21 @@ export default function Footer() {
         linkedin: import.meta.env.VITE_APP_LINKEDIN,
         instagram: import.meta.env.VITE_APP_INSTAGRAM
     })
+    let SettingStateData = useSelector(state => state.SettingStateData)
+    let dispatch = useDispatch()
+
+    useEffect(() => {
+        (() => {
+            dispatch(getSetting())
+            if (SettingStateData.length) {
+                setSettingData(() => {
+                    let item = {}
+                    Object.keys(settingData).map(key => item[key] = SettingStateData[0][key] || settingData[key])
+                    return item
+                })
+            }
+        })()
+    }, [SettingStateData.length])
     return (
         <>
             <div className="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
@@ -124,7 +141,7 @@ export default function Footer() {
                                 className="fas fa-copyright text-light me-2"></i>{settingData.siteName}</a>, All right
                                 reserved.</span>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

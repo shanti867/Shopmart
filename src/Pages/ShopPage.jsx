@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+
 import Breadcrum from '../Components/Breadcrum'
 import Offer from '../Components/Offer'
 import Service from '../Components/Service'
 import SaleBanner from '../Components/SaleBanner'
 
 export default function ShopPage() {
+    let [amount, setAmount] = useState(0)
     return (
         <>
             <Breadcrum title="Shop" />
@@ -57,8 +59,8 @@ export default function ShopPage() {
                             <div className="price mb-4">
                                 <h4 className="mb-2">Price</h4>
                                 <input type="range" className="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500"
-                                    value="0" oninput="amount.value=rangeInput.value" />
-                                <output id="amount" name="amount" min-velue="0" max-value="500" for="rangeInput">0</output>
+                                    value={amount}  onChange={(e) => setAmount(e.target.value)}/>
+                                <output id="amount" name="amount" min-velue="0" max-value="500" htmlFor="rangeInput">0</output>
                                 <div className=""></div>
                             </div>
                             <div className="product-color mb-3">
@@ -91,23 +93,23 @@ export default function ShopPage() {
                                 <h4>Additional Products</h4>
                                 <div className="additional-product-item">
                                     <input type="radio" className="me-2" id="Categories-1" name="Categories-1" value="Beverages" />
-                                    <label for="Categories-1" className="text-dark"> Accessories</label>
+                                    <label htmlFor="Categories-1" className="text-dark"> Accessories</label>
                                 </div>
                                 <div className="additional-product-item">
                                     <input type="radio" className="me-2" id="Categories-2" name="Categories-1" value="Beverages" />
-                                    <label for="Categories-2" className="text-dark"> Electronics & Computer</label>
+                                    <label htmlFor="Categories-2" className="text-dark"> Electronics & Computer</label>
                                 </div>
                                 <div className="additional-product-item">
                                     <input type="radio" className="me-2" id="Categories-3" name="Categories-1" value="Beverages" />
-                                    <label for="Categories-3" className="text-dark"> Laptops & Desktops</label>
+                                    <label htmlFor="Categories-3" className="text-dark"> Laptops & Desktops</label>
                                 </div>
                                 <div className="additional-product-item">
                                     <input type="radio" className="me-2" id="Categories-4" name="Categories-1" value="Beverages" />
-                                    <label for="Categories-4" className="text-dark"> Mobiles & Tablets</label>
+                                    <label htmlFor="Categories-4" className="text-dark"> Mobiles & Tablets</label>
                                 </div>
                                 <div className="additional-product-item">
                                     <input type="radio" className="me-2" id="Categories-5" name="Categories-1" value="Beverages" />
-                                    <label for="Categories-5" className="text-dark"> SmartPhone & Smart TV</label>
+                                    <label htmlFor="Categories-5" className="text-dark"> SmartPhone & Smart TV</label>
                                 </div>
                             </div>
                             <div className="featured-product mb-4">
@@ -222,7 +224,7 @@ export default function ShopPage() {
                                 </div>
                                 <div className="col-xl-3 text-end">
                                     <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between">
-                                        <label for="electronics">Sort By:</label>
+                                        <label htmlFor="electronics">Sort By:</label>
                                         <select id="electronics" name="electronicslist"
                                             className="border-0 form-select-sm bg-light me-3" form="electronicsform">
                                             <option value="volvo">Default Sorting</option>

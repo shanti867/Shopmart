@@ -59,15 +59,15 @@ export default function ProductPage() {
                         <h4>Select By Color</h4>
                         <div className="additional-product-item">
                             <input type="radio" className="me-2" id="Categories-1" name="Categories-1" value="Beverages"/>
-                            <label for="Categories-1" className="text-dark"> Gold</label>
+                            <label htmlFor="Categories-1" className="text-dark"> Gold</label>
                         </div>
                         <div className="additional-product-item">
                             <input type="radio" className="me-2" id="Categories-2" name="Categories-1" value="Beverages"/>
-                            <label for="Categories-2" className="text-dark"> Green</label>
+                            <label htmlFor="Categories-2" className="text-dark"> Green</label>
                         </div>
                         <div className="additional-product-item">
                             <input type="radio" className="me-2" id="Categories-3" name="Categories-1" value="Beverages"/>
-                            <label for="Categories-3" className="text-dark"> White</label>
+                            <label htmlFor="Categories-3" className="text-dark"> White</label>
                         </div>
                     </div>
                     <div className="featured-product mb-4">
@@ -190,7 +190,7 @@ export default function ProductPage() {
                             <a href="#" className="btn btn-primary px-4 py-3 rounded-pill w-100">Vew More</a>
                         </div>
                     </div>
-                    <a href="#">
+                    <div>
                         <div className="position-relative">
                             <img src="/img/product-banner-2.jpg" className="img-fluid w-100 rounded" alt="Image"/>
                             <div className="text-center position-absolute d-flex flex-column align-items-center justify-content-center rounded p-4"
@@ -200,7 +200,7 @@ export default function ProductPage() {
                                 <a href="#" className="btn btn-primary rounded-pill px-4">Shop Now</a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                     <div className="product-tags my-4">
                         <h4 className="mb-3">PRODUCT TAGS</h4>
                         <div className="product-tags-items bg-light rounded p-3">
@@ -284,7 +284,7 @@ export default function ProductPage() {
                                         <i className="fa fa-minus"></i>
                                     </button>
                                 </div>
-                                <input type="text" className="form-control form-control-sm text-center border-0" value="1"/>
+                                <input type="text" className="form-control form-control-sm text-center border-0" value="1" readOnly/>
                                 <div className="input-group-btn">
                                     <button className="btn btn-sm btn-plus rounded-circle bg-light border">
                                         <i className="fa fa-plus"></i>
@@ -404,7 +404,7 @@ export default function ProductPage() {
                                 <div className="col-lg-12">
                                     <div className="border-bottom rounded my-4">
                                         <textarea name="" id="" className="form-control border-0" cols="30" rows="8"
-                                            placeholder="Your Review *" spellcheck="false"></textarea>
+                                            placeholder="Your Review *" spellCheck="false"></textarea>
                                     </div>
                                 </div>
                                 <div className="col-lg-12">

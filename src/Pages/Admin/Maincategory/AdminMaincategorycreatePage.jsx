@@ -19,7 +19,7 @@ export default function AdminMaincategorycreatePage() {
         pic: "Pic Field is Mendatory"
     })
     let [show, setShow] = useState(false)
-    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData.maincategory)
     let dispatch = useDispatch()
     let navigate = useNavigate()
     function getInputData(e) {

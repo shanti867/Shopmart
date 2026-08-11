@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-
+import { getSetting } from "../Redux/ActionCreators/SettingActionCreators"
+import { getActiveMaincategory, getMaincategory } from "../Redux/ActionCreators/MaincategoryActionCreators"
+import { useDispatch, useSelector } from 'react-redux'
 export default function Navbar() {
-    let[settingData, setSettingData] = useState({
+    let [settingData, setSettingData] = useState({
         siteName: import.meta.env.VITE_APP_SITE_NAME,
         address: import.meta.env.VITE_APP_ADDRESS,
         map1: import.meta.env.VITE_APP_MAP1,
@@ -16,6 +18,27 @@ export default function Navbar() {
         linkedin: import.meta.env.VITE_APP_LINKEDIN,
         instagram: import.meta.env.VITE_APP_INSTAGRAM
     })
+    let SettingStateData = useSelector(state => state.SettingStateData)
+    let MaincategoryStateData = useSelector(state=>state.MaincategoryStateData)
+    let ActiveMaincategoryStateData = MaincategoryStateData.activeMaincategory
+    let dispatch = useDispatch()
+
+     useEffect(()=>{
+        (()=>{
+            dispatch(getSetting())
+            if(SettingStateData.length){
+                setSettingData(()=>{
+                    let item = {}
+                    Object.keys(settingData).map(key => item[key] = SettingStateData[0][key] || settingData[key])
+                    return item
+                })
+            }
+        })()
+    },[SettingStateData.length])
+
+    useEffect(()=>{
+        dispatch(getActiveMaincategory())
+    },[])
     return (
         <>
             <div className="container-fluid px-5 border-bottom">
@@ -23,20 +46,20 @@ export default function Navbar() {
                     <div className="col-lg-7 col-4 text-center d-flex align-items-center justify-content-center">
                         <a href={settingData.map1} target='_blank' className="text-muted d-flex me-2">
                             <i className='me-1bi bi-geo-alt'></i>
-                            <span className = 'd-none d-xl-inline-block'>{settingData.address}</span>
-                            </a>
-                            <a href={`mailto:${settingData.email}`} target='_blank' className="text-muted d-flex me-2">
+                            <span className='d-none d-xl-inline-block'>{settingData.address}</span>
+                        </a>
+                        <a href={`mailto:${settingData.email}`} target='_blank' className="text-muted d-flex me-2">
                             <i className='me-1bi bi-envelope'></i>
-                            <span className = 'd-none d-xl-inline-block'>{settingData.email}</span>
-                            </a>
-                            <a href={`tel:${settingData.phone}`} target='_blank' className="text-muted d-flex me-2">
+                            <span className='d-none d-xl-inline-block'>{settingData.email}</span>
+                        </a>
+                        <a href={`tel:${settingData.phone}`} target='_blank' className="text-muted d-flex me-2">
                             <i className='me-1bi bi-telephone'></i>
-                            <span className = 'd-none d-xl-inline-block'>{settingData.phone}</span>
-                            </a>
-                            <a href={`https://wa.me/${settingData.whatsapp}`} target='_blank' className="text-muted d-flex me-2">
+                            <span className='d-none d-xl-inline-block'>{settingData.phone}</span>
+                        </a>
+                        <a href={`https://wa.me/${settingData.whatsapp}`} target='_blank' className="text-muted d-flex me-2">
                             <i className='me-1bi bi-whatsapp'></i>
-                            <span className = 'd-none d-xl-inline-block'>{settingData.whatsapp}</span>
-                            </a>
+                            <span className='d-none d-xl-inline-block'>{settingData.whatsapp}</span>
+                        </a>
                     </div>
                     <div className="col-lg-5 col-8 text-center text-lg-end">
                         <div className="d-inline-flex align-items-center" style={{ height: "45px" }}>
@@ -77,9 +100,9 @@ export default function Navbar() {
                     <div className="col-md-4 col-lg-6 text-center">
                         <div className="position-relative ps-4">
                             <div className="d-flex border rounded-pill">
-                                <input className="form-control border-primary outline-primary w-100 py-3" style={{borderRadius:"30px 0 0 30px"}}type="text"
+                                <input className="form-control border-primary outline-primary w-100 py-3" style={{ borderRadius: "30px 0 0 30px" }} type="text"
                                     data-bs-target="#dropdownToggle123" placeholder="Search Looking For?" />
-                                <button type="button" className="btn btn-primary py-3 px-5" style={{borderRadius:"0 30px 30px 0"}}><i
+                                <button type="button" className="btn btn-primary py-3 px-5" style={{ borderRadius: "0 30px 30px 0" }}><i
                                     className="fas fa-search"></i></button>
                             </div>
                         </div>
@@ -90,7 +113,7 @@ export default function Navbar() {
                                 className=""><i className=" me-1 fas fa-heart"></i> Wishlist</span></Link>
                             <Link to="/cart" className=" d-flex me-2 align-items-center justify-content-center"><span
                                 className=""><i className=" me-1 fas fa-shopping-cart"></i> Cart</span>
-                               </Link>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -106,36 +129,13 @@ export default function Navbar() {
                             <div className="collapse navbar-collapse rounded-bottom" id="allCat">
                                 <div className="navbar-nav ms-auto py-0">
                                     <ul className="list-unstyled categories-bars">
-                                        <li>
+                                        {ActiveMaincategoryStateData.map((item, index)=>{
+                                         return <li key = {index}>
                                             <div className="categories-bars-item">
-                                                <a href="#">Accessories</a>
-                                                <span>(3)</span>
+                                                <Link to={`/shop?mc=${item.name}`}>{item.name}</Link>
                                             </div>
                                         </li>
-                                        <li>
-                                            <div className="categories-bars-item">
-                                                <a href="#">Electronics & Computer</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div className="categories-bars-item">
-                                                <a href="#">Laptops & Desktops</a>
-                                                <span>(2)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div className="categories-bars-item">
-                                                <a href="#">Mobiles & Tablets</a>
-                                                <span>(8)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div className="categories-bars-item">
-                                                <a href="#">SmartPhone & Smart TV</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
+                                        })}
                                     </ul>
                                 </div>
                             </div>

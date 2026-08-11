@@ -54,7 +54,8 @@ export default function AdminProductcreatePage() {
 
     })
     let [show, setShow] = useState(false)
-    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
+    let MaincategoryStateData = useSelector(state => state.MaincategoryStateData.maincategory)
+    let ActiveMaincategoryStateData = useSelector(state => state.MaincategoryStateData.activeMaincategory)
     let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
     let BrandStateData = useSelector(state => state.BrandStateData)
     let dispatch = useDispatch()
@@ -109,8 +110,8 @@ export default function AdminProductcreatePage() {
             let fp = parseInt(bp - (bp * d) / 100)
             let formData = new FormData()
             formData.append("name", data.name)
-            data.pic.forEach(x=>{
-                formData.append("pic",x)
+            data.pic.forEach(x => {
+                formData.append("pic", x)
             })
             formData.append("status", data.status)
             formData.append("mainCategoryId", data.maincategory || MaincategoryStateData[0]?.id)
@@ -121,20 +122,20 @@ export default function AdminProductcreatePage() {
             formData.append("finalPrice", fp)
             formData.append("stock", data.stock)
             formData.append("stockQuantity", data.stockQuantity)
-            data.color.forEach(x=>{
+            data.color.forEach(x => {
                 formData.append("color", x)
             })
-            data.size.forEach(x=>{
+            data.size.forEach(x => {
                 formData.append("size", x)
             })
             formData.append("description", description)
-            
+
             try {
-                
+
                 dispatch(createProduct(formData))
                 // navigate("/admin/product")
-                setTimeout(()=>{
-navigate("/admin/product")
+                setTimeout(() => {
+                    navigate("/admin/product")
                 }, 500)
             }
             catch (error) {
@@ -155,7 +156,7 @@ navigate("/admin/product")
         dispatch(getActiveSubcategory())
     }, [SubcategoryStateData.length])
 
-    
+
     return (
         <>
             <Breadcrum title="Admin" />
@@ -177,7 +178,7 @@ navigate("/admin/product")
                                 <div className="col-xl-3 col-md-3 mb-3">
                                     <label>Maincategory*</label>
                                     <select name="maincategory" onChange={getInputData} className='form-select border-primary'>
-                                        {MaincategoryStateData.map((item) => {
+                                        {ActiveMaincategoryStateData.map((item) => {
                                             return <option key={item.id} value={item.id}>{item.name}</option>
                                         })}
                                     </select>
@@ -272,9 +273,9 @@ navigate("/admin/product")
                                 <div className="col-md-6 mb-3">
                                     <label>Pic*</label>
                                     <input type="file" name="pic" multiple onChange={getInputData} className={`form-control ${show && errorMessage.pic ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.pic ? errorMessage.pic?.split("|").map((item,index)=>{
-                                        return<p className='text-danger text-capitalize' key={index}>{item}</p> 
-                                    }): null}
+                                    {show && errorMessage.pic ? errorMessage.pic?.split("|").map((item, index) => {
+                                        return <p className='text-danger text-capitalize' key={index}>{item}</p>
+                                    }) : null}
                                 </div>
 
                                 <div className="col-md-6 md-3">

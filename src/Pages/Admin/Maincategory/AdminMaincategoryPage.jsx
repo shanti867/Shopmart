@@ -13,7 +13,7 @@ import {
 
 export default function AdminMaincategoryPage() {
     const dispatch = useDispatch();
-    const data = useSelector(state => state.MaincategoryStateData);
+    const data = useSelector(state => state.MaincategoryStateData.maincategory);
     const [search, setSearch] = useState("");
 
     useEffect(() => {

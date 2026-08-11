@@ -17,29 +17,18 @@ import {
 export default function AdminProductPage() {
 
     const dispatch = useDispatch();
-
     const data = useSelector(state => state.ProductStateData);
-
     const [search, setSearch] = useState("");
-
 
     useEffect(() => {
         dispatch(getProduct());
     }, []);
 
-
-
     function deleteRecord(id) {
-
         if (window.confirm("Are You Sure To Delete This Record?")) {
-
             dispatch(deleteProduct({ id }));
-
         }
-
     }
-
-
 
     const filteredData = data.filter(row =>
 
@@ -50,11 +39,9 @@ export default function AdminProductPage() {
         row.brand?.name?.toLowerCase().includes(search.toLowerCase()) ||
         (row.status ? "active" : "inactive")
             .includes(search.toLowerCase())
-
     );
 
     const columns = [
-
         {
             name: "Id",
             selector: row => row.ProductId,
@@ -65,7 +52,9 @@ export default function AdminProductPage() {
         {
             name: "Name",
             selector: row => row.name,
-            sortable: true
+            sortable: true,
+            wrap: true
+            
         },
 
 
@@ -92,13 +81,15 @@ export default function AdminProductPage() {
 
         {
             name: "Color",
-            selector: row => row.color?.join(", ")
+            selector: row => row.color?.join(", "),
+            wrap:true
         },
 
 
         {
             name: "Size",
-            selector: row => row.size?.join(", ")
+            selector: row => row.size?.join(", "),
+            wrap:true
         },
 
 
