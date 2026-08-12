@@ -12,7 +12,7 @@ import BestSellerProducts from '../Components/BestSellerProducts'
 
 import {getMaincategory, getActiveMaincategory} from "../Redux/ActionCreators/MaincategoryActionCreators"
 // import {getProduct} from "../Redux/ActionCreators/ProductActionCreators"
-import{getProduct} from "../Redux/ActionCreators/ProductActionCreators "
+import{getActiveProduct} from "../Redux/ActionCreators/ProductActionCreators "
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -26,7 +26,7 @@ export default function HomePage() {
         },
         modules:[Autoplay]
     }
-    let [data, setData] = useState([])
+    let [data, setData] = useState({pic:[]})
     let MaincategoryStateData = useSelector(state=>state.MaincategoryStateData)
     let ActiveMaincategoryStateData = useSelector(state=>state.MaincategoryStateData.activeMaincategory)
     let ProductStateData = useSelector(state=>state.ProductStateData)
@@ -40,9 +40,9 @@ export default function HomePage() {
 
     useEffect(()=>{
         (()=>{
-            dispatch(getProduct())
+            dispatch(getActiveProduct())
             if(ProductStateData.length){
-                setData(ProductStateData.slice(0,4))
+                setData(ProductStateData[0])
             }
         })()
     },[ProductStateData.length])
@@ -88,31 +88,33 @@ export default function HomePage() {
                     </Swiper>
                 </div>
             </div>
-            {data.length?
-            <div className="col-12 col-lg-5 col-xl-3 wow fadeInRight" data-wow-delay="0.1s">
+            
+            {data?.id?(
+                <div className="col-12 col-lg-5 col-xl-3 wow fadeInRight" data-wow-delay="0.1s">
                 <div className="carousel-header-banner h-100">
-                    <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${data[0].pic[2]}`} className="img-fluid w-100 h-100" style={{objectFit: "cover"}} alt="Image"/>
+                    <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${data.pic[2]}`} className="img-fluid w-100 h-100" style={{objectFit: "cover"}} alt="Image"/>
                     <div className="carousel-banner-offer">
-                        <p className="bg-primary text-white rounded fs-5 py-2 px-4 mb-0 me-3">Save &#8377;{data[0].basePrice-data[0].finalPrice}</p>
-                        <p className="text-light fs-5 fw-bold mb-0">{data[0].discount}% Off</p>
+                        <p className="bg-primary text-white rounded fs-5 py-2 px-4 mb-0 me-3">Save &#8377;{data.basePrice-data.finalPrice}</p>
+                        <p className="text-light fs-5 fw-bold mb-0">{data.discount}% Off</p>
                     </div>
                     <div className="carousel-banner">
                         <div className="carousel-banner-content text-center p-4">
-                            <Link to={`/shop?mc=${data[0]?.maincategory.name}`} className="text-light d-block mb-2">{data[0]?.maincategory.name}</Link>
-                            <Link to={`/product/${data[0].id}`} className="d-block text-white fs-3">{data[0].name}</Link>
-                            <del className="me-2 text-white fs-5">&#8377;{data[0].basePrice}</del>
-                            <span className="text-light fs-5">&#8377;{data[0].finalPrice}</span>
+                            <Link to={`/shop?mc=${data?.maincategory?.name}`} className="text-light d-block mb-2">{data?.maincategory?.name}</Link>
+                            <Link to={`/product/${data.id}`} className="d-block text-white fs-3">{data.name}</Link>
+                            <del className="me-2 text-white fs-5">&#8377;{data.basePrice}</del>
+                            <span className="text-light fs-5">&#8377;{data.finalPrice}</span>
                         </div>
-                        <Link to={`/product/${data[0].id}`} className="btn btn-primary rounded-pill py-2 px-4"><i
+                        <Link to={`/product/${data.id}`} className="btn btn-primary rounded-pill py-2 px-4"><i
                                 className="fas fa-shopping-cart me-2"></i> Add To Cart</Link>
                     </div>
                 </div>
-            </div>:null}
+            </div>
+            ):null}
         </div>
     </div>
     <Service/>
     <Offer/>
-    <Products maincategory={ActiveMaincategoryStateData}/>
+    <Products maincategory={ActiveMaincategoryStateData} data={ProductStateData}/>
     <SaleBanner/>
     <ProductsSlider/>
     <BestSellerProducts/>
