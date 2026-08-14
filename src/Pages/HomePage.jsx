@@ -46,6 +46,7 @@ export default function HomePage() {
             }
         })()
     },[ProductStateData.length])
+    
   return (
     <>
     <div className="container-fluid carousel bg-light px-0">
@@ -116,7 +117,9 @@ export default function HomePage() {
     <Offer/>
     <Products maincategory={ActiveMaincategoryStateData} data={ProductStateData}/>
     <SaleBanner/>
-    <ProductsSlider/>
+    {ActiveMaincategoryStateData.filter(x=>ProductStateData.filter(p=>p.maincategory.name === x.name).length).map(item=>{
+        return <ProductsSlider key = {item.id} maincategory={item.name} data={ProductStateData.filter(p=> p.maincategory.name === item.name)}/>
+    })}
     <BestSellerProducts/>
     </>
   )
