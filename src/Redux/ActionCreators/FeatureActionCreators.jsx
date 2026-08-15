@@ -1,5 +1,5 @@
 
-import { CREATE_FEATURE, DELETE_FEATURE, GET_FEATURE, UPDATE_FEATURE } from "../Constant"
+import { CREATE_FEATURE, DELETE_FEATURE, GET_FEATURE, GET_ACTIVE_FEATURE, UPDATE_FEATURE } from "../Constant"
 
 export function createFeature(data){
     return{
@@ -11,6 +11,11 @@ export function createFeature(data){
 export function getFeature(){
     return{
         type: GET_FEATURE,
+    }
+}
+export function getActiveFeature(){
+    return{
+        type: GET_ACTIVE_FEATURE,
     }
 }
 
