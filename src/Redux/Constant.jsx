@@ -63,6 +63,7 @@ export const UPDATE_FAQ = "UPDATE_FAQ"
 export const UPDATE_FAQ_RED = "UPDATE_FAQ_RED"
 export const DELETE_FAQ = "DELETE_FAQ"
 export const DELETE_FAQ_RED = "DELETE_FAQ_RED"
+export const GET_ACTIVE_FAQ = "GET_ACTIVE_FAQ"
 
 //SETTING
 export const CREATE_SETTING = "CREATE_SETTING"

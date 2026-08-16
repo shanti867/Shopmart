@@ -1,6 +1,6 @@
 import { put, takeEvery } from "redux-saga/effects"
 import { createRecord, deleteRecord, getRecord, updateRecord } from "./Service/Index"
-import { CREATE_FAQ, CREATE_FAQ_RED, DELETE_FAQ, DELETE_FAQ_RED, GET_FAQ, GET_FAQ_RED, UPDATE_FAQ, UPDATE_FAQ_RED } from "../Constant"
+import { CREATE_FAQ, CREATE_FAQ_RED, DELETE_FAQ, DELETE_FAQ_RED, GET_FAQ, GET_FAQ_RED, GET_ACTIVE_FAQ, UPDATE_FAQ, UPDATE_FAQ_RED } from "../Constant"
 
 function* createSaga(action){        //worker
     let response = yield createRecord("faq", action.payload)
@@ -9,6 +9,10 @@ function* createSaga(action){        //worker
 function* getSaga(){        //worker
     let response = yield getRecord("faq")
     yield put({type: GET_FAQ_RED, payload: response})
+}
+function* getActiveSaga(){
+    let response = yield getRecord("faq/active")
+    yield put({type:GET_FAQ_RED, payload: response})
 }
 function* updateSaga(action){        //worker
     let response = yield updateRecord("faq", action.payload.id, action.payload.data)
@@ -29,6 +33,7 @@ function* deleteSaga(action){        //worker
 export default function* FaqSaga(){         
     yield takeEvery(CREATE_FAQ, createSaga)  //Watcher
     yield takeEvery(GET_FAQ, getSaga)        //Watcher
+    yield takeEvery(GET_ACTIVE_FAQ, getActiveSaga) //Watcher
     yield takeEvery(UPDATE_FAQ, updateSaga)   //Watcher
     yield takeEvery(DELETE_FAQ, deleteSaga)   //Watcher
 }

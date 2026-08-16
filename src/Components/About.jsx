@@ -40,11 +40,11 @@ export default function About() {
             <p>{settingData.siteName} also provides an efficient shopping experience through features such as active product management, category-based filtering, product details, promotional banners, and attractive product sliders. The application is developed using modern web technologies, with React.js used for the frontend and Spring Boot used for backend services and API management. Redux is used for managing application state and handling product and category data efficiently. The project aims to demonstrate how a complete e-commerce application can connect frontend, backend, and database technologies to deliver a practical, user-friendly, and scalable online shopping platform.</p>
             
             <div>
-              <a href={settingData.facebook} target='_blank' className="me-2"><i className='fs-3 bi bi-facebook'></i></a>
-              <a href={settingData.twitter} target='_blank' className="me-2"><i className='fs-3 bi bi-twitter'></i></a>
-              <a href={settingData.youtube} target='_blank' className="me-2"><i className='fs-3 bi bi-youtube'></i></a>
-              <a href={settingData.linkedin} target='_blank' className="me-2"><i className='fs-3 bi bi-linkedin'></i></a>
-              <a href={settingData.instagram} target='_blank' className="me-2"><i className='fs-3 bi bi-instagram'></i></a>
+              <a href={settingData.facebook} target='_blank' className="me-2"><i className='fs-3 text-secondary bi bi-facebook'></i></a>
+              <a href={settingData.twitter} target='_blank' className="me-2"><i className='fs-3 text-secondary bi bi-twitter'></i></a>
+              <a href={settingData.youtube} target='_blank' className="me-2"><i className='fs-3 text-secondary bi bi-youtube'></i></a>
+              <a href={settingData.linkedin} target='_blank' className="me-2"><i className='fs-3 text-secondary bi bi-linkedin'></i></a>
+              <a href={settingData.instagram} target='_blank' className="me-2"><i className='fs-3 text-secondary bi bi-instagram'></i></a>
             </div>
           </div>
           <div className="col-md-6">

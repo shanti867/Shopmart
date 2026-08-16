@@ -1,23 +1,59 @@
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
 import Breadcrum from '../Components/Breadcrum'
-import Offer from '../Components/Offer'
-import Service from '../Components/Service'
 import SaleBanner from '../Components/SaleBanner'
+
+import {getActiveMaincategory} from "../Redux/ActionCreators/MaincategoryActionCreators"
+import {getActiveSubcategory} from "../Redux/ActionCreators/SubcategoryActionCreators"
+// import {getActiveBrand} from "../Redux/ActionCreators/BrandActionCreators"
+import {getActiveBrand} from "../Redux/ActionCreators/BrandActionCreators"
+// import {getActiveProduct} from "../Redux/ActionCreators/ProductActionCreators"
+import { getActiveProduct } from '../Redux/ActionCreators/ProductActionCreators '
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function ShopPage() {
     let [amount, setAmount] = useState(0)
+    let MaincategoryStateData = useSelector(state=>state.MaincategoryStateData)
+    let ActiveMaincategoryStateData = useSelector(state=>state.MaincategoryStateData.activeMaincategory)
+    let SubcategoryStateData = useSelector(state=>state.SubcategoryStateData)
+    let BrandStateData = useSelector(state=>state.BrandStateData)
+    let ProductStateData = useSelector(state=>state.ProductStateData)
+
+    let dispatch = useDispatch()
+
+    useEffect(()=>{
+        (()=>{
+            dispatch(getActiveMaincategory())
+        })()
+    }, [ActiveMaincategoryStateData.length])
+
+    useEffect(()=>{
+        (()=>{
+            dispatch(getActiveSubcategory())
+        })()
+    },[SubcategoryStateData.length])
+
+    useEffect(()=>{
+        (()=>{
+            dispatch(getActiveBrand())
+        })()
+    },[BrandStateData.length])
+
+    useEffect(()=>{
+        (()=>{
+            dispatch(getActiveProduct())
+        })()
+    },[ProductStateData.length])
+
+
     return (
         <>
             <Breadcrum title="Shop" />
-            <Service />
-            <Offer />
             <div className="container-fluid shop py-5">
                 <div className="container py-5">
                     <div className="row g-4">
                         <div className="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
                             <div className="product-categories mb-4">
-                                <h4>Products Categories</h4>
+                                <h4>Maincategory</h4>
                                 <ul className="list-unstyled">
                                     <li>
                                         <div className="categories-item">

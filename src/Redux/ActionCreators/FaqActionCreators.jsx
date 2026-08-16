@@ -1,5 +1,5 @@
 
-import { CREATE_FAQ, DELETE_FAQ, GET_FAQ, UPDATE_FAQ } from "../Constant"
+import { CREATE_FAQ, DELETE_FAQ, GET_FAQ, GET_ACTIVE_FAQ, UPDATE_FAQ } from "../Constant"
 
 export function createFaq(data){
     return{
@@ -11,6 +11,12 @@ export function createFaq(data){
 export function getFaq(){
     return{
         type: GET_FAQ,
+    }
+}
+
+export function getActiveFaq(){
+    return{
+        type:GET_ACTIVE_FAQ
     }
 }
 
