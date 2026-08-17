@@ -21,10 +21,11 @@ export default function ShopPage() {
     let SubcategoryStateData = useSelector(state => state.SubcategoryStateData)
     let BrandStateData = useSelector(state => state.BrandStateData)
     let ProductStateData = useSelector(state => state.ProductStateData)
-    
-    let [page, setPage] = useState(0)
+
+    let [page, setPage] = useState(1)
     let [startIndex, setStartIndex] = useState(0)
     let [endIndex, setEndIndex] = useState(0)
+    let [totalProducts, setTotalProducts] = useState(0)
     let dispatch = useDispatch()
 
     useEffect(() => {
@@ -48,8 +49,16 @@ export default function ShopPage() {
     useEffect(() => {
         (() => {
             dispatch(getActiveProduct())
+            if (ProductStateData.length) {
+                setTotalProducts(ProductStateData.length)
+            }
         })()
     }, [ProductStateData.length])
+
+    useEffect(()=>{
+        setStartIndex((page-1)*24)
+        setEndIndex((page-1)*24+24)
+    },[page])
 
 
     return (
@@ -170,34 +179,31 @@ export default function ShopPage() {
                             <div className="tab-content">
                                 <div id="tab-5" className="tab-pane fade show p-0 active">
                                     <div className="row g-4 product">
-                                        {ProductStateData.map(item=>{
-                                            return <SingleProduct item={item} title="shop" key={item.id}/>
+                                        {ProductStateData.slice(startIndex, endIndex).map(item => {
+                                            return <SingleProduct item={item} title="shop" key={item.id} />
                                         })}
-                                        
+
                                     </div>
                                 </div>
                                 <div id="tab-6" className="products tab-pane fade show p-0">
                                     <div className="row g-4 products-mini">
-                                        
-                                        {ProductStateData.map(item=>{
-                                            return <div key ={item.id} className="col-lg-6">
-                                            <SingleProduct2 item={item} title="shop"/>
-                                        </div>
+
+                                        {ProductStateData.slice(startIndex, endIndex).map(item => {
+                                            return <div key={item.id} className="col-lg-6">
+                                                <SingleProduct2 item={item} title="shop" />
+                                            </div>
                                         })}
                                     </div>
                                 </div>
                                 <div className="col-12 wow fadeInUp" data-wow-delay="0.1s">
-                                            <div className="pagination d-flex justify-content-center mt-5">
-                                                <a href="#" onClick={()=>page>1?setPage(page-1):null}className="rounded">&laquo;</a>
-                                                <a href="#" className={`rounded ${page===1?'active':''}`}>1</a>
-                                                <a href="#" className={`rounded ${page===2?'active':''}`}>2</a>
-                                                <a href="#" className={`rounded ${page===3?'active':''}`}>3</a>
-                                                <a href="#" className={`rounded ${page===4?'active':''}`}>4</a>
-                                                <a href="#" className={`rounded ${page===5?'active':''}`}>5</a>
-                                                <a href="#" className={`rounded ${page===6?'active':''}`}>6</a>
-                                                <a href="#" onClick={()=>page<ProductStateData.length?setPage(page+1):null}className="rounded">&raquo;</a>
-                                            </div>
-                                        </div>
+                                    <div className="pagination d-flex justify-content-center mt-5">
+                                        <a href="#" onClick={() => page > 1 ? setPage(page - 1) : null} className="rounded">&laquo;</a>
+                                        {Array.from({ length: (totalProducts / 24)+1 }, (p, index) => (
+                                            <a href="#" key={index} onClick={()=>setPage(index+1)} className={`rounded ${page === (index + 1) ? 'active' : ''}`}>{index + 1}</a>
+                                        ))}
+                                        <a href="#" onClick={() => page < totalProducts ? setPage(page + 1) : null} className="rounded">&raquo;</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
