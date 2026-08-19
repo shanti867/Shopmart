@@ -15,8 +15,8 @@ export default function SingleProduct({ item, title }) {
                         </div>
                     </div>
                     <div className="text-center rounded-bottom p-4">
-                        <a href="#" className="d-block mb-2">{item.maincategory.name}/{item.subcategory.name}</a>
-                        <a href="#" className="d-block h4">{item.name} </a>
+                        <Link to={`/product/${item.id}`} className="d-block mb-2">{item.maincategory.name}/{item.subcategory.name}</Link>
+                        <Link to={`/product/${item.id}`} className="d-block h4">{item.name} </Link>
                         <del className="me-2 fs-5">&#8377;{item.basePrice}</del>
                         <span className="text-primary fs-5">&#8377;{item.finalPrice}</span>
                     </div>
