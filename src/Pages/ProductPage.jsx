@@ -4,11 +4,9 @@ import ProductsSlider from '../Components/ProductsSlider'
 import { useParams } from 'react-router-dom'
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import { EffectCube, Pagination } from 'swiper/modules';
 import { EffectFlip, Pagination, Navigation } from 'swiper/modules';
 
 import 'swiper/css';
-// import 'swiper/css/effect-cube';
 import 'swiper/css/effect-flip';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -17,19 +15,6 @@ import { getActiveProduct } from "../Redux/ActionCreators/ProductActionCreators 
 import { useDispatch, useSelector } from 'react-redux'
 
 const sliderOptions = {
-    // effect: 'cube',
-    // grabCursor: true,
-    // cubeEffect: {
-    //     shadow: true,
-    //     slideShadows: true,
-    //     shadowOffset: 20,
-    //     shadowScale: 0.94,
-    // },
-    // loop: true,
-    // pagination: true,
-    // modules: [EffectCube, Pagination],
-    // className: "mySwiper"
-
     effect:'flip',
         grabCursor:true,
         pagination:true,
@@ -39,7 +24,11 @@ const sliderOptions = {
 }
 export default function ProductPage() {
     let { id } = useParams()
-
+    let [selected, setSelected] = useState({
+        color: "",
+        size: "",
+        quantity:1
+    })
     let [data, setData] = useState({ pic: [] })
     let [relatedProducts, setRelatedProducts] = useState([])
 
@@ -52,6 +41,7 @@ export default function ProductPage() {
             if (ProductStateData.length) {
                 let item = ProductStateData.find(x => x.id == id)
                 setData({ ...item })
+                setSelected({...selected, color: data.color[0], size: data.size[0]})
                 setRelatedProducts(ProductStateData.filter(x => x.maincategory?.name === item.maincategory?.name))
             }
         })()
@@ -74,17 +64,17 @@ export default function ProductPage() {
                                     </Swiper>
                                 </div>
                                 <div className="col-xl-6">
-                                    <h4 className="fw-bold mb-3">Smart Camera</h4>
-                                    <p className="mb-3">Category: Electronics</p>
-                                    <h5 className="fw-bold mb-3">3,35 $</h5>
-                                    <div className="d-flex mb-4">
+                                    <h4 className="fw-bold mb-3">{data.name}</h4>
+                                    <p className="mb-3">Category: {data.maincategory?.name}/{data.subcategory?.name}/{data.brand?.name}</p>
+                                    <h5 className="fw-bold mb-3"><del>&#8377;{data.basePrice}</del>&#8377;{data.finalPrice}<sup>{data.discount}% Off</sup></h5>
+                                    {/* <div className="d-flex mb-4">
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star"></i>
-                                    </div>
-                                    <div className="mb-3">
+                                    </div> */}
+                                    {/* <div className="mb-3">
                                         <div className="btn btn-primary d-inline-block rounded text-white py-1 px-4 me-2"><i
                                             className="fab fa-facebook-f me-1"></i> Share</div>
                                         <div className="btn btn-secondary d-inline-block rounded text-white py-1 px-4 ms-2"><i
@@ -93,11 +83,17 @@ export default function ProductPage() {
                                     <div className="d-flex flex-column mb-3">
                                         <small>Product SKU: N/A</small>
                                         <small>Available: <strong className="text-primary">20 items in stock</strong></small>
+                                    </div> */}
+        
+                                    <p className="mb-4">{data.stock?`${data.stockQuantity} Left In Stock`:"Out Of Stock"}</p>
+                                    <div className="d-flex">
+                                        <h4>Color : </h4>
+                                        <div className="ms-4 btn-group">
+                                            {data?.color?.map((item,index)=>{
+                                                return <button key={index} className={`btn btn-light border border-primary`}>{item}</button>
+                                            })}
+                                        </div>
                                     </div>
-                                    <p className="mb-4">The generated Lorem Ipsum is therefore always free from repetition injected
-                                        humour, or non-characteristic words etc.</p>
-                                    <p className="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder;
-                                        chain pickerel hatchetfish, pencilfish snailfish</p>
                                     <div className="input-group quantity mb-5" style={{ width: "100px" }}>
                                         <div className="input-group-btn">
                                             <button className="btn btn-sm btn-minus rounded-circle bg-light border">
