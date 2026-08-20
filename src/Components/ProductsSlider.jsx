@@ -6,30 +6,26 @@ import "swiper/css";
 import SingleProduct2 from './SingleProduct2';
 
 const slideOptions = {
-        loop: true,
-        breakpoints: {
-            640: {
-                slidesPerView: 1,
-                spaceBetween: 0,
-            },
-            768: {
-                slidesPerView: 2,
-                spaceBetween: 10,
-            },
-            1024: {
-                slidesPerView: 3,
-                spaceBetween: 10,
-            },
+    loop: true,
+    breakpoints: {
+        640: {
+            slidesPerView: 1,
+            spaceBetween: 0,
         },
-        autoplay: {
-            delay: 2000,
-            disableOnInteraction: false,
+        768: {
+            slidesPerView: 2,
+            spaceBetween: 10,
+        }
+    },
+    autoplay: {
+        delay: 2000,
+        disableOnInteraction: false,
 
-        },
-        modules: [Autoplay]
-    }
+    },
+    modules: [Autoplay]
+}
 export default function ProductsSlider({ title, maincategory, data }) {
-    
+
     return (
         <>
             <div className="container-fluid products productList overflow-hidden">
@@ -37,10 +33,10 @@ export default function ProductsSlider({ title, maincategory, data }) {
                     <div className="mx-auto text-center mb-5" style={{ maxWidth: "900px" }}>
                         <h4 className="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp"
                             data-wow-delay="0.1s">Products</h4>
-                        {title===""?
-                        <h1 className="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">Other Related Items</h1> :
-                        <h1 className="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">All {maincategory} Items</h1>
-                    }
+                        {title === "" ?
+                            <h1 className="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">Other Related Items</h1> :
+                            <h1 className="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">All {maincategory} Items</h1>
+                        }
                     </div>
                     <div className="productList-carousel  pt-4 wow fadeInUp" data-wow-delay="0.3s">
                         <Swiper {...slideOptions}>

@@ -11,6 +11,7 @@ import { getActiveBrand } from "../Redux/ActionCreators/BrandActionCreators"
 // import {getActiveProduct} from "../Redux/ActionCreators/ProductActionCreators"
 import { getActiveProduct } from '../Redux/ActionCreators/ProductActionCreators '
 import { useDispatch, useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 
 const colors = ["Black", "White", "Blue", "Red", "Green", "Gray", "Pink", "Yellow", "Magenta", "purple", "Orange", "N/A"]
 const sizes = ["XXL", "XL", "L", "MD", "SM", "XS", "NB", "22", "24", "26", "28", "30", "32", "34", "36", "38", "40", "N/A"]
@@ -26,6 +27,8 @@ export default function ShopPage() {
     let [startIndex, setStartIndex] = useState(0)
     let [endIndex, setEndIndex] = useState(0)
     let [totalProducts, setTotalProducts] = useState(0)
+
+    let [searchParams] = useSearchParams()
 
     let [selected, setSelected] = useState({
         maincategory: [],
@@ -74,37 +77,46 @@ export default function ShopPage() {
         applySortFilter(sortFilter, items)
     }
 
-    function applySortFilter(filter, data){
-        if(min !== -1 && max !== -1){
+    function applySortFilter(filter, data) {
+        if (min !== -1 && max !== -1) {
             data = data.filter(x => x.finalPrice >= min && x.finalPrice <= max)
         }
-        if(filter==="Latest")
-            setData(data.sort((x,y)=>y.id - x.id))
-        else if(filter==="Price : Low to high")
-            setData(data.sort((x,y)=>x.finalPrice-y.finalPrice))
+        if (filter === "Latest")
+            setData(data.sort((x, y) => y.id - x.id))
+        else if (filter === "Price : Low to high")
+            setData(data.sort((x, y) => x.finalPrice - y.finalPrice))
         else
-            setData(data.sort((x,y)=>y.finalPrice-x.finalPrice))
-        
+            setData(data.sort((x, y) => y.finalPrice - x.finalPrice))
+
         setTotalProducts(data.length)
         setSortFilter(filter)
     }
 
-    function applySearchFilter(){
-        let ch = search?.toLocaleLowerCase()
-        let items = ProductStateData.filter(x=>
+    function applySearchFilter(option = null) {
+        let ch = option ? option?.toLocaleLowerCase() : search?.toLocaleLowerCase()
+        let items
+        if (ActiveMaincategoryStateData.some(x =>
+        x.name?.toLocaleLowerCase() === ch
+    )) {
+        items = ProductStateData.filter(x =>
+            x.maincategory?.name?.toLocaleLowerCase() === ch
+        )
+    }
+    else{
+        items = ProductStateData.filter(x =>
             (x.name?.toLocaleLowerCase()?.includes(ch)) ||
-            (x.maincategory.name?.toLocaleLowerCase()===ch) ||
-            (x.subcategory.name?.toLocaleLowerCase()===ch) ||
-            (x.brand.name?.toLocaleLowerCase()===ch) ||
+            (x.subcategory.name?.toLocaleLowerCase() === ch) ||
+            (x.brand.name?.toLocaleLowerCase() === ch) ||
             (x.color?.includes(ch)) ||
             (x.description?.toLocaleLowerCase()?.includes(ch))
         )
+    }
         setSelected({
             maincategory: [],
-            subcategory : [],
-            brand : [],
-            color : [],
-            size : [],
+            subcategory: [],
+            brand: [],
+            color: [],
+            size: [],
         })
         applySortFilter(sortFilter, items)
     }
@@ -142,7 +154,30 @@ export default function ShopPage() {
         setEndIndex((page - 1) * 24 + 24)
     }, [page])
 
+    useEffect(()=>{
+        if(searchParams.get("search"))
+            applySearchFilter(searchParams.get("search"))
+        else{
+                           let selectItems = {
+            maincategory: searchParams.get("mc")
+                ? [searchParams.get("mc")]
+                : [],
+            subcategory: searchParams.get("sc")
+                ? [searchParams.get("sc")]
+                : [],
+            brand: searchParams.get("br")
+                ? [searchParams.get("br")]
+                : [],
+            color: [],
+            size: []
+        }
 
+        setSelected(selectItems)
+        applySelectFilter(selectItems)
+    }
+
+
+    },[searchParams])
     return (
         <>
             <Breadcrum title="Shop" />
@@ -223,19 +258,19 @@ export default function ShopPage() {
 
                             <div className="product-size mb-3">
                                 <h5>Filter By Price Range</h5>
-                                <form onSubmit={(e)=>{
+                                <form onSubmit={(e) => {
                                     e.preventDefault()
                                     applySortFilter(sortFilter, data)
                                 }}>
                                     <div className="row">
                                         <div className="col-6 mb-3">
                                             <label>Min. Amount</label>
-                                            <input type="number" name="min" onChange={e=>(setMin(e.target.value))} placeholder="Min. Amount" className="form-control border-primary" />
+                                            <input type="number" name="min" onChange={e => (setMin(e.target.value))} placeholder="Min. Amount" className="form-control border-primary" />
                                         </div>
 
                                         <div className="col-6 mb-3">
                                             <label>Max. Amount</label>
-                                            <input type="number" name="max" onChange={e=>(setMax(e.target.value))} placeholder="Max. Amount" className="form-control border-primary" />
+                                            <input type="number" name="max" onChange={e => (setMax(e.target.value))} placeholder="Max. Amount" className="form-control border-primary" />
                                         </div>
 
                                         <div className="col-12 mb-3">
@@ -248,16 +283,16 @@ export default function ShopPage() {
                         <div className="col-lg-9 wow fadeInUp" data-wow-delay="0.1s">
                             <div className="row g-4">
                                 <div className="col-xl-6">
-                                    <form onSubmit={(e)=>{
+                                    <form onSubmit={(e) => {
                                         e.preventDefault()
                                         applySearchFilter()
                                     }}>
                                         <div className="input-group w-100 mx-auto d-flex">
-                                        <input type="search" value={search} onChange={(e)=>setSearch(e.target.value)} className="form-control p-3" placeholder="Search Products By Name, Category, Color etc"
-                                            aria-describedby="search-icon-1" />
-                                        <button type="submit" id="search-icon-1" className="input-group-text p-3"><i
-                                            className="fa fa-search"></i></button>
-                                    </div>
+                                            <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} className="form-control p-3" placeholder="Search Products By Name, Category, Color etc"
+                                                aria-describedby="search-icon-1" />
+                                            <button type="submit" id="search-icon-1" className="input-group-text p-3"><i
+                                                className="fa fa-search"></i></button>
+                                        </div>
                                     </form>
                                 </div>
                                 <div className="col-xl-4 text-end">

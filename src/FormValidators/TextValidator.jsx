@@ -1,9 +1,26 @@
 import React from 'react'
+import PasswordValidator from 'password-validator'
+
+var schema = new PasswordValidator();
+
+// Add properties to it
+schema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase(1)                              // Must have uppercase 1 letters
+    .has().lowercase(1)                              // Must have lowercase 1 letters
+    .has().digits(1)                                 // Must have at least 1 digit
+    .has().symbols(1)                              // Must have at least 1 special Character
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
+
 
 export default function TextValidator(e) {
     let { value, name } = e.target
     switch (name) {
         case "name":
+        case "email":
+        case "username":
         case "icon":
         case "question":
             if (!value || value.length === 0)
@@ -13,10 +30,28 @@ export default function TextValidator(e) {
             else
                 return ""
 
+        case "password":
+            if (!value || value.length === 0)
+                return name + " Field is Mendatory"
+            else if (!schema.validate(value))
+                return schema.validate(value, { details: true }).map(x => x.message.replaceAll('string', 'password'))
+            else
+                return ""
+
+        case "phone":
+            if (!value || value.length === 0)
+                return name + " Field is Mendatory"
+            else if (value.length < 10 || value.length > 10)
+                return "Invalid Phone Number, Phone Number Should be 10 Digits"
+            else if (!["6", "7", "8", "9"].includes(value[0]))
+                return "Invalid Phone Number, Phone Number Must be start with 6,7,8,9"
+            else
+                return ""
+
         case "basePrice":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
-            else if (parseInt(value)<1)
+            else if (parseInt(value) < 1)
                 return " Price Field Length Must Be 1 or More"
             else
                 return ""
@@ -24,15 +59,15 @@ export default function TextValidator(e) {
         case "stockQuantity":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
-            else if (parseInt(value)<0)
+            else if (parseInt(value) < 0)
                 return " Stock Quantity Field Length Must Be 0 or More"
             else
-                return ""  
-            
+                return ""
+
         case "discount":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
-            else if (parseInt(value)<0 || parseInt(value)>100)
+            else if (parseInt(value) < 0 || parseInt(value) > 100)
                 return " Discount Field value Must Be 0-100"
             else
                 return ""
