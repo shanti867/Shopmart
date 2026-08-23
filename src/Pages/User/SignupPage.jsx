@@ -3,6 +3,7 @@ import TextValidator from '../../FormValidators/TextValidator'
 import { Link, useNavigate } from 'react-router-dom'
 
 export default function SignupPage() {
+    let [showPassword, setShowPassword] = useState(false)
     let [data, setData] = useState({
         name: '',
         username: '',
@@ -30,30 +31,32 @@ export default function SignupPage() {
     }
     async function postData(e) {
         e.preventDefault()
+        let item = Object.values(errorMessage).find(x => x !== "")
+        if (item) {
+            setShow(true)
+            return
+        }
 
         let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                ...data,
-                status: true
-            })
+            body: JSON.stringify(data)
         })
         if (response.ok) {
             navigate("/login")
         }
-        else {        
-        let message = await response.json()
-            if(message.message === "Username Already Taken"){
-                setErrorMessage({...errorMessage, username: message.message})
+        else {
+            let message = await response.json()
+            if (message.message === "Username Already Taken") {
+                setErrorMessage({ ...errorMessage, username: message.message })
             }
-            else if(message.message === "Email Address Already Taken"){
-                setErrorMessage({...errorMessage, email: message.message})
+            if (message.message === "Email Address Already Taken") {
+                setErrorMessage({ ...errorMessage, email: message.message })
             }
-            else if(message.message === "Password and Confirm Password do not match"){
-                setErrorMessage({...errorMessage, cpassword: message.message})
+            if (message.message === "Password and Confirm Password do not match") {
+                setErrorMessage({ ...errorMessage, cpassword: message.message })
             }
             setShow(true)
         }
@@ -94,16 +97,22 @@ export default function SignupPage() {
                             </div>
 
                             <div className="col-lg-6 mb-3">
-                                <label>Password*</label>
-                                <input type="password" name="password" onChange={getInputData}
-                                    placeholder="Password" className={`form-control ${show && errorMessage.password ? "border-danger" : "border-primary"}`} />
-                                {show && errorMessage.password ? <p className="text-danger">{errorMessage.password}</p> : null}
+                                <label className="d-block">Password*</label>
+                                <div className="btn-group w-100">
+                                    <input type={`${showPassword ? "text" : "password"}`} name="password" onChange={getInputData}
+                                        placeholder="Password" className={`form-control rounded-0 rounded-start ${show && errorMessage.password ? "border-danger" : "border-primary"}`} />
+                                    <button type="button" className="btn border border-primary" onClick={() => setShowPassword(!showPassword)}><i className={`${showPassword ? "bi bi-eye-slash" : "bi bi-eye"}`}></i></button>
+                                </div>
+                                {show && errorMessage.password ? errorMessage.password?.split("|").map((item, index) => {
+                                    return <p className="text-danger" key={index}>{item}</p>
+                                }) : null}
                             </div>
 
                             <div className="col-lg-6 mb-3">
                                 <label>Confirm Password*</label>
                                 <input type="password" name="cpassword" onChange={getInputData}
-                                    placeholder="Confirm Password" className={`form-control ${show && errorMessage.password ? "border-danger" : "border-primary"}`} />
+                                    placeholder="Confirm Password" className={`form-control ${show && errorMessage.cpassword ? "border-danger" : "border-primary"}`} />
+                                {show && errorMessage.cpassword ? <p className="text-danger">{errorMessage.cpassword}</p> : null}
                             </div>
 
                             <div className="col-12 mb-3">

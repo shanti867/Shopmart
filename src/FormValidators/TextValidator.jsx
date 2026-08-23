@@ -34,7 +34,7 @@ export default function TextValidator(e) {
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
             else if (!schema.validate(value))
-                return schema.validate(value, { details: true }).map(x => x.message.replaceAll('string', 'password'))
+                return schema.validate(value, { details: true }).map(x => x.message.replaceAll('string', 'password')).join("|")
             else
                 return ""
 

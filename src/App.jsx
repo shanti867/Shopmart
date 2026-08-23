@@ -43,6 +43,8 @@ import AdminProductUpdatePage from './Pages/Admin/Product/AdminProductUpdatePage
 
 import AdminSettingPage from './Pages/Admin/Setting/AdminSettingPage'
 import SignupPage from './Pages/User/SignupPage'
+import LoginPage from './Pages/User/LoginPage'
+import ProfilePage from './Pages/User/ProfilePage'
 export default function App() {
   return (
     <>
@@ -63,8 +65,10 @@ export default function App() {
           <Route path='/tc' element={<TermsAndConditions />} />
 
           <Route path='/signup' element={<SignupPage />} />
+          <Route path='/login' element={<LoginPage />} />
           <Route path='/*' element={<ErrorPage />} />
           {/*User Routes*/}
+          <Route path='/profile' element={<ProfilePage />} />
           <Route path='/cart' element={<CartPage />} />
           <Route path='/checkout' element={<CheckOutPage />} />
 
