@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Cookies from "js-cookie"
 
 import { getSetting } from "../Redux/ActionCreators/SettingActionCreators"
 import { getActiveMaincategory, getMaincategory } from "../Redux/ActionCreators/MaincategoryActionCreators"
@@ -18,7 +19,7 @@ export default function Navbar() {
         linkedin: import.meta.env.VITE_APP_LINKEDIN,
         instagram: import.meta.env.VITE_APP_INSTAGRAM
     })
-    
+
     let [search, setSearch] = useState("")
     let SettingStateData = useSelector(state => state.SettingStateData)
     let MaincategoryStateData = useSelector(state => state.MaincategoryStateData)
@@ -27,9 +28,17 @@ export default function Navbar() {
 
     let navigate = useNavigate()
 
-    function postData(e){
+    function logout() {
+        Cookies.remove("login")
+        Cookies.remove("id")
+        Cookies.remove("name")
+        Cookies.remove("role")
+        Cookies.remove("token")
+        navigate("/login")
+    }
+    function postData(e) {
         e.preventDefault()
-        navigate(`/shop?search=${search}`) 
+        navigate(`/shop?search=${search}`)
     }
     useEffect(() => {
         (() => {
@@ -76,20 +85,23 @@ export default function Navbar() {
                             <a href={settingData.youtube} target='_blank' className="me-2"><i className='bi bi-youtube'></i></a>
                             <a href={settingData.linkedin} target='_blank' className="me-2"><i className='bi bi-linkedin'></i></a>
                             <a href={settingData.instagram} target='_blank' className="me-2"><i className='bi bi-instagram'></i></a>
-                            <div className="dropdown">
-                                <a href="#" className="dropdown-toggle ms-2" data-bs-toggle="dropdown"><small><i
-                                    className="fa fa-home me-2"></i> Shanti</small></a>
-                                <div className="dropdown-menu rounded">
-                                    <Link to="/profile?option=profile" className="dropdown-item"> Profile</Link>
-                                    <Link to="/profile?option=profile" className="dropdown-item"> Admin Dashboard</Link>
-                                    <Link to="/profile?option=wishlist" className="dropdown-item"> Wishlist</Link>
-                                    <Link to="/profile?option=orders" className="dropdown-item"> Orders</Link>
-                                    <Link to="/profile?option=address" className="dropdown-item"> Address</Link>
-                                    <Link to="/cart" className="dropdown-item"> Cart</Link>
-                                    <Link to="/checkout" className="dropdown-item"> Checkout</Link>
-                                    <button className="dropdown-item"> Log Out</button>
-                                </div>
-                            </div>
+                            {Cookies.get("login") ?
+                                <div className="dropdown">
+                                    <a href="#" className="dropdown-toggle ms-2" data-bs-toggle="dropdown"><small><i
+                                        className="fa fa-home me-2"></i> {Cookies.get("name")}</small></a>
+                                    <div className="dropdown-menu rounded">
+                                        <Link to="/profile?option=profile" className="dropdown-item"> Profile</Link>
+                                        {Cookies.get("role") === "Buyer" ? null : <Link to="/profile?option=profile" className="dropdown-item"> Admin Dashboard</Link>}
+                                        <Link to="/profile?option=wishlist" className="dropdown-item"> Wishlist</Link>
+                                        <Link to="/profile?option=orders" className="dropdown-item"> Orders</Link>
+                                        <Link to="/profile?option=address" className="dropdown-item"> Address</Link>
+                                        <Link to="/cart" className="dropdown-item"> Cart</Link>
+                                        <Link to="/checkout" className="dropdown-item"> Checkout</Link>
+                                        <button onClick={logout} className="dropdown-item"> Log Out</button>
+                                    </div>
+                                </div> :
+                                <Link to="/login" className="me-2">Login</Link>
+                            }
                         </div>
                     </div>
                 </div>
@@ -109,7 +121,7 @@ export default function Navbar() {
                         <div className="position-relative ps-4">
                             <form onSubmit={postData}>
                                 <div className="d-flex border rounded-pill">
-                                    <input className="form-control border-primary outline-primary w-100 py-3" onChange={(e)=> setSearch(e.target.value)} style={{ borderRadius: "30px 0 0 30px" }} type="text"
+                                    <input className="form-control border-primary outline-primary w-100 py-3" onChange={(e) => setSearch(e.target.value)} style={{ borderRadius: "30px 0 0 30px" }} type="text"
                                         data-bs-target="#dropdownToggle123" placeholder="Search Products by Name, Category, Color etc" />
                                     <button type="submit" className="btn btn-primary py-3 px-5" style={{ borderRadius: "0 30px 30px 0" }}><i
                                         className="fas fa-search"></i></button>
@@ -185,36 +197,13 @@ export default function Navbar() {
                                         <a href="#" className="nav-link text-light dropdown-toggle" data-bs-toggle="dropdown">Category</a>
                                         <div className="dropdown-menu m-0">
                                             <ul className="list-unstyled categories-bars">
-                                                <li>
-                                                    <div className="categories-bars-item">
-                                                        <a href="#">Accessories</a>
-                                                        <span>(3)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="categories-bars-item">
-                                                        <a href="#">Electronics & Computer</a>
-                                                        <span>(5)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="categories-bars-item">
-                                                        <a href="#">Laptops & Desktops</a>
-                                                        <span>(2)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="categories-bars-item">
-                                                        <a href="#">Mobiles & Tablets</a>
-                                                        <span>(8)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="categories-bars-item">
-                                                        <a href="#">SmartPhone & Smart TV</a>
-                                                        <span>(5)</span>
-                                                    </div>
-                                                </li>
+                                                {ActiveMaincategoryStateData.map((item, index) => {
+                                                    return <li key={index}>
+                                                        <div className="categories-bars-item">
+                                                            <Link to={`/shop?mc=${item.name}`}>{item.name}</Link>
+                                                        </div>
+                                                    </li>
+                                                })}
                                             </ul>
                                         </div>
                                     </div>

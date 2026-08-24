@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Cookies from "js-cookie"
 import { Link, useNavigate } from 'react-router-dom'
 
 export default function SignupPage() {
@@ -7,7 +8,7 @@ export default function SignupPage() {
         username: '',
         password: ''
     })
-    
+
     let [errorMessage, setErrorMessage] = useState("")
     let [show, setShow] = useState(false)
     let navigate = useNavigate()
@@ -19,7 +20,7 @@ export default function SignupPage() {
     }
     async function postData(e) {
         e.preventDefault()
-        
+
         let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user/login`, {
             method: "POST",
             headers: {
@@ -27,36 +28,40 @@ export default function SignupPage() {
             },
             body: JSON.stringify(data)
         })
-        response = response.json()
-        let item = response
-        if(item){
-            if(item.status === false){
-                setErrorMessage("Your Account Has Been Blocked Due to Some Authorized Activity, Please Contact Us to Resume Your Account")
+
+        let item = await response.json()
+        if (!response.ok) {
+            setErrorMessage(item.message)
+            setShow(true)
+            return
+        }
+            if (item.status === false) {
+                Cookies.remove("login")
+                Cookies.remove("id")
+                Cookies.remove("name")
+                Cookies.remove("role")
+                Cookies.remove("token")
+                setErrorMessage("Your account has been blocked due to multiple failed login attempts. Please contact us to reactivate your account."
+                )
                 setShow(true)
+                return 
             }
-            else{
-                cookieStore.setItem("login", true)
-                cookieStore.setItem("userid", response.data?.id)
-                cookieStore.setItem("name", response.data?.name)
-                cookieStore.setItem("role", response.data?.role)
-                cookieStore.setItem("token", response.token)
-                if(item.role === "Buyer"){
+            else {
+                Cookies.set("login", item.data?.status)
+                Cookies.set("userid", item.data?.id)
+                Cookies.set("name", item.data?.name)
+                Cookies.set("role", item.data?.role)
+                Cookies.set("token", item.token)
+                if (item.data?.role === "Buyer") {
                     navigate("/profile")
                 }
-                else{
+                else {
                     navigate("/admin")
                 }
             }
         }
-        if (response.ok) {
-            navigate("/*")
-        }
-        else {
-            let message = await response.json()
-            setErrorMessage(message.message)
-            setShow(true)
-        }
-    }
+
+    
     return (
         <div className="container my-3">
             <div className="row">
@@ -68,7 +73,7 @@ export default function SignupPage() {
                                 <label>Username*</label>
                                 <input type="text" name="username" onChange={getInputData}
                                     placeholder="Username" className={`form-control ${show ? "border-danger" : "border-primary"}`} />
-                                {show ? <p className="text-danger">{errorMessage}</p> : null}
+                                
                             </div>
 
                             <div className="col-12 mb-3">
@@ -78,7 +83,7 @@ export default function SignupPage() {
                                         placeholder="Password" className={`form-control rounded-0 rounded-start ${show ? "border-danger" : "border-primary"}`} />
                                     <button type="button" className="btn border border-primary" onClick={() => setShowPassword(!showPassword)}><i className={`${showPassword ? "bi bi-eye-slash" : "bi bi-eye"}`}></i></button>
                                 </div>
-                                
+                                {show ? <p className="text-danger">{errorMessage}</p> : null}
                             </div>
 
                             <div className="col-12 mb-3">
