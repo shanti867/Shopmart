@@ -1,28 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Cookies from "js-cookie"
+import { useNavigate } from 'react-router-dom'
+
 
 export default function Profile() {
+    let [data, setData] = useState({})
+    let navigate = useNavigate()
+
+    useEffect(()=>{
+        (async()=>{
+            let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user/profile`,{
+                method:"GET",
+                headers:{
+                    "content-type":"application/json",
+                    "Authorization":`Bearer ${Cookies.get("token")}`
+                }
+            })
+            response = await response.json()
+            if(response.status){
+                setData(response.data)
+            }
+            else{
+                navigate("/login")
+            }
+        })()
+    },[])
   return (
     <table className='table table-bordered text-dark'>
         <tbody>
             <tr>
                 <th>Name</th>
-                <td>Shanti</td>
+                <td>{data.name}</td>
             </tr>
              <tr>
                 <th>Username</th>
-                <td>Shanti</td>
+                <td>{data.username}</td>
             </tr>
              <tr>
                 <th>Email</th>
-                <td>shantikumari9311@gmail.com</td>
+                <td>{data.email}</td>
             </tr>
              <tr>
                 <th>Phone</th>
-                <td>9311783488</td>
+                <td>{data.phone}</td>
             </tr>
              <tr>
                 <th>Role</th>
-                <td>Super Admin</td>
+                <td>{data.role}</td>
             </tr>
         </tbody>
 

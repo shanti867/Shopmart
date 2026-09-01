@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Cookies from "js-cookie"
 import { Link, useNavigate } from 'react-router-dom'
 
-export default function SignupPage() {
+export default function LoginPage() {
     let [showPassword, setShowPassword] = useState(false)
     let [data, setData] = useState({
         username: '',
