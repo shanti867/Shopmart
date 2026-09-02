@@ -19,9 +19,6 @@ export default function Wishlist() {
   useEffect(() => {
     (() => {
       dispatch(getWishlist())
-      if (WishlistStateData.length) {
-        setData(WishlistStateData.filter(x => x.user == Cookies.get("userid")))
-      }
     })()
   }, [WishlistStateData.length])
   return (
@@ -46,14 +43,14 @@ export default function Wishlist() {
             {data?.map(item => {
               return <tr key={item.id}>
                 <td>
-                  <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.product.pic}`} target="_blank">
-                    <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}${item.product.pic}`} height={70} width={70} alt="" /></Link>
+                  <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic}`} target="_blank">
+                    <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic}`} height={70} width={70} alt="" /></Link>
                 </td>
-                <td>{item.product.name}</td>
-                <td>{item.product.brand}</td>
-                <td>{item.product.color?.join(", ")}</td>
-                <td>{item.product.size?.join(", ")}</td>
-                <td>{item.product.stockQuantity ? `${item.product.stockQuantity} Left In Stock` : 'Out of Stock'}</td>
+                <td>{item.name}</td>
+                <td>{item.brand}</td>
+                <td>{item.color?.join(", ")}</td>
+                <td>{item.size?.join(", ")}</td>
+                <td>{item.stockQuantity ? `${item.stockQuantity} Left In Stock` : 'Out of Stock'}</td>
                 <td>&#8377;{item.price}</td>
                 <td><Link to={`/product/${item.id}`} className='btn btn-primary'><i className='bi bi-cart-plus'></i></Link></td>
                 <td><button className='btn btn-danger' onClick={()=>deleteRecord(item.id)}><i className='bi bi-x'></i></button></td>

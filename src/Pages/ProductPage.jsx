@@ -50,11 +50,10 @@ export default function ProductPage() {
 
     function addToCart() {
         let item = {
-            user: Cookies.get("userid"),
-            product: data.id,
+            productId: data.id,
             quantity: selected.quantity,
-            color: selected.color,
-            size: selected.size
+            selectedColor: selected.color,
+            selectedSize: selected.size
         }
         dispatch(createCart({ ...item }))
 
@@ -63,8 +62,7 @@ export default function ProductPage() {
 
     function addToWishlist() {
         let item = {
-            user: Cookies.get("userid"),
-            product: data.id,
+            productId: data.id,
         }
         dispatch(createWishlist({ ...item }))
     
