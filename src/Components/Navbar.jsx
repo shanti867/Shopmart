@@ -131,7 +131,7 @@ export default function Navbar() {
                     </div>
                     <div className="col-md-4 col-lg-3 text-center text-lg-end">
                         <div className="d-inline-flex align-items-center">
-                            <Link to="/profile?option=wishlist" className=" d-flex me-2 align-items-center justify-content-center me-3"><span
+                            <Link to="/profile?option=Wishlist" className=" d-flex me-2 align-items-center justify-content-center me-3"><span
                                 className=""><i className=" me-1 fas fa-heart"></i> Wishlist</span></Link>
                             <Link to="/cart" className=" d-flex me-2 align-items-center justify-content-center"><span
                                 className=""><i className=" me-1 fas fa-shopping-cart"></i> Cart</span>

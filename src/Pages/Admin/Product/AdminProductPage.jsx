@@ -54,7 +54,7 @@ export default function AdminProductPage() {
             selector: row => row.name,
             sortable: true,
             wrap: true
-            
+        
         },
 
 

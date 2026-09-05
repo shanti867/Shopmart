@@ -1,16 +1,16 @@
-import { CREATE_BRAND_RED, DELETE_BRAND_RED, GET_BRAND_RED, UPDATE_BRAND_RED } from "../Constant"
-export default function BrandReducer(state=[],action){
+import { CREATE_CART_RED, DELETE_CART_RED, GET_CART_RED, UPDATE_CART_RED } from "../Constant"
+export default function CartReducer(state=[],action){
     let index
     switch(action.type){
-        case CREATE_BRAND_RED:
-            return [...state,action.payload]
+        case CREATE_CART_RED:
+            return [...state,action.payload.data]
         
-        case GET_BRAND_RED:
-            return action.payload
+        case GET_CART_RED:
+            return action.payload.data
 
-        case UPDATE_BRAND_RED:
+        case UPDATE_CART_RED:
             return state.map(item => item.id == action.payload.id ? action.payload : item)
-        case DELETE_BRAND_RED:
+        case DELETE_CART_RED:
             return state.filter(x=>x.id != action.payload.id)
 
         default:

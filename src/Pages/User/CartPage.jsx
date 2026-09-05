@@ -1,164 +1,165 @@
-import React from 'react'
-import Breadcrum from '../../Components/Breadcrum'
+import React, { useEffect, useState } from 'react'
+import Cookies from "js-cookie"
 
+import { getCart, deleteCart } from "../../Redux/ActionCreators/CartActionCreators"
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import Breadcrum from '../../Components/Breadcrum'
 export default function CartPage() {
+  let [subtotal, setSubtotal] = useState(0);
+  let [shipping, setShipping] = useState(0);
+  let [total, setTotal] = useState(0);
+
+  let CartStateData = useSelector(state => state.CartStateData)
+  console.log("Cart Data:", CartStateData);
+  let dispatch = useDispatch()
+
+  let data = CartStateData
+
+  function deleteRecord(id) {
+    if (window.confirm("Are You Sure To Delete This Record")) {
+      dispatch(deleteCart({ id }));
+    }
+  }
+
+  function updateRecord(id, option) {
+    let item = data.find(x=>x.id === id)
+    if((item.quantity===1 && option === "DEC")||(item.quantity=== item.stockQuantity && option==="INC"))
+      return 
+
+    let index = data.findIndex(x => x.id == id)
+    if(option === "DEC"){
+      item.quantity = item.quantity - 1
+      item.total = item.total - item.price
+    }
+    else{
+      item.quantity = item.quantity + 1
+      item.total = item.total + item.price
+    }
+    data[index] = {...item}
+    calculate(data)
+  }
+  function calculate(cart) {
+    let sum = 0;
+    cart.forEach(x => sum = sum + x.total)
+    if (sum > 0 && sum < 1000) {
+      setTotal(sum + 150)
+      setShipping(150)
+    }
+    else {
+      setTotal(sum)
+      setShipping(0)
+    }
+    setSubtotal(sum)
+  }
+  useEffect(() => {
+    (() => {
+      dispatch(getCart())
+    })()
+  }, [CartStateData.length])
+
+  useEffect(() => {
+    if (Array.isArray(CartStateData)) {
+      calculate(CartStateData);
+    }
+  }, [CartStateData]);
   return (
     <>
       <Breadcrum title="Cart" />
       <div className="container-fluid py-5">
         <div className="container py-5">
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Model</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Quantity</th>
-                  <th scope="col">Total</th>
-                  <th scope="col">Handle</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">
-                    <p className="mb-0 py-4">Apple iPad Mini</p>
-                  </th>
-                  <td>
-                    <p className="mb-0 py-4">G2356</p>
-                  </td>
-                  <td>
-                    <p className="mb-0 py-4">2.99 $</p>
-                  </td>
-                  <td>
-                    <div className="input-group quantity py-4" style={{ width: "100px" }}>
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-minus rounded-circle bg-light border">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input type="text" className="form-control form-control-sm text-center border-0"
-                        value="1" />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-plus rounded-circle bg-light border">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <p className="mb-0 py-4">2.99 $</p>
-                  </td>
-                  <td className="py-4">
-                    <button className="btn btn-md rounded-circle bg-light border">
-                      <i className="fa fa-times text-danger"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <p className="mb-0 py-4">Apple iPad Mini</p>
-                  </th>
-                  <td>
-                    <p className="mb-0 py-4">G2356</p>
-                  </td>
-                  <td>
-                    <p className="mb-0 py-4">2.99 $</p>
-                  </td>
-                  <td>
-                    <div className="input-group quantity py-4" style={{ width: "100px" }}>
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-minus rounded-circle bg-light border">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input type="text" className="form-control form-control-sm text-center border-0"
-                        value="1" />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-plus rounded-circle bg-light border">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <p className="mb-0 py-4">2.99 $</p>
-                  </td>
-                  <td className="py-4">
-                    <button className="btn btn-md rounded-circle bg-light border">
-                      <i className="fa fa-times text-danger"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <p className="mb-0 py-4">Apple iPad Mini</p>
-                  </th>
-                  <td>
-                    <p className="mb-0 py-4">G2356</p>
-                  </td>
-                  <td>
-                    <p className="mb-0 py-4">2.99 $</p>
-                  </td>
-                  <td>
-                    <div className="input-group quantity py-4" style={{ width: "100px" }}>
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-minus rounded-circle bg-light border">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input type="text" className="form-control form-control-sm text-center border-0"
-                        value="1" />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-plus rounded-circle bg-light border">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <p className="mb-0 py-4">2.99 $</p>
-                  </td>
-                  <td className="py-4">
-                    <button className="btn btn-md rounded-circle bg-light border">
-                      <i className="fa fa-times text-danger"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-5">
-            <input type="text" className="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code" />
-            <button className="btn btn-primary rounded-pill px-4 py-3" type="button">Apply Coupon</button>
-          </div>
-          <div className="row g-4 justify-content-end">
-            <div className="col-8"></div>
-            <div className="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-              <div className="bg-light rounded">
-                <div className="p-4">
-                  <h1 className="display-6 mb-4">Cart <span className="fw-normal">Total</span></h1>
-                  <div className="d-flex justify-content-between mb-4">
-                    <h5 className="mb-0 me-4">Subtotal:</h5>
-                    <p className="mb-0">$96.00</p>
-                  </div>
-                  <div className="d-flex justify-content-between">
-                    <h5 className="mb-0 me-4">Shipping</h5>
-                    <div>
-                      <p className="mb-0">Flat rate: $3.00</p>
-                    </div>
-                  </div>
-                  <p className="mb-0 text-end">Shipping to Ukraine.</p>
-                </div>
-                <div className="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                  <h5 className="mb-0 ps-4 me-4">Total</h5>
-                  <p className="mb-0 pe-4">$99.00</p>
-                </div>
-                <button className="btn btn-primary rounded-pill px-4 py-3 text-uppercase mb-4 ms-4"
-                  type="button">Proceed Checkout</button>
+          {data.length ?
+            <>
+              <div className="table-responsive">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Brand</th>
+                      <th scope="col">Color</th>
+                      <th scope="col">Size</th>
+                      <th scope="col">Stock Quantity</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Total</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data?.map((item) => {
+                      return <tr key={item.id}>
+                        <th scope="row">
+                          <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item?.pic?.[0]}`} target="_blank">
+                            <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item?.pic?.[0]}`} height={70} width={70} alt="" />
+                          </Link>
+                        </th>
+                        <th scope="row"><p className="mb-0 py-4">{item.name}</p></th>
+                        <td><p className="mb-0 py-4">{item.brand}</p></td>
+                        <td><p className="mb-0 py-4">{item.selectedColor}</p></td>
+                        <td><p className="mb-0 py-4">{item.selectedSize}</p></td>
+                        <td><p className="mb-0 py-4">{item.stockQuantity}</p></td>
+                        <td><p className="mb-0 py-4">&#8377;{item.price}</p></td>
+                        <td>
+                          <div className="input-group quantity py-4" style={{ width: "100px" }}>
+                            <div className="input-group-btn">
+                              <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => updateRecord(item.id, "DEC")}>
+                                <i className="fa fa-minus"></i>
+                              </button>
+                            </div>
+                            <input type="text" className="form-control form-control-sm text-center border-0"
+                              value={item.quantity} />
+                            <div className="input-group-btn">
+                              <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={() => updateRecord(item.id, "INC")}>
+                                <i className="fa fa-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                        <td><p className="mb-0 py-4">&#8377;{item.total}</p></td>
+                        <td className="py-4">
+                          <button className="btn btn-md rounded-circle bg-light border" onClick={() => deleteRecord(item.id)}>
+                            <i className="fa fa-times text-danger"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    })}
+
+                  </tbody>
+                </table>
               </div>
-            </div>
-          </div>
+
+              <div className="row g-4 justify-content-end">
+                <div className="col-8"></div>
+                <div className="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                  <div className="bg-light rounded">
+                    <div className="p-4">
+                      <h3 className="mb-3">Cart <span className="fw-normal">Total</span></h3>
+                      <div className="d-flex justify-content-between mb-4">
+                        <h5 className="mb-0 me-4">Subtotal:</h5>
+                        <p className="mb-0">&#8377;{subtotal}</p>
+                      </div>
+                      <div className="d-flex justify-content-between">
+                        <h5 className="mb-0 me-4">Shipping</h5>
+                        <div>
+                          <p className="mb-0">&#8377;{shipping}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="py-2 mb-4 border-top border-bottom d-flex justify-content-between">
+                      <h5 className="mb-0 ps-4 me-4">Total</h5>
+                      <p className="mb-0 pe-4">&#8377;{total}</p>
+                    </div>
+                    <Link to="/checkout" className="w-100 btn btn-primary rounded-pill text-uppercase">Proceed Checkout</Link>
+                  </div>
+                </div>
+              </div>
+            </> :
+            <div className='card p-5 text-center'>
+              <h3>No Items in Cart</h3>
+              <Link to="/shop" className="btn btn-primary w-25 m-auto">Shop Now</Link>
+            </div>}
         </div>
       </div>
     </>

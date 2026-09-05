@@ -3,10 +3,10 @@ export default function WishlistReducer(state=[],action){
     let index
     switch(action.type){
         case CREATE_WISHLIST_RED:
-            return [...state,action.payload]
+            return [...state,action.payload.data]
         
         case GET_WISHLIST_RED:
-            return action.payload
+            return action.payload.data
 
         case UPDATE_WISHLIST_RED:
             return state.map(item => item.id == action.payload.id ? action.payload : item)

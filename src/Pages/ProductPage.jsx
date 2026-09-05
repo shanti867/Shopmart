@@ -53,7 +53,8 @@ export default function ProductPage() {
             productId: data.id,
             quantity: selected.quantity,
             selectedColor: selected.color,
-            selectedSize: selected.size
+            selectedSize: selected.size,
+            // total: selected.quantity*data.finalPrice,
         }
         dispatch(createCart({ ...item }))
 

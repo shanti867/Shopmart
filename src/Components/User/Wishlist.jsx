@@ -5,10 +5,12 @@ import { getWishlist, deleteWishlist } from "../../Redux/ActionCreators/Wishlist
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 export default function Wishlist() {
-  let [data, setData] = useState()
-
+  
   let WishlistStateData = useSelector(state => state.WishlistStateData)
+  console.log("Wishlist Redux Data:", WishlistStateData)
   let dispatch = useDispatch()
+  
+  let data = WishlistStateData
 
   function deleteRecord(id) {
     if (window.confirm("Are You Sure To Delete This Record")) {
@@ -43,8 +45,8 @@ export default function Wishlist() {
             {data?.map(item => {
               return <tr key={item.id}>
                 <td>
-                  <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic}`} target="_blank">
-                    <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic}`} height={70} width={70} alt="" /></Link>
+                  <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic[0]}`} target="_blank">
+                    <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic[0]}`} height={70} width={70} alt="" /></Link>
                 </td>
                 <td>{item.name}</td>
                 <td>{item.brand}</td>
@@ -52,7 +54,7 @@ export default function Wishlist() {
                 <td>{item.size?.join(", ")}</td>
                 <td>{item.stockQuantity ? `${item.stockQuantity} Left In Stock` : 'Out of Stock'}</td>
                 <td>&#8377;{item.price}</td>
-                <td><Link to={`/product/${item.id}`} className='btn btn-primary'><i className='bi bi-cart-plus'></i></Link></td>
+                <td><Link to={`/product/${item.productId}`} className='btn btn-primary'><i className='bi bi-cart-plus'></i></Link></td>
                 <td><button className='btn btn-danger' onClick={()=>deleteRecord(item.id)}><i className='bi bi-x'></i></button></td>
               </tr>
             })}

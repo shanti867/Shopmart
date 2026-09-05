@@ -96,27 +96,20 @@ export default function AdminSubcategoryPage() {
         }
 
     ];
-    console.log(data);
     return (
         <>
             <Breadcrum title="Admin" />
-
             <div className="container-fluid my-3">
                 <div className="row">
-
                     <div className="col-md-3">
                         <AdminSidebar />
                     </div>
-
                     <div className="col-md-9">
-
                         <h5 className="bg-primary text-light text-center p-2">
                             Subcategory
-
                             <Link to="/admin/subcategory/create">
                                 <i className="bi bi-plus text-light float-end"></i>
                             </Link>
-
                         </h5>
                         <input
                             type="text"
@@ -126,10 +119,8 @@ export default function AdminSubcategoryPage() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
 
-
                         <DataTable
                             columns={columns}
-                            
                             data={filteredData}
                             pagination
                             striped
@@ -139,7 +130,6 @@ export default function AdminSubcategoryPage() {
                         />
 
                     </div>
-
                 </div>
             </div>
         </>
