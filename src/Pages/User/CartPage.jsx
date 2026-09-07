@@ -12,7 +12,6 @@ export default function CartPage() {
   let [total, setTotal] = useState(0);
 
   let CartStateData = useSelector(state => state.CartStateData)
-  console.log("Cart Data:", CartStateData);
   let dispatch = useDispatch()
 
   let data = CartStateData

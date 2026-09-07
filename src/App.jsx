@@ -45,6 +45,8 @@ import AdminSettingPage from './Pages/Admin/Setting/AdminSettingPage'
 import SignupPage from './Pages/User/SignupPage'
 import LoginPage from './Pages/User/LoginPage'
 import ProfilePage from './Pages/User/ProfilePage'
+
+import OrderConfirmation from './Pages/User/OrderConfirmation'
 export default function App() {
   return (
     <>
@@ -71,6 +73,7 @@ export default function App() {
           <Route path='/profile' element={<ProfilePage />} />
           <Route path='/cart' element={<CartPage />} />
           <Route path='/checkout' element={<CheckOutPage />} />
+          <Route path='/order-confirmation' element={<OrderConfirmation />} />
 
           {/*Admin Routes*/}
           <Route path='/admin' element={<AdminHomePage />} />

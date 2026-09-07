@@ -5,9 +5,7 @@ import { getWishlist, deleteWishlist } from "../../Redux/ActionCreators/Wishlist
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 export default function Wishlist() {
-  
   let WishlistStateData = useSelector(state => state.WishlistStateData)
-  console.log("Wishlist Redux Data:", WishlistStateData)
   let dispatch = useDispatch()
   
   let data = WishlistStateData

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Cookies from "js-cookie"
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-import { getCart, deleteCart } from "../../Redux/ActionCreators/CartActionCreators"
 import Breadcrum from '../../Components/Breadcrum'
+import { getCart, deleteCart } from "../../Redux/ActionCreators/CartActionCreators"
+// import { createCheckout } from "../../Redux/ActionCreators/CheckoutActionCreators"
+import {createCheckout} from "../../Redux/ActionCreators/CheckoutActionCreators"
+// // import { getActiveProduct, updateProduct } from "../../Redux/ActionCreators/ProductActionCreators"
+// import { getActiveProduct, updateProduct } from '../../Redux/ActionCreators/ProductActionCreators '
 
 export default function CheckOutPage() {
     let [user, setUser] = useState({})
@@ -17,10 +21,27 @@ export default function CheckOutPage() {
         paymentMode: "COD"
     })
     let CartStateData = useSelector(state => state.CartStateData)
-    let dispatch = useDispatch()
-
+    // let ProductStateData = useSelector(state => state.ProductStateData)
+    
     let data = CartStateData
-
+    let dispatch = useDispatch()
+    let navigate =useNavigate()
+    
+    function placeOrder(){
+        let item={
+            // user:Cookies.get("userid"),
+            deliveryAddress:selected.deliveryAddress,
+            orderStatus: "Order Has Been Placed",
+            paymentMode: selected.paymentMode,
+            paymentStatus:"Pending",
+            subtotal:subtotal,
+            total:total,
+            date: new Date(),
+            products: data
+        }
+        dispatch(createCheckout({...item}))
+        navigate("/order-confirmation")
+    }
     function calculate(cart) {
         let sum = 0;
         cart.forEach(x => sum = sum + x.total)
@@ -45,22 +66,6 @@ export default function CheckOutPage() {
             calculate(CartStateData);
         }
     }, [CartStateData]);
-
-    // useEffect(() => {
-    //     (async () => {
-    //         let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user/address`, {
-    //             method: "GET",
-    //             headers: {
-    //                 "content-type": "application/json",
-    //                 "Authorization": `Bearer ${Cookies.get("token")}`
-
-    //             }
-    //         })
-    //         response = await response.json();
-    //         console.log("Address response",response);
-    //         setUser(response)
-    //     })
-    // },[])
 
     useEffect(() => {
         (async () => {
@@ -88,6 +93,11 @@ export default function CheckOutPage() {
             }
         })();
     }, []);
+    
+
+    // useEffect(()=>{
+    //     (()=> dispatch(getActiveProduct()))()
+    // },[ProductStateData.length])
     return (
         <>
             <Breadcrum title="Checkout" />
@@ -96,7 +106,7 @@ export default function CheckOutPage() {
                     <div className="row g-5">
                         <div className="col-lg-6 col-xl-6 wow fadeInUp" data-wow-delay="0.3s">
                             <h3 className="mb-4 wow fadeInUp" data-wow-delay="0.1s">Billing details</h3>
-                            {data.address?.length !==0?
+                            {user.data?.length !==0?
                             user.data?.map((item, index) => {
                                 return <div key={index} className='card p-3 mb-3' onClick={() => setSelected({ ...selected, deliveryAddress: item })}>
                                     <h6>{item.name}</h6>
@@ -174,8 +184,8 @@ export default function CheckOutPage() {
                                     </div>
                                 </div>
                             </div>
-                            {data.address?.length !==0? <div className="row g-4 text-center align-items-center justify-content-center pt-4">
-                                <button type="button"
+                            {user.data?.length !==0? <div className="row g-4 text-center align-items-center justify-content-center pt-4">
+                                <button type="button" onClick={placeOrder}
                                     className="btn btn-primary border-secondary text-uppercase w-100 text-primary">Place Order</button>
                             </div> : null}
                         </div>
