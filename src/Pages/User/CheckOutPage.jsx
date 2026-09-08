@@ -35,6 +35,7 @@ export default function CheckOutPage() {
             paymentMode: selected.paymentMode,
             paymentStatus:"Pending",
             subtotal:subtotal,
+            shipping:shipping,
             total:total,
             date: new Date(),
             products: data

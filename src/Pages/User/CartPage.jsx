@@ -108,7 +108,7 @@ export default function CartPage() {
                               </button>
                             </div>
                             <input type="text" className="form-control form-control-sm text-center border-0"
-                              value={item.quantity} />
+                              value={item.quantity} readOnly/>
                             <div className="input-group-btn">
                               <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={() => updateRecord(item.id, "INC")}>
                                 <i className="fa fa-plus"></i>
