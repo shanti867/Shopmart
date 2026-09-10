@@ -76,23 +76,44 @@ export default function AdminSettingPage() {
         toast("Your Record Has Been Updated!!!");
     }
 
-    useEffect(() => {
-        dispatch(getSetting());
-        (() => {
-            if (SettingStateData.length) {
-                setData({ ...data, ...SettingStateData[0] })
+    // useEffect(() => {
+    //     dispatch(getSetting());
+    //     (() => {
+    //         if (SettingStateData.length) {
+    //             setData({ ...data, ...SettingStateData[0] })
 
-                setTimeout(() => {
-                    const documentModel1 = createStructuredContent(SettingStateData[0].privacyPolicy ?? "")
-                    const documentModel2 = createStructuredContent(SettingStateData[0].termsAndConditions ?? "")
-                    const documentModel3 = createStructuredContent(SettingStateData[0].refundPolicy ?? "")
-                    changePrivacyPolicy(documentModel1, SettingStateData[0].privacyPolicy ?? "")
-                    changeTermsAndConditions(documentModel2, SettingStateData[0].termsAndConditions ?? "")
-                    changeRefundPolicy(documentModel3, SettingStateData[0].refundPolicy ?? "")
-                }, 500)
-            }
-        })()
-    }, [SettingStateData.length]);
+    //             setTimeout(() => {
+    //                 const documentModel1 = createStructuredContent(SettingStateData[0].privacyPolicy ?? "")
+    //                 const documentModel2 = createStructuredContent(SettingStateData[0].termsAndConditions ?? "")
+    //                 const documentModel3 = createStructuredContent(SettingStateData[0].refundPolicy ?? "")
+    //                 changePrivacyPolicy(documentModel1, SettingStateData[0].privacyPolicy ?? "")
+    //                 changeTermsAndConditions(documentModel2, SettingStateData[0].termsAndConditions ?? "")
+    //                 changeRefundPolicy(documentModel3, SettingStateData[0].refundPolicy ?? "")
+    //             }, 500)
+    //         }
+    //     })()
+    // }, [SettingStateData.length]);
+
+    useEffect(() => {
+    dispatch(getSetting())
+}, [dispatch])
+
+
+useEffect(() => {
+    if (SettingStateData.length) {
+
+        setData(prev => ({
+            ...prev,
+            ...SettingStateData[0]
+        }))
+
+        setPrivacyPolicy(SettingStateData[0].privacyPolicy ?? "")
+
+        setTermsAndConditions(SettingStateData[0].termsAndConditions ?? "")
+
+        setRefundPolicy(SettingStateData[0].refundPolicy ?? "")
+    }
+}, [SettingStateData])
     return (
         <>
             <ToastContainer />

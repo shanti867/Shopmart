@@ -1,9 +1,9 @@
 import { put, takeEvery } from "redux-saga/effects"
-import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
+import { createRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
 import { CREATE_NEWSLETTER, CREATE_NEWSLETTER_RED, DELETE_NEWSLETTER, DELETE_NEWSLETTER_RED, GET_NEWSLETTER, GET_NEWSLETTER_RED, GET_ACTIVE_NEWSLETTER, UPDATE_NEWSLETTER, UPDATE_NEWSLETTER_RED } from "../Constant"
 
 function* createSaga(action){        //worker
-    let response = yield createMultipartRecord("newsletter", action.payload)
+    let response = yield createRecord("newsletter", action.payload)
     yield put({type: CREATE_NEWSLETTER_RED, payload: response})
 }
 function* getSaga(){        //worker
