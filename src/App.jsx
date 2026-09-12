@@ -42,6 +42,9 @@ import AdminProductcreatePage from './Pages/Admin/Product/AdminProductcreatePage
 import AdminProductUpdatePage from './Pages/Admin/Product/AdminProductUpdatePage'
 
 import AdminSettingPage from './Pages/Admin/Setting/AdminSettingPage'
+import AdminNewsletterPage from './Pages/Admin/Newsletter/AdminNewsletterPage'
+import AdminContactUsPage from './Pages/Admin/ContactUs/AdminContactUsPage'
+
 import SignupPage from './Pages/User/SignupPage'
 import LoginPage from './Pages/User/LoginPage'
 import ProfilePage from './Pages/User/ProfilePage'
@@ -103,6 +106,8 @@ export default function App() {
           <Route path='/admin/product/update/:id' element={<AdminProductUpdatePage />} />
 
           <Route path='/admin/setting' element={<AdminSettingPage />} />
+          <Route path='/admin/newsletter' element={<AdminNewsletterPage />} />
+          <Route path='/admin/contact' element={<AdminContactUsPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>

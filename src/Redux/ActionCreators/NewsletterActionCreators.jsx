@@ -18,16 +18,20 @@ export function getActiveNewsletter() {
         type: GET_ACTIVE_NEWSLETTER
     };
 }
-
-export function updateNewsletter(id, data){
-    return{
+export function updateNewsletter(data) {
+    return {
         type: UPDATE_NEWSLETTER,
-        payload: {
-            id:id,
-            data:data
-        }
-    }
+        payload: data
+    };
 }
+// export function updateNewsletter(data){
+//     return{
+//         type: UPDATE_NEWSLETTER,
+//         payload: {
+//             data:data
+//         }
+//     }
+// }
 
 export function deleteNewsletter(data){
     return{

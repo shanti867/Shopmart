@@ -89,7 +89,7 @@ export default function AdminSettingPage() {
     //                 changePrivacyPolicy(documentModel1, SettingStateData[0].privacyPolicy ?? "")
     //                 changeTermsAndConditions(documentModel2, SettingStateData[0].termsAndConditions ?? "")
     //                 changeRefundPolicy(documentModel3, SettingStateData[0].refundPolicy ?? "")
-    //             }, 500)
+    //             }, 1000)
     //         }
     //     })()
     // }, [SettingStateData.length]);
@@ -100,20 +100,21 @@ export default function AdminSettingPage() {
 
 
 useEffect(() => {
-    if (SettingStateData.length) {
+    if (SettingStateData.length > 0) {
+
+        const setting = SettingStateData[0]
 
         setData(prev => ({
             ...prev,
-            ...SettingStateData[0]
+            ...setting
         }))
 
-        setPrivacyPolicy(SettingStateData[0].privacyPolicy ?? "")
-
-        setTermsAndConditions(SettingStateData[0].termsAndConditions ?? "")
-
-        setRefundPolicy(SettingStateData[0].refundPolicy ?? "")
+        setPrivacyPolicy(setting.privacyPolicy ?? "")
+        setTermsAndConditions(setting.termsAndConditions ?? "")
+        setRefundPolicy(setting.refundPolicy ?? "")
     }
 }, [SettingStateData])
+
     return (
         <>
             <ToastContainer />

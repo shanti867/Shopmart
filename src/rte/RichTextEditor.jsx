@@ -26,7 +26,17 @@ const RichTextEditor = forwardRef(function RichTextEditor(
   const onErrorRef = useRef(onError);
   const valueFormatRef = useRef(valueFormat);
   const configRef = useRef(config || {});
-  const initialValueRef = useRef(value !== undefined ? value : defaultValue);
+  const valueRef = useRef(value);
+  const defaultValueRef = useRef(defaultValue);
+  // const initialValueRef = useRef(value !== undefined ? value : defaultValue);
+
+  // useEffect(() => {
+  //   onChangeRef.current = onChange;
+  //   onReadyRef.current = onReady;
+  //   onErrorRef.current = onError;
+  //   valueFormatRef.current = valueFormat;
+  //   configRef.current = config || {};
+  // });
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -34,6 +44,8 @@ const RichTextEditor = forwardRef(function RichTextEditor(
     onErrorRef.current = onError;
     valueFormatRef.current = valueFormat;
     configRef.current = config || {};
+    valueRef.current = value;
+    defaultValueRef.current = defaultValue;
   });
 
   useImperativeHandle(
@@ -75,14 +87,26 @@ const RichTextEditor = forwardRef(function RichTextEditor(
         const editor = new window.RichTextEditor(activeHost, configRef.current);
         editorRef.current = editor;
 
-        const initialValue = initialValueRef.current;
-        if (initialValue !== undefined) {
+        const initialValue =
+          valueRef.current !== undefined
+            ? valueRef.current
+            : defaultValueRef.current;
+
+        if (initialValue !== undefined && initialValue !== "") {
           if (valueFormatRef.current === "json") {
             editor.setJSON(initialValue);
           } else {
             editor.setHTMLCode(normalizeStructuredContent(initialValue));
           }
         }
+        // const initialValue = initialValueRef.current;
+        // if (initialValue !== undefined) {
+        //   if (valueFormatRef.current === "json") {
+        //     editor.setJSON(initialValue);
+        //   } else {
+        //     editor.setHTMLCode(normalizeStructuredContent(initialValue));
+        //   }
+        // }
 
         changeHandler = () => {
           if (!onChangeRef.current) {
