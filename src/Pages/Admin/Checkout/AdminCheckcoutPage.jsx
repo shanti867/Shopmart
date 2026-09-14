@@ -5,41 +5,41 @@ import AdminSidebar from "../../../Components/Admin/AdminSidebar";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-// import { getContactUs, deleteContactUs, updateContactUs } from "../../../Redux/ActionCreators/ContactUsActionCreators";
-import { getContactUs, deleteContactUs, updateContactUs } from "../../../Redux/ActionCreators/ContactUsActionCreators";
-export default function AdminContactUsPage() {
+
+import { getCheckout, updateCheckout } from "../../../Redux/ActionCreators/CheckoutActionCreators";
+export default function AdminCheckoutPage() {
     const dispatch = useDispatch();
-    const data = useSelector(state => state.ContactUsStateData);
+    const data = useSelector(state => state.CheckoutStateData);
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        dispatch(getContactUs());
+        dispatch(getCheckout());
     }, []);
 
     function updateRecord(id) {
         if (window.confirm("Are You Sure to Change Status of This Record?")) {
 
-            let ContactUs = data.find(x => x.id === id);
+            let Checkout = data.find(x => x.id === id);
 
-            if (!ContactUs) {
+            if (!Checkout) {
                 return;
             }
 
-            dispatch(updateContactUs({
-                id: ContactUs.id,
-                status: !ContactUs.status
+            dispatch(updateCheckout({
+                id: Checkout.id,
+                status: !Checkout.status
             }));
         }
     }
 
-    function deleteRecord(id) {
-        if (window.confirm("Are You Sure To Delete This Record")) {
-            dispatch(deleteContactUs({ id }));
-        }
-    }
+    // function deleteRecord(id) {
+    //     if (window.confirm("Are You Sure To Delete This Record")) {
+    //         dispatch(deleteCheckout({ id }));
+    //     }
+    // }
 
     const filteredData = data.filter(row =>
-        row.ContactUsId?.toLowerCase().includes(search.toLowerCase()) ||
+        row.CheckoutId?.toLowerCase().includes(search.toLowerCase()) ||
         row.name?.toLowerCase().includes(search.toLowerCase()) ||
         (row.status ? "active" : "inactive").includes(search.toLowerCase())
     );
@@ -47,68 +47,64 @@ export default function AdminContactUsPage() {
     const columns = [
         {
             name: "Id",
-            selector: row => row.contactUsId,
+            selector: row => row.checkoutId,
+            sortable: true
+        },
+        // {
+        //     name: "User",
+        //     selector: row => row.deliveryAddress?.name,
+        //     width:"200px",
+        //     sortable:true
+        // },
+        {
+            name: "User",
+            selector: row => {
+                let address = {};
+
+                if (row.deliveryAddress) {
+                    try {
+                        address = JSON.parse(row.deliveryAddress);
+                    } catch (error) {
+                        console.log("Invalid delivery address:", error);
+                    }
+                }
+                return `${address.name || ""}, ${address.city || ""}`;
+            },
+            width: "200px",
             sortable: true
         },
         {
-            name: "Name",
-            selector: row => row.name,
-            width:"200px",
-            sortable:true
-        },
-        {
-            name: "Phone",
-            selector: row => row.phone,
+            name: "Status",
+            selector: row => row.orderStatus,
             sortable: true,
-            width:"200px"
+            width: "200px",
         },
         {
-            name: "Email",
-            selector: row => row.email,
-            width:"300px",
+            name: "Payment Mode",
+            selector: row => row.paymentMode,
+            sortable: true,
+            width: "200px"
+        },
+        {
+            name: "Payment Status",
+            selector: row => row.paymentStatus,
+            width: "300px",
             sortable: true
         },
         {
-            name: "Subject",
-            selector: row => row.subject,
-            width:"200px",
-            wrap:true,
-            sortable:true
+            name: "Total",
+            selector: row => `\u20B9${row.total}`,
+            sortable: true
         },
         {
             name: "Date",
             selector: row => new Date(row.date).toLocaleDateString(),
-            sortable:true
-        },
-        {
-            name: "Status",
-            width: "120px",
-            cell: row => (
-                <button
-                    className={`btn ${row.status ? "btn-success" : "btn-secondary"}`}
-                    onClick={() => {
-                        updateRecord(row.id)
-                    }}>
-                    {row.status ? "Active" : "Inactive"}
-                </button>
-            ),
             sortable: true
         },
         {
             name: "View",
-            cell: row=>(
-                <Link to={`/admin/contact/show/${row.id}`} className='btn btn-primary'><i className='bi bi-eye'></i></Link>
-            )
-        },
-        {
-            name: "Delete",
             cell: row => (
-                row.status?null:(<button
-                    className="btn btn-danger"
-                    onClick={() => deleteRecord(row.id)}
-                >
-                    <i className="bi bi-x"></i>
-                </button>)
+                <Link to={`/admin/checkout/show/${row.id}`} className='btn btn-primary'><i className='bi bi-eye'></i></Link>
             )
         }
     ];
@@ -123,13 +119,13 @@ export default function AdminContactUsPage() {
                     </div>
                     <div className="col-md-9">
                         <h5 className="bg-primary text-light text-center p-2">
-                            ContactUs
+                            Checkout
                         </h5>
 
                         <input
                             type="text"
                             className="form-control mb-3 w-25 float-end"
-                            placeholder="Search ContactUs..."
+                            placeholder="Search Checkout..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />

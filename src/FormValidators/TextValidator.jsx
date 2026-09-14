@@ -21,6 +21,7 @@ export default function TextValidator(e) {
         case "name":
         case "email":
         case "username":
+        case "subject":
         case "icon":
         case "question":
             if (!value || value.length === 0)
@@ -74,7 +75,6 @@ export default function TextValidator(e) {
 
         case "shortDescription":
         case "answer":
-        case "subject":
             if (!value || value.length === 0)
                 return name + " Field is Mendatory"
             else if (value.length < 20 || value.length > 1000)

@@ -50,6 +50,9 @@ import LoginPage from './Pages/User/LoginPage'
 import ProfilePage from './Pages/User/ProfilePage'
 
 import OrderConfirmation from './Pages/User/OrderConfirmation'
+import AdminContactUsShowPage from './Pages/Admin/ContactUs/AdminContactUsShowPage'
+import AdminCheckoutPage from './Pages/Admin/Checkout/AdminCheckcoutPage'
+import AdminCheckoutShowPage from './Pages/Admin/Checkout/AdminCheckoutShowPage'
 export default function App() {
   return (
     <>
@@ -106,8 +109,14 @@ export default function App() {
           <Route path='/admin/product/update/:id' element={<AdminProductUpdatePage />} />
 
           <Route path='/admin/setting' element={<AdminSettingPage />} />
+
           <Route path='/admin/newsletter' element={<AdminNewsletterPage />} />
+          
           <Route path='/admin/contact' element={<AdminContactUsPage />} />
+          <Route path='/admin/contact/show/:id' element={<AdminContactUsShowPage />} />
+
+          <Route path='/admin/checkout' element={<AdminCheckoutPage />} />
+          <Route path='/admin/checkout/show/:id' element={<AdminCheckoutShowPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>

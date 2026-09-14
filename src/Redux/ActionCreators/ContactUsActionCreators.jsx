@@ -19,15 +19,21 @@ export function getActiveContactUs() {
     };
 }
 
-export function updateContactUs(id, data){
-    return{
+export function updateContactUs(data) {
+    return {
         type: UPDATE_CONTACT_US,
-        payload: {
-            id:id,
-            data:data
-        }
-    }
+        payload: data
+    };
 }
+// export function updateContactUs(id, data){
+//     return{
+//         type: UPDATE_CONTACT_US,
+//         payload: {
+//             id:id,
+//             data:data
+//         }
+//     }
+// }
 
 export function deleteContactUs(data){
     return{

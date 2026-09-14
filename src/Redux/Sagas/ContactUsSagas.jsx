@@ -14,9 +14,44 @@ function* getActiveSaga(){        //worker
     let response = yield getRecord("contactus/active")
     yield put({type: GET_CONTACT_US_RED, payload: response})
 }
-function* updateSaga(action){        //worker
-    let response = yield updateMultipartRecord("contactus", action.payload.id, action.payload.data)
-    yield put({type: UPDATE_CONTACT_US_RED, payload: response})
+// function* updateSaga(action){        //worker
+//     let response = yield updateMultipartRecord("contactus", action.payload.id, action.payload.data)
+//     yield put({type: UPDATE_CONTACT_US_RED, payload: response})
+// }
+
+function* updateSaga(action) {
+
+    try {
+        let response = yield fetch(
+            `${import.meta.env.VITE_APP_BACKEND_SERVER}/contactus/${action.payload.id}/status`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: action.payload.status
+                })
+            }
+        );
+
+        let result = yield response.json();
+
+        yield put({
+            type: UPDATE_CONTACT_US_RED,
+            payload: result
+        });
+
+        // Refresh newsletter list after updating status
+        yield put({
+            type: GET_CONTACT_US
+        });
+
+    } catch (error) {
+
+        console.log("Newsletter Status Update Error:", error);
+
+    }
 }
 function* deleteSaga(action){        //worker
     let response = yield deleteRecord("contactus", action.payload.id)

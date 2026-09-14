@@ -64,16 +64,19 @@ export default function AdminNewsletterPage() {
         {
             name: "Email",
             selector: row => row.email,
+            width:"300px",
             sortable: true
         },
 
         {
             name: "Status",
+            width: "120px",
             cell: row => (
                 <button
                     className={`btn ${row.status ? "btn-success" : "btn-secondary"}`}
-                    onClick={() =>{
-                         updateRecord(row.id)}}>
+                    onClick={() => {
+                        updateRecord(row.id)
+                    }}>
                     {row.status ? "Active" : "Inactive"}
                 </button>
             ),
