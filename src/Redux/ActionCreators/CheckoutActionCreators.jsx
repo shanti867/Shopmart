@@ -19,13 +19,11 @@ export function getActiveCheckout() {
     };
 }
 
-export function updateCheckout(id, data){
+export function updateCheckout(data){
     return{
         type: UPDATE_CHECKOUT,
-        payload: {
-            id:id,
-            data:data
-        }
+        payload: data
+        
     }
 }
 

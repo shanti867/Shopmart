@@ -18,6 +18,7 @@ function* updateSaga(action){        //worker
     let response = yield updateMultipartRecord("user", action.payload.id, action.payload.data)
     yield put({type: UPDATE_USER_RED, payload: response})
 }
+
 function* deleteSaga(action){        //worker
     let response = yield deleteRecord("user", action.payload.id)
         if(response){

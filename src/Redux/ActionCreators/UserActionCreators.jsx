@@ -19,16 +19,12 @@ export function getActiveUser() {
     };
 }
 
-export function updateUser(id, data){
-    return{
+export function updateUser(data) {
+    return {
         type: UPDATE_USER,
-        payload: {
-            id:id,
-            data:data
-        }
-    }
+        payload: data
+    };
 }
-
 export function deleteUser(data){
     return{
         type: DELETE_USER,

@@ -28,7 +28,6 @@ function* deleteSaga(action){        //worker
             }
         })
     }
-    // yield put({type: DELETE_SUBCATEGORY_RED, payload: response})
 }
 
 export default function* SubcategorySaga(){         

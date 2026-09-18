@@ -53,6 +53,11 @@ import OrderConfirmation from './Pages/User/OrderConfirmation'
 import AdminContactUsShowPage from './Pages/Admin/ContactUs/AdminContactUsShowPage'
 import AdminCheckoutPage from './Pages/Admin/Checkout/AdminCheckcoutPage'
 import AdminCheckoutShowPage from './Pages/Admin/Checkout/AdminCheckoutShowPage'
+
+import AdminUserPage from './Pages/Admin/User/AdminUserPage'
+import AdminUsercreatePage from './Pages/Admin/User/AdminUsercreatePage'
+import AdminUserUpdatePage from './Pages/Admin/User/AdminUserUpdatePage'
+
 export default function App() {
   return (
     <>
@@ -117,6 +122,10 @@ export default function App() {
 
           <Route path='/admin/checkout' element={<AdminCheckoutPage />} />
           <Route path='/admin/checkout/show/:id' element={<AdminCheckoutShowPage />} />
+
+          <Route path='/admin/user' element={<AdminUserPage />} />
+          <Route path='/admin/user/create' element={<AdminUsercreatePage />} />
+          <Route path='/admin/user/update/:id' element={<AdminUserUpdatePage />} />
         </Routes>
         <Footer />
       </BrowserRouter>

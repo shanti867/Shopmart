@@ -37,7 +37,7 @@ export default function LoginPage() {
         }
             if (item.status === false) {
                 Cookies.remove("login")
-                Cookies.remove("id")
+                Cookies.remove("userid")
                 Cookies.remove("name")
                 Cookies.remove("role")
                 Cookies.remove("token")

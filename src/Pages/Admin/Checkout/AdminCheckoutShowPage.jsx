@@ -12,20 +12,13 @@ export default function AdminCheckoutShowPage() {
     let navigate = useNavigate()
     const dispatch = useDispatch();
     let [data, setData] = useState({})
+    let [orderStatus, setOrderStatus] = useState("")
+    let [paymentStatus, setPaymentStatus] = useState("")
     let CheckoutStateData = useSelector(state => state.CheckoutStateData);
 
     useEffect(() => {
         dispatch(getCheckout());
     }, [dispatch]);
-
-
-
-    function deleteRecord() {
-        if (window.confirm("Are You Sure To Delete This Record")) {
-            dispatch(deleteCheckout({ id }));
-            navigate("/admin/checkout")
-        }
-    }
 
     useEffect(() => {
         if (CheckoutStateData.length > 0) {
@@ -33,7 +26,9 @@ export default function AdminCheckoutShowPage() {
                 x => String(x.id) === String(id)
             );
             if (item) {
-                setData(item);
+                setData(item)
+                setOrderStatus(item.orderStatus)
+                setPaymentStatus(item.paymentStatus)
             }
             else {
                 navigate("/admin/checkout");
@@ -43,14 +38,12 @@ export default function AdminCheckoutShowPage() {
 
     function updateRecord() {
         if (window.confirm("Are You Sure to Change Status of This Record?")) {
-            // let Checkout = data.find(x => String(x.id) === String(id));
-            // if (!Checkout) {
-            //     return;
-            // }
             dispatch(updateCheckout({
                 id: data.id,
-                status: !data.status
+                orderStatus: orderStatus,
+                paymentStatus: paymentStatus
             }));
+
         }
     }
     let address = {};
@@ -60,6 +53,16 @@ export default function AdminCheckoutShowPage() {
             address = JSON.parse(data.deliveryAddress);
         } catch (error) {
             console.log("Invalid delivery address:", error);
+        }
+    }
+
+    let products = []
+    if (data.products) {
+        try {
+            products = JSON.parse(data.products);
+        }
+        catch (error) {
+            console.log("Invalid ")
         }
     }
 
@@ -94,7 +97,19 @@ export default function AdminCheckoutShowPage() {
 
                                     <tr>
                                         <th>Order status</th>
-                                        <td>{data.orderStatus}</td>
+                                        <td>{data.orderStatus}
+                                            {data.orderStatus !== "Delivered" ?
+                                                <select name="orderStatus" value={orderStatus} onChange={(e) => setOrderStatus(e.target.value)} className='form-select border-primary my-3'>
+                                                    <option>Order Has Been Placed</option>
+                                                    <option>Order Has Been Packed</option>
+                                                    <option>Order Is Ready To Ship</option>
+                                                    <option>Order Has Been Shipped</option>
+                                                    <option>Order Is In Transit</option>
+                                                    <option>Order Has Been Reached At The Final Delivery station</option>
+                                                    <option>Order Is Out for Delivery</option>
+                                                    <option>Delivered</option>
+                                                </select> : null}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Payment Mode</th>
@@ -102,7 +117,13 @@ export default function AdminCheckoutShowPage() {
                                     </tr>
                                     <tr>
                                         <th>Payment Status</th>
-                                        <td>{data.paymentStatus}</td>
+                                        <td>{data.paymentStatus}
+                                            {data.paymentStatus !== "Done" ?
+                                                <select name="paymentStatus" value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value)} className='form-select border-primary my-3'>
+                                                    <option>Pending</option>
+                                                    <option>Done</option>
+                                                </select> : null}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Subtotal</th>
@@ -131,6 +152,40 @@ export default function AdminCheckoutShowPage() {
                                                 : null}
                                         </td>
                                     </tr>
+                                </tbody>
+                            </table>
+                            <h5 className='bg-primary text-center p-2 text-light'>Products In This Order</h5>
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>Brand</th>
+                                        <th>Color</th>
+                                        <th>Size</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {products?.map(item => {
+                                        return <tr key={item.id}>
+                                            <td>
+                                                <Link to={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic[0]}`} target="_blank">
+                                                    <img src={`${import.meta.env.VITE_APP_IMAGE_SERVER}/product/${item.pic[0]}`} height={70} width={70} alt="" /></Link>
+                                            </td>
+                                            <td>{item.name}</td>
+                                            <td>{item.brand}</td>
+                                            <td>{item.selectedColor}</td>
+                                            <td>{item.selectedSize}</td>
+                                            <td>&#8377;{item.price}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>&#8377;{item.total}</td>
+                                        </tr>
+                                    })}
                                 </tbody>
                             </table>
                         </div>

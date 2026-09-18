@@ -139,7 +139,6 @@ export default function AdminCheckoutPage() {
                             responsive
                             persistTableHead
                         />
-
                     </div>
                 </div>
             </div>

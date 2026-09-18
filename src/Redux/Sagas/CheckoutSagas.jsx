@@ -1,6 +1,6 @@
 import { put, takeEvery } from "redux-saga/effects"
 import Cookies from "js-cookie"
-import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
+import {  deleteRecord, getRecord} from "./Service/Index"
 import { CREATE_CHECKOUT, CREATE_CHECKOUT_RED, DELETE_CHECKOUT, DELETE_CHECKOUT_RED, GET_CHECKOUT, GET_CHECKOUT_RED, GET_ACTIVE_CHECKOUT, UPDATE_CHECKOUT, UPDATE_CHECKOUT_RED } from "../Constant"
 
 function* createSaga(action){
@@ -32,9 +32,28 @@ function* getActiveSaga(){        //worker
     let response = yield getRecord("checkout/active")
     yield put({type: GET_CHECKOUT_RED, payload: response})
 }
-function* updateSaga(action){        //worker
-    let response = yield updateMultipartRecord("checkout", action.payload.id, action.payload.data)
-    yield put({type: UPDATE_CHECKOUT_RED, payload: response})
+function* updateSaga(action) {
+    let response = yield fetch(
+        `${import.meta.env.VITE_APP_BACKEND_SERVER}/checkout/${action.payload.id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${Cookies.get("token")}`
+            },
+            body: JSON.stringify({
+                orderStatus: action.payload.orderStatus,
+                paymentStatus: action.payload.paymentStatus
+            })
+        }
+    );
+
+    let data = yield response.json();
+
+    yield put({
+        type: UPDATE_CHECKOUT_RED,
+        payload: data
+    });
 }
 function* deleteSaga(action){        //worker
     let response = yield deleteRecord("checkout", action.payload.id)
