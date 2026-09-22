@@ -13,18 +13,21 @@ export default function AdminUserUpdatePage() {
     let { id } = useParams()
 
     let [data, setData] = useState({
-        name: "",
-        icon: "",
-        shortDescription:"",
-        status: true
+        name: '',
+        username: '',
+        phone: '',
+        email: '',
+        role: ""
     })
     let [errorMessage, setErrorMessage] = useState({
         name: "",
-        icon: "",
-        shortDescription:""
+        username: "",
+        email: "",
+        phone: "",
+
     })
     let [show, setShow] = useState(false)
-    let[isUpdating, setIsUpdating] = useState(false)
+    let [isUpdating, setIsUpdating] = useState(false)
     let UserStateData = useSelector(state => state.UserStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -47,37 +50,44 @@ export default function AdminUserUpdatePage() {
         });
     }
 
-    function postData(e) {
+    async function postData(e) {
         e.preventDefault()
-        let error = Object.values(errorMessage).find(x => x != "")
-        if (error) {
+        let item = Object.values(errorMessage).find(x => x !== "")
+        if (item) {
             setShow(true)
+            return
+        }
+        let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        let message = await response.json()
+
+        if (message.status === true) {
+            navigate("/admin/user")
         }
         else {
-            try {
-                let item = UserStateData.find(x => x.id != id && x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
-                if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'User With This Name Already Exist' })
-                    setShow(true)
-                    return
-                }
-                setIsUpdating(true)
-                dispatch(updateUser(id, data))
-               
+            // let message = await response.json()
+            if (message.message === "Username Already Taken") {
+                setErrorMessage({ ...errorMessage, username: message.message })
             }
-            catch (error) {
-                console.log(error);
+            if (message.message === "Email Already Taken") {
+                setErrorMessage({ ...errorMessage, email: message.message })
             }
+            setShow(true)
         }
     }
-    useEffect(()=>{
-        if(isUpdating){
+    useEffect(() => {
+        if (isUpdating) {
             let updateItem = UserStateData.find(item => item.id == id)
-            if(updateItem){
+            if (updateItem) {
                 navigate("/admin/user")
             }
         }
-    },[UserStateData])
+    }, [UserStateData])
 
     useEffect(() => {
         (() => {
@@ -106,22 +116,40 @@ export default function AdminUserUpdatePage() {
                         <h5 className='bg-primary text-light text-center p-2'>Update User<Link to="/admin/user"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
-                                <div className="col-12 mb-3">
-                                    <label>Name*</label>
-                                    <input type="text" name="name" value={data.name} onChange={getInputData} placeholder='User Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
+                                <div className="col-lg-6 mb-3">
+                                    <label>Full Name*</label>
+                                    <input type="text" value={data.name} name="name" onChange={getInputData}
+                                        placeholder="Full Name" className={`form-control ${show && errorMessage.name ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.name ? <p className="text-danger">{errorMessage.name}</p> : null}
                                 </div>
 
-                                <div className="col-12 mb-3">
-                                    <label>Short Description*</label>
-                                    <textarea name="shortDescription" value ={data.shortDescription} rows = {3} onChange={getInputData} placeholder='User Name' className={`form-control ${show && errorMessage.shortDescription ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.shortDescription ? <p className='text-danger text-capitalize'>{errorMessage.shortDescription}</p> : null}
+                                <div className="col-lg-6 mb-3">
+                                    <label>Phone Number*</label>
+                                    <input type="text" value={data.phone} name="phone" onChange={getInputData}
+                                        placeholder="Phone Number" className={`form-control ${show && errorMessage.phone ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.phone ? <p className="text-danger">{errorMessage.phone}</p> : null}
+                                </div>
+
+                                <div className="col-lg-6 mb-3">
+                                    <label>Username*</label>
+                                    <input type="text" value={data.username} name="username" onChange={getInputData}
+                                        placeholder="Username" className={`form-control ${show && errorMessage.username ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.username ? <p className="text-danger">{errorMessage.username}</p> : null}
+                                </div>
+
+                                <div className="col-lg-6 mb-3">
+                                    <label>Email Address*</label>
+                                    <input type="email" value={data.email} name="email" onChange={getInputData}
+                                        placeholder="Email Address" className={`form-control ${show && errorMessage.email ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.email ? <p className="text-danger">{errorMessage.email}</p> : null}
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label>Icon*</label>
-                                    <input type="text" name="icon" value={data.icon} onChange={getInputData} className={`form-control ${show && errorMessage.icon ? 'border-danger' : 'border-primary'}`} placeholder="Bootstrap Icon Tag like <i class='bi bi-list'></i>"/>
-                                    {show && errorMessage.icon ? <p className='text-danger text-capitalize'>{errorMessage.icon}</p> : null}
+                                    <label>Role*</label>
+                                    <select name="role" value={data.role} onChange={getInputData} className='form-select border-primary'>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Super Admin">Super Admin</option>
+                                    </select>
                                 </div>
 
                                 <div className="col-md-6 md-3">
@@ -133,7 +161,7 @@ export default function AdminUserUpdatePage() {
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <button type='submit' className='btn btn-primary w-100' disabled={isUpdating}>{isUpdating?"Updating...":"Update"}</button>
+                                    <button type='submit' className='btn btn-primary w-100' disabled={isUpdating}>{isUpdating ? "Updating..." : "Update"}</button>
                                 </div>
 
                             </div>

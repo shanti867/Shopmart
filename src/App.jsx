@@ -1,5 +1,7 @@
 import React from 'react'
+import Cookies from "js-cookie";
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
 import HomePage from './Pages/HomePage'
@@ -16,7 +18,9 @@ import TermsAndConditions from './Pages/TermsAndConditions'
 import ContactUsPage from './Pages/ContactUsPage'
 import AboutPage from './Pages/AboutPage'
 import ReturnAndRefundPolicy from './Components/ReturnAndRefundPolicy'
+
 import AdminHomePage from './Pages/Admin/AdminHomePage'
+
 import AdminMaincategoryPage from './Pages/Admin/Maincategory/AdminMaincategoryPage'
 import AdminMaincategorycreatePage from './Pages/Admin/Maincategory/AdminMaincategorycreatePage'
 import AdminMaincategoryUpdatePage from './Pages/Admin/Maincategory/AdminMaincategoryUpdatePage'
@@ -81,13 +85,18 @@ export default function App() {
           <Route path='/login' element={<LoginPage />} />
           <Route path='/*' element={<ErrorPage />} />
           {/*User Routes*/}
+          {Cookies.get("login")?
+          <>
           <Route path='/profile' element={<ProfilePage />} />
           <Route path='/cart' element={<CartPage />} />
           <Route path='/checkout' element={<CheckOutPage />} />
           <Route path='/order-confirmation' element={<OrderConfirmation />} />
-
+          </>:null}
           {/*Admin Routes*/}
-          <Route path='/admin' element={<AdminHomePage />} />
+          
+          {Cookies.get("login") && Cookies.get("role") !== "Buyer"?
+        <>
+        <Route path='/admin' element={<AdminHomePage />} />
           <Route path='/admin/maincategory' element={<AdminMaincategoryPage />} />
           <Route path='/admin/maincategory/create' element={<AdminMaincategorycreatePage />} />
           <Route path='/admin/maincategory/update/:id' element={<AdminMaincategoryUpdatePage />} />
@@ -123,9 +132,14 @@ export default function App() {
           <Route path='/admin/checkout' element={<AdminCheckoutPage />} />
           <Route path='/admin/checkout/show/:id' element={<AdminCheckoutShowPage />} />
 
+          {Cookies.get("role")==="Super Admin"?
+          <>
           <Route path='/admin/user' element={<AdminUserPage />} />
           <Route path='/admin/user/create' element={<AdminUsercreatePage />} />
           <Route path='/admin/user/update/:id' element={<AdminUserUpdatePage />} />
+          </>:null}
+        </>  
+        :null}
         </Routes>
         <Footer />
       </BrowserRouter>

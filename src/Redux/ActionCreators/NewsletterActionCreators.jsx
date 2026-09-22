@@ -24,14 +24,6 @@ export function updateNewsletter(data) {
         payload: data
     };
 }
-// export function updateNewsletter(data){
-//     return{
-//         type: UPDATE_NEWSLETTER,
-//         payload: {
-//             data:data
-//         }
-//     }
-// }
 
 export function deleteNewsletter(data){
     return{

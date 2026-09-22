@@ -5,7 +5,7 @@ import AdminSidebar from "../../../Components/Admin/AdminSidebar";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getUser, deleteUser } from "../../../Redux/ActionCreators/UserActionCreators";
+import { getUser, deleteUser, updateStatusUser } from "../../../Redux/ActionCreators/UserActionCreators";
 
 export default function AdminUserPage() {
 
@@ -20,7 +20,7 @@ export default function AdminUserPage() {
             if (!user) {
                 return;
             }
-            dispatch(update({
+            dispatch(updateStatusUser({
                 id: user.id,
                 status: !user.status
             }));

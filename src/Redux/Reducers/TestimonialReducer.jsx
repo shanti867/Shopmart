@@ -1,12 +1,12 @@
 import { CREATE_TESTIMONIAL_RED, DELETE_TESTIMONIAL_RED, GET_TESTIMONIAL_RED, UPDATE_TESTIMONIAL_RED } from "../Constant"
 export default function TestimonialReducer(state=[],action){
-    let index
+    
     switch(action.type){
         case CREATE_TESTIMONIAL_RED:
-            return [...state,action.payload]
+            return [...state,action.payload.data]
         
         case GET_TESTIMONIAL_RED:
-            return action.payload
+            return action.payload.data
 
         case UPDATE_TESTIMONIAL_RED:
             return state.map(item => item.id == action.payload.id ? action.payload : item)

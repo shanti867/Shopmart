@@ -35,7 +35,6 @@ function* updateSaga(action) {
         );
 
         let result = yield response.json();
-
         yield put({
             type: UPDATE_NEWSLETTER_RED,
             payload: result
@@ -47,9 +46,7 @@ function* updateSaga(action) {
         });
 
     } catch (error) {
-
         console.log("Newsletter Status Update Error:", error);
-
     }
 }
 function* deleteSaga(action) {        //worker

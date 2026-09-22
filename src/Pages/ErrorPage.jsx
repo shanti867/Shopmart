@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import Cookies from "js-cookie"
 import Breadcrum from '../Components/Breadcrum'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 export default function ErrorPage() {
+
+    let navigate = useNavigate()
+
+    useEffect(()=>{
+        setTimeout(()=>{
+            if(Cookies.get("login")){
+            if(Cookies.get("role")!=="Buyer" && location.pathname==="/admin")
+                navigate(0)
+
+            else if(location.pathname==="/profile")
+                navigate(0)
+        }
+        },500)
+    },[])
+    
   return (
     <>
     <Breadcrum title="404! Page Not Found"/>

@@ -25,6 +25,14 @@ export function updateUser(data) {
         payload: data
     };
 }
+
+export function updateStatusUser(data) {
+    return {
+        type: UPDATE_USER,
+        payload: data
+    };
+}
+
 export function deleteUser(data){
     return{
         type: DELETE_USER,

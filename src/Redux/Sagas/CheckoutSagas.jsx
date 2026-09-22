@@ -24,10 +24,30 @@ function* createSaga(action){
         payload: data
     })
 }
-function* getSaga(){        //worker
-    let response = yield getRecord("checkout")
-    yield put({type: GET_CHECKOUT_RED, payload: response})
+// function* getSaga(){        //worker
+//     let response = yield getRecord("checkout")
+//     yield put({type: GET_CHECKOUT_RED, payload: response})
+// }
+
+function* getSaga() {
+
+    let response = yield fetch(
+        `${import.meta.env.VITE_APP_BACKEND_SERVER}/checkout`,
+        {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${Cookies.get("token")}`
+            }
+        }
+    );
+
+    let data = yield response.json();
+    yield put({
+        type: GET_CHECKOUT_RED,
+        payload: data
+    });
 }
+
 function* getActiveSaga(){        //worker
     let response = yield getRecord("checkout/active")
     yield put({type: GET_CHECKOUT_RED, payload: response})

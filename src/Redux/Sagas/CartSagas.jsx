@@ -1,19 +1,7 @@
 import { put, takeEvery } from "redux-saga/effects"
 
 import Cookies from "js-cookie"
-import { createMultipartRecord, deleteRecord, getRecord, updateMultipartRecord } from "./Service/Index"
-import { CREATE_CART, CREATE_CART_RED, DELETE_CART, DELETE_CART_RED, GET_CART, GET_CART_RED, GET_ACTIVE_CART, UPDATE_CART, UPDATE_CART_RED } from "../Constant"
-
-// function* createSaga(action){        //worker
-//     let response = yield createMultipartRecord("user/cart", action.payload)
-//     yield put({type: CREATE_CART_RED, payload: response})
-// }
-// function* getSaga(){        //worker
-//     let response = yield getRecord("user/cart")
-//     yield put({type: GET_CART_RED, payload: response})
-// }
-
-// ================= CREATE CART =================
+import { CREATE_CART, CREATE_CART_RED, DELETE_CART, DELETE_CART_RED, GET_CART, GET_CART_RED} from "../Constant"
 
 function* createSaga(action) {
     try {

@@ -1,7 +1,13 @@
 
 /*** Spinner Start ***/
 /*** Spinner ***/
-
+.my-testimonial{
+    height: 200px;
+    overflow:auto;
+}
+.my-testimonial::-webkit-scrollbar{
+    display:none;
+}
 .my-card{
     background-color: white;
     color: black;

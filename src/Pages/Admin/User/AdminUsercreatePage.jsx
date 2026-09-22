@@ -9,17 +9,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createUser, getUser } from '../../../Redux/ActionCreators/UserActionCreators'
 export default function AdminUsercreatePage() {
     let [data, setData] = useState({
-        name: "",
-        icon: "",
-        shortDescription: "",
-        status: true
+        name: '',
+        username: '',
+        phone: '',
+        email: '',
+        password: '',
+        cpassword: '',
+        role: "Admin"
     })
     let [errorMessage, setErrorMessage] = useState({
-        name: "Name Field is Mendatory",
-        icon: "Icon Field is Mendatory",
-        shortDescription: "Short Description Field is Mendatory"
+        name: "Full Name Field is Mendatory",
+        username: "User Name Field is Mendatory",
+        email: "Email Address Field is Mendatory",
+        phone: "Phone Number Field is Mendatory",
+        password: "password Field is Mendatory",
+        cpassword: "Confirm Password Field is Mendatory"
+
     })
     let [show, setShow] = useState(false)
+
     let UserStateData = useSelector(state => state.UserStateData)
     let dispatch = useDispatch()
     let navigate = useNavigate()
@@ -42,30 +50,37 @@ export default function AdminUsercreatePage() {
         });
     }
 
-    function postData(e) {
+    async function postData(e) {
         e.preventDefault()
-        let error = Object.values(errorMessage).find(x => x != "")
-        if (error) {
+        let item = Object.values(errorMessage).find(x => x !== "")
+        if (item) {
             setShow(true)
+            return
+        }
+        let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/user`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        if (response.ok) {
+            navigate("/admin/user")
         }
         else {
-            try {
-                let item = UserStateData.find(x => x.name?.toLocaleLowerCase() === data.name?.toLocaleLowerCase())
-                if (item) {
-                    setErrorMessage({ ...errorMessage, name: 'User With This Name Already Exist' })
-                    setShow(true)
-                    return
-                }
-                dispatch(createUser(data))
-                // navigate("/admin/User")
-                setTimeout(()=>{
-                   navigate("/admin/user") 
-                }, 500)
+            let message = await response.json()
+            if (message.message === "Username Already Taken") {
+                setErrorMessage({ ...errorMessage, username: message.message })
             }
-            catch (error) {
-                console.log(error);
+            if (message.message === "Email Address Already Taken") {
+                setErrorMessage({ ...errorMessage, email: message.message })
             }
+            if (message.message === "Password and Confirm Password do not match") {
+                setErrorMessage({ ...errorMessage, cpassword: message.message })
+            }
+            setShow(true)
         }
+
     }
 
     useEffect(() => {
@@ -84,25 +99,63 @@ export default function AdminUsercreatePage() {
                         <h5 className='bg-primary text-light text-center p-2'>Create User<Link to="/admin/user"><i className='bi bi-arrow-left text-light float-end'></i></Link></h5>
                         <form onSubmit={postData}>
                             <div className="row">
-                                <div className="col-12 mb-3">
-                                    <label>Name*</label>
-                                    <input type="text" name="name" onChange={getInputData} placeholder='User Name' className={`form-control ${show && errorMessage.name ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.name ? <p className='text-danger text-capitalize'>{errorMessage.name}</p> : null}
+                                <div className="col-lg-6 mb-3">
+                                    <label>Full Name*</label>
+                                    <input type="text" name="name" onChange={getInputData}
+                                        placeholder="Full Name" className={`form-control ${show && errorMessage.name ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.name ? <p className="text-danger">{errorMessage.name}</p> : null}
                                 </div>
 
-                                <div className="col-12 mb-3 ">
-                                    <label>Short Description*</label>
-                                    <textarea name="shortDescription" rows = {3} onChange={getInputData} placeholder='User Name' className={`form-control ${show && errorMessage.shortDescription ? 'border-danger' : 'border-primary'}`} />
-                                    {show && errorMessage.shortDescription ? <p className='text-danger text-capitalize'>{errorMessage.shortDescription}</p> : null}
+                                <div className="col-lg-6 mb-3">
+                                    <label>Phone Number*</label>
+                                    <input type="text" name="phone" onChange={getInputData}
+                                        placeholder="Phone Number" className={`form-control ${show && errorMessage.phone ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.phone ? <p className="text-danger">{errorMessage.phone}</p> : null}
+                                </div>
+
+                                <div className="col-lg-6 mb-3">
+                                    <label>Username*</label>
+                                    <input type="text" name="username" onChange={getInputData}
+                                        placeholder="Username" className={`form-control ${show && errorMessage.username ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.username ? <p className="text-danger">{errorMessage.username}</p> : null}
+                                </div>
+
+                                <div className="col-lg-6 mb-3">
+                                    <label>Email Address*</label>
+                                    <input type="email" name="email" onChange={getInputData}
+                                        placeholder="Email Address" className={`form-control ${show && errorMessage.email ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.email ? <p className="text-danger">{errorMessage.email}</p> : null}
+                                </div>
+
+                                <div className="col-lg-6 mb-3">
+                                    <label className="d-block">Password*</label>
+                                    <div className="btn-group w-100">
+                                        <input type="password" name="password" onChange={getInputData}
+                                            placeholder="Password" className={`form-control ${show && errorMessage.password ? "border-danger" : "border-primary"}`} />
+                                        {/* <button type="button" className="btn border border-primary" onClick={() => setShowPassword(!showPassword)}><i className={`${showPassword ? "bi bi-eye-slash" : "bi bi-eye"}`}></i></button> */}
+                                    </div>
+                                    {show && errorMessage.password ? errorMessage.password?.split("|").map((item, index) => {
+                                        return <p className="text-danger" key={index}>{item}</p>
+                                    }) : null}
+                                </div>
+
+                                <div className="col-lg-6 mb-3">
+                                    <label>Confirm Password*</label>
+                                    <input type="password" name="cpassword" onChange={getInputData}
+                                        placeholder="Confirm Password" className={`form-control ${show && errorMessage.cpassword ? "border-danger" : "border-primary"}`} />
+                                    {show && errorMessage.cpassword ? <p className="text-danger">{errorMessage.cpassword}</p> : null}
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label>Icon*</label>
-                                    <input type="text" name="icon" onChange={getInputData} className={`form-control ${show && errorMessage.icon ? 'border-danger' : 'border-primary'}`} placeholder="Bootstrap Icon Tag like <i class='bi bi-list'></i>"/>
-                                    {show && errorMessage.icon ? <p className='text-danger text-capitalize'>{errorMessage.icon}</p> : null}
+                                    <label>Role*</label>
+                                    <select name="role" onChange={getInputData} className='form-select border-primary'>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Super Admin">Super Admin</option>
+                                    </select>
                                 </div>
 
-                                <div className="col-md-6 md-3">
+
+                                <div className="col-md-6 mb-3">
                                     <label>Status*</label>
                                     <select name="status" onChange={getInputData} className='form-select border-primary'>
                                         <option value="1">Active</option>
