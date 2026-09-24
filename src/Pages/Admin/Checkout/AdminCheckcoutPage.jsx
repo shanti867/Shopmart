@@ -39,23 +39,18 @@ export default function AdminCheckoutPage() {
     // }
 
     const filteredData = data.filter(row =>
-        row.CheckoutId?.toLowerCase().includes(search.toLowerCase()) ||
-        row.name?.toLowerCase().includes(search.toLowerCase()) ||
-        (row.status ? "active" : "inactive").includes(search.toLowerCase())
-    );
-
+    row.checkoutId?.toLowerCase().includes(search.toLowerCase()) ||
+    row.orderStatus?.toLowerCase().includes(search.toLowerCase()) ||
+    row.paymentMode?.toLowerCase().includes(search.toLowerCase()) ||
+    row.paymentStatus?.toLowerCase().includes(search.toLowerCase())
+);
     const columns = [
         {
             name: "Id",
             selector: row => row.checkoutId,
             sortable: true
         },
-        // {
-        //     name: "User",
-        //     selector: row => row.deliveryAddress?.name,
-        //     width:"200px",
-        //     sortable:true
-        // },
+        
         {
             name: "User",
             selector: row => {

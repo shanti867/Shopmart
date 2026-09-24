@@ -118,10 +118,10 @@ export default function AdminCheckoutShowPage() {
                                     <tr>
                                         <th>Payment Status</th>
                                         <td>{data.paymentStatus}
-                                            {data.paymentStatus !== "Done" ?
+                                            {data.paymentStatus !== "Paid" ?
                                                 <select name="paymentStatus" value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value)} className='form-select border-primary my-3'>
                                                     <option>Pending</option>
-                                                    <option>Done</option>
+                                                    <option>Paid</option>
                                                 </select> : null}
                                         </td>
                                     </tr>
@@ -142,8 +142,16 @@ export default function AdminCheckoutShowPage() {
                                         <td>{new Date(data.date).toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <th>RPPID</th>
-                                        <td>{data.rppid ? data.rppid : "N/A"}</td>
+                                        <th>Razorpay Order ID</th>
+                                        <td>
+                                            {data.razorpayOrderId?data.razorpayOrderId:"N/A"}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Razorpay Payment ID</th>
+                                        <td>
+                                            {data.razorpayPaymentId ? data.razorpayPaymentId:"N/A"}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td colSpan={2}>

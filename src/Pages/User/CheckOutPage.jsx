@@ -4,11 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 import Breadcrum from '../../Components/Breadcrum'
-import { getCart, deleteCart } from "../../Redux/ActionCreators/CartActionCreators"
-// import { createCheckout } from "../../Redux/ActionCreators/CheckoutActionCreators"
+import { getCart } from "../../Redux/ActionCreators/CartActionCreators"
 import {createCheckout} from "../../Redux/ActionCreators/CheckoutActionCreators"
-// // import { getActiveProduct, updateProduct } from "../../Redux/ActionCreators/ProductActionCreators"
-// import { getActiveProduct, updateProduct } from '../../Redux/ActionCreators/ProductActionCreators '
+
 
 export default function CheckOutPage() {
     let [user, setUser] = useState({})
@@ -21,13 +19,95 @@ export default function CheckOutPage() {
         paymentMode: "COD"
     })
     let CartStateData = useSelector(state => state.CartStateData)
-    // let ProductStateData = useSelector(state => state.ProductStateData)
     
     let data = CartStateData
     let dispatch = useDispatch()
     let navigate =useNavigate()
     
-    function placeOrder(){
+    async function makePayment(checkoutId){
+        try{
+            let token = Cookies.get("token");
+
+            let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/payment/create-order`,{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":`Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    checkoutId:checkoutId
+                })
+            })
+            let result = await response.json();
+            console.log("Razorpay Order Response:",result)
+
+            if(!response.ok || !result.status){
+                alert(result.message || "Unable to create Razorpay order");
+                return;
+            }
+            let options = {
+                key: result.key,
+                amount: result.amount,
+                currency: result.currency,
+                name:"Shopmart",
+                description: "Shopmart Order Payment",
+                order_id: result.razorpayOrderId,
+
+                handler: async function(paymentResponse){
+                    console.log("Payment Response:", paymentResponse);
+
+                    let verifyResponse = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/payment/verify`,{
+                        method: "POST",
+                        headers:{
+                            "Content-Type": "application/json",
+                            "Authorization":`Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            checkoutId: checkoutId,
+                            razorpayOrderId: paymentResponse.razorpay_order_id,
+                            razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                            razorpaySignature: paymentResponse.razorpay_signature,
+                        })
+                    })
+                    let verifyResult = await verifyResponse.json();
+                    console.log("Payment Verification:", verifyResult);
+
+                    if(verifyResult.status){
+                        alert("Payment Successful!");
+                        navigate("/order-confirmation");
+                    }
+                    
+                    else{
+                        alert(verifyResult.message || "Payment verification failed")
+                    }
+                },
+                prefill:{
+                    name: user.data?.[0]?.name || "",
+                    email: user.data?.[0]?.email || "",
+                    phone: user.data?.[0]?.phone || ""
+                },
+                theme:{
+                    color: "#0d6efd"
+                }
+            }
+            let razorpay = new window.Razorpay(options)
+            razorpay.on("payment.failed", function(response){
+                console.log("Payment Failed:", response.error);
+                alert(response.error.description || "Payment Failed");
+            })
+            razorpay.open()
+        }
+        catch(error){
+            console.log("Payment Error:", error);
+            alert("Something went wrong while starting payment")
+        }
+    }
+
+    async function placeOrder(){
+
+        try{
+            let token = Cookies.get("token")
+
         let item={
             // user:Cookies.get("userid"),
             deliveryAddress:selected.deliveryAddress,
@@ -40,8 +120,42 @@ export default function CheckOutPage() {
             date: new Date(),
             products: data
         }
-        dispatch(createCheckout({...item}))
-        navigate("/order-confirmation")
+
+        let response = await fetch(`${import.meta.env.VITE_APP_BACKEND_SERVER}/checkout`,{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+                "Authorization":`Bearer ${token}`
+            },
+            body: JSON.stringify(item)
+        })
+        let result = await response.json();
+        console.log("Checkout Response:", result);
+
+        if(!response.ok){
+            alert(result.message || "Unable to create checkout");
+            return;
+        }
+        let checkout = result.data || result;
+        console.log("Created Checkout:", checkout);
+
+        if(!checkout.id){
+           alert("Checkout ID not received from server");
+           return; 
+        }
+        if(selected.paymentMode === "COD"){
+            navigate("/order-confirmation");
+        }
+        else{
+            await makePayment(checkout.id);
+        }
+    }
+    catch(error){
+        console.log("Place Order Error:", error)
+        alert("Something went wrong while placing the order")
+    }
+        
+        // navigate("/order-confirmation")
     }
     function calculate(cart) {
         let sum = 0;
@@ -180,8 +294,8 @@ export default function CheckOutPage() {
 
                                 <div className="col-6">
                                     <div className="form-check text-start my-2">
-                                        <input type="checkbox" className="form-check-input bg-primary border-0" id="netbanking" onChange={() => setSelected({ ...selected, paymentMode: "netbanking" })} checked={selected.paymentMode !== "COD" ? true : false} />
-                                        <label className="form-check-label" htmlFor="netbanking">Net Banking/Card/UPI</label>
+                                        <input type="checkbox" className="form-check-input bg-primary border-0" id="netbanking" onChange={() => setSelected({ ...selected, paymentMode: "Online" })} checked={selected.paymentMode !== "COD" ? true : false} />
+                                        <label className="form-check-label" htmlFor="netbanking">Online Payment</label>
                                     </div>
                                 </div>
                             </div>
